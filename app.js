@@ -40,14 +40,34 @@ const questions = [
     {
         id: "q4",
         type: "table",
-        text: "Completa la tabla sobre los componentes principales:",
-        headers: ["Componente", "Descripción"],
-        options: {
-            "": "-- Seleccionar --",
-            "A": "Lenguaje de programación compilado de Google",
-            "B": "Protocolo estandarizado para conectar la IA con herramientas locales",
-            "C": "Sistema de cifrado asimétrico de respuestas de exámenes"
-        },
+        text: "Completa la tabla comparativa sobre los tres conceptos clave:",
+        headers: ["Característica", "Chatbot", "Agente", "Protocolo MCP"],
+        rows: [
+            {
+                label: "Rol",
+                cols: [
+                    "Interfaz pasiva.",
+                    "Sistema autónomo.",
+                    "Estándar de conexión abierto."
+                ]
+            },
+            {
+                label: "Funcionamiento",
+                cols: [
+                    "Responde únicamente a inputs y archivos cargados manualmente.",
+                    "Planifica, encadena acciones y usa herramientas iterativamente para tareas complejas.",
+                    {
+                        type: "select",
+                        options: {
+                            "": "-- Seleccionar Funcionamiento --",
+                            "A": "Lenguaje de programación compilado que define cómo razona la IA.",
+                            "B": "No define cómo razona la IA; estandariza cómo se conecta con herramientas y carpetas locales.",
+                            "C": "Sistema de cifrado asimétrico que protege los prompts del usuario."
+                        }
+                    }
+                ]
+            }
+        ],
         ref: "Transformando la Evaluación Docente con MCP",
         url: "https://sites.google.com/fi.unju.edu.ar/integracion-de-agentes-de-ia/#h.lp9kenpoij0x"
     }
@@ -171,33 +191,40 @@ function init() {
             table.appendChild(thead);
             
             const tbody = document.createElement('tbody');
-            const row = document.createElement('tr');
-            
-            const td1 = document.createElement('td');
-            td1.innerText = "Model Context Protocol";
-            row.appendChild(td1);
-            
-            const td2 = document.createElement('td');
-            const select = document.createElement('select');
-            select.className = 'modern-select table-select';
-            Object.entries(q.options).forEach(([key, value]) => {
-                const opt = document.createElement('option');
-                opt.value = key;
-                opt.innerText = value;
-                select.appendChild(opt);
+            q.rows.forEach(r => {
+                const row = document.createElement('tr');
+                const tdLabel = document.createElement('td');
+                tdLabel.innerText = r.label;
+                tdLabel.style.fontWeight = "bold";
+                row.appendChild(tdLabel);
+                
+                r.cols.forEach(colData => {
+                    const td = document.createElement('td');
+                    if (typeof colData === 'string') {
+                        td.innerText = colData;
+                    } else if (colData.type === 'select') {
+                        const select = document.createElement('select');
+                        select.className = 'modern-select table-select';
+                        Object.entries(colData.options).forEach(([key, value]) => {
+                            const opt = document.createElement('option');
+                            opt.value = key;
+                            opt.innerText = value;
+                            select.appendChild(opt);
+                        });
+                        select.onchange = (e) => {
+                            if(e.target.value) {
+                                state[q.id] = e.target.value;
+                            } else {
+                                delete state[q.id];
+                            }
+                            checkCompletion();
+                        };
+                        td.appendChild(select);
+                    }
+                    row.appendChild(td);
+                });
+                tbody.appendChild(row);
             });
-            select.onchange = (e) => {
-                if(e.target.value) {
-                    state[q.id] = e.target.value;
-                } else {
-                    delete state[q.id];
-                }
-                checkCompletion();
-            };
-            td2.appendChild(select);
-            row.appendChild(td2);
-            
-            tbody.appendChild(row);
             table.appendChild(tbody);
             tableContainer.appendChild(table);
             card.appendChild(tableContainer);
