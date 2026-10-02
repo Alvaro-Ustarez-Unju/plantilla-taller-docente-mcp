@@ -5,8 +5,9 @@ Bienvenido/a al repositorio base del Taller *"Agentes de IA y Protocolo MCP para
 Este repositorio es tu **espacio de trabajo personal**. Aquí aplicarás los conceptos aprendidos durante el Día 1 y el Día 2 del taller, construyendo paso a paso la estructura de tu propia cátedra interactiva.
 
 ## 🚀 Tareas del Día 1: Fundamentos y Persistencia (Onboarding)
-Tu objetivo es inicializar este repositorio como el núcleo de tu materia. Para aprobar esta etapa, debes pedirle a tu Agente de IA que genere la siguiente estructura:
+Tu objetivo es inicializar este repositorio como el núcleo de tu materia. Para aprobar esta etapa, debes realizar lo siguiente:
 
+- [ ] **0. Completar el Laboratorio Web:** Haz doble clic en `index.html` (dentro de este repositorio) en tu computadora. Responde las 4 preguntas sobre los fundamentos del taller, haz clic en Exportar y guarda el archivo `respuestas_taller.json` en la raíz de esta carpeta.
 - [ ] **1. Crear `AGENTS.md`**: Define las reglas de comportamiento de tu agente (Ej: "Eres el asistente de la materia X, usa método socrático").
 - [ ] **2. Crear `MEMORY.md`**: Define el estado inicial de tu proyecto y las convenciones de tu cátedra.
 - [ ] **3. Crear `planificacion.md`**: Un archivo con el programa analítico o la planificación de tu materia.
