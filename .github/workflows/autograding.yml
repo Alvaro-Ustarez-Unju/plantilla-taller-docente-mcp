@@ -1,0 +1,22 @@
+name: Autoevaluación del Taller Docente
+
+on:
+  push:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  evaluar-progreso:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout del repositorio
+      uses: actions/checkout@v4
+      
+    - name: Configurar Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+        
+    - name: Ejecutar Autograder Docente
+      run: python autograder_taller.py
