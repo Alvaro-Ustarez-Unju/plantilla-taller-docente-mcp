@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        :root {
+            --sanguche-gold: #ffc107;
+            --sanguche-red: #d32f2f;
+            --success-green: #388e3c;
+            --dark-gray: #333;
+            --light-gray: #f4f4f4;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: transparent;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            padding: 15px;
+        }
+
+        .promo-card {
+            background: white;
+            width: 100%;
+            max-width: 400px;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            border: 2px solid var(--sanguche-gold);
+        }
+
+        .promo-header {
+            background-color: var(--sanguche-red);
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .promo-header h2 { margin: 0; font-size: 1.3rem; text-transform: uppercase; }
+        .promo-header p { margin: 5px 0 0; font-size: 0.85rem; font-style: italic; }
+
+        .content { padding: 20px; }
+
+        .input-group { margin-bottom: 15px; }
+
+        label {
+            display: block;
+            font-size: 0.9rem;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: var(--dark-gray);
+        }
+
+        input[type="number"], select {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            box-sizing: border-box;
+            outline: none;
+        }
+
+        input:focus, select:focus { border-color: var(--sanguche-gold); }
+
+        .logic-result {
+            margin-top: 20px;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            background-color: var(--light-gray);
+            transition: all 0.3s ease;
+        }
+
+        .boolean-text {
+            font-size: 1.8rem;
+            font-weight: 900;
+            margin: 5px 0;
+        }
+
+        .papas-icon {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            display: none;
+        }
+
+        .code-view {
+            background: #272822;
+            color: #f8f8f2;
+            padding: 10px;
+            border-radius: 6px;
+            font-family: monospace;
+            font-size: 0.8rem;
+            margin-top: 15px;
+            text-align: left;
+        }
+
+        /* Estados */
+        .ganaste { background-color: #e8f5e9; border: 2px solid var(--success-green); color: var(--success-green); }
+        .perdiste { background-color: #fafafa; border: 2px solid #ccc; color: #777; }
+    </style>
+</head>
+<body>
+
+<div class="promo-card">
+    <div class="promo-header">
+        <h2>🍟 ¡Papas Gratis!</h2>
+        <p>Promoción Especial Terminal</p>
+    </div>
+
+    <div class="content">
+        <div class="input-group">
+            <label>Monto de la compra ($):</label>
+            <input type="number" id="montoInput" placeholder="Ej: 16000" oninput="calcularPromo()">
+        </div>
+
+        <div class="input-group">
+            <label>¿Paga en efectivo?</label>
+            <select id="efectivoInput" onchange="calcularPromo()">
+                <option value="false">Falso (Tarjeta/Transferencia)</option>
+                <option value="true">Verdadero (Efectivo)</option>
+            </select>
+        </div>
+
+        <div id="resultadoPanel" class="logic-result perdiste">
+            <div id="papasIcon" class="papas-icon">🍟</div>
+            <div style="font-size: 0.8rem; text-transform: uppercase;">¿Recibe promoción?</div>
+            <div id="booleanVal" class="boolean-text">FALSO</div>
+            
+            <div class="code-view">
+                compra > 15000 <span style="color: #f92672;">||</span> efectivo == verdadero
+                <br>
+                <span style="color: #a6e22e;">// Resultado: </span><span id="rawVal">false</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function calcularPromo() {
+        const monto = parseFloat(document.getElementById('montoInput').value);
+        const esEfectivo = document.getElementById('efectivoInput').value === "true";
+        const panel = document.getElementById('resultadoPanel');
+        const boolText = document.getElementById('booleanVal');
+        const rawText = document.getElementById('rawVal');
+        const icon = document.getElementById('papasIcon');
+
+        if (isNaN(monto)) {
+            panel.className = "logic-result perdiste";
+            boolText.innerText = "FALSO";
+            rawText.innerText = "false";
+            icon.style.display = "none";
+            return;
+        }
+
+        // LÓGICA CON OPERADOR OR (||)
+        const tienePromo = (monto > 15000) || (esEfectivo === true);
+
+        if (tienePromo) {
+            panel.className = "logic-result ganaste";
+            boolText.innerText = "VERDADERO";
+            rawText.innerText = "true";
+            icon.style.display = "block";
+        } else {
+            panel.className = "logic-result perdiste";
+            boolText.innerText = "FALSO";
+            rawText.innerText = "false";
+            icon.style.display = "none";
+        }
+    }
+</script>
+
+</body>
+</html>

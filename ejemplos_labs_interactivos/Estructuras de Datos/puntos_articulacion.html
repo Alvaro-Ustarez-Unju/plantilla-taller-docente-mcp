@@ -1,0 +1,1847 @@
+<!DOCTYPE html>
+<html lang="es" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Puntos de Articulación y Biconexidad | Cátedra Estructura de Datos</title>
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#ecfeff',
+              100: '#cffafe',
+              500: '#06b6d4',
+              600: '#0891b2',
+              700: '#0e7490',
+            },
+            board: {
+              bg: '#0f172a',
+              card: '#1e293b',
+              border: '#334155',
+              chalk: '#f8fafc',
+              emerald: '#10b981',
+              amber: '#f59e0b',
+              indigo: '#6366f1',
+              rose: '#f43f5e'
+            }
+          },
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+            mono: ['JetBrains Mono', 'Fira Code', 'monospace'],
+            heading: ['Outfit', 'Inter', 'sans-serif']
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- KaTeX for math formulas and auto-render -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js" onload="if(window.renderMath) window.renderMath();"></script>
+
+  <!-- Tippy.js & Popper for rich popovers -->
+  <script src="https://unpkg.com/@popperjs/core@2"></script>
+  <script src="https://unpkg.com/tippy.js@6"></script>
+  <link rel="stylesheet" href="https://unpkg.com/tippy.js@6/animations/scale.css"/>
+  <link rel="stylesheet" href="https://unpkg.com/tippy.js@6/themes/light-border.css"/>
+
+  <style>
+    /* Popover themes */
+    .tippy-box[data-theme~='articulation'] {
+      background-color: #0f172a;
+      color: #f1f5f9;
+      border: 1px solid #38bdf8;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5), 0 0 15px rgba(56, 189, 248, 0.2);
+      border-radius: 0.75rem;
+      padding: 0.25rem;
+      font-size: 0.875rem;
+    }
+    .tippy-box[data-theme~='articulation'] .tippy-arrow {
+      color: #38bdf8;
+    }
+
+    /* Animaciones suaves */
+    @keyframes pulse-ring {
+      0% { transform: scale(0.95); opacity: 0.8; }
+      50% { transform: scale(1.25); opacity: 0.3; }
+      100% { transform: scale(0.95); opacity: 0.8; }
+    }
+    .animate-pulse-ring {
+      animation: pulse-ring 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    }
+
+    /* Scrollbar personalizada */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #0f172a;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #334155;
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #475569;
+    }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 font-sans min-h-screen flex flex-col antialiased selection:bg-rose-500/30 selection:text-rose-200">
+
+  <!-- ================= TOP NAVBAR ================= -->
+  <header class="sticky top-0 z-40 bg-slate-900/90 backdrop-blur-md border-b border-slate-800 shadow-lg">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
+
+      <!-- Brand & Title -->
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-rose-600 via-amber-500 to-indigo-600 flex items-center justify-center shadow-md shadow-rose-500/20 text-white font-black text-xl">
+          PA
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <h1 class="font-heading font-bold text-lg text-white leading-tight">Puntos de Articulación y Biconexidad</h1>
+            <span class="text-xs px-2 py-0.5 rounded-full bg-rose-500/20 border border-rose-500/30 text-rose-300 font-medium">Unidad 7 Cátedra UCSE</span>
+          </div>
+          <p class="text-xs text-slate-400">Algoritmo DFS de la Cátedra: $numero\_bp[v]$, $bajo[v]$ y detección de corte</p>
+        </div>
+      </div>
+
+      <!-- Presets & Controls Selector -->
+      <div class="flex items-center gap-3">
+        <div class="hidden lg:flex items-center bg-slate-800/80 p-1 rounded-xl border border-slate-700/60 text-xs gap-1">
+          <button id="btnPresetPage8" onclick="loadPreset('page8')" class="px-2.5 py-1.5 rounded-lg font-medium transition-all bg-rose-600 text-white shadow">
+            Ejemplo Pág. 8 (7 Nodos - Clase)
+          </button>
+          <button id="btnPresetPage3" onclick="loadPreset('page3')" class="px-2.5 py-1.5 rounded-lg font-medium text-slate-400 hover:text-slate-200 transition-all">
+            Ejemplo Pág. 3 (6 Nodos - Intro)
+          </button>
+          <button id="btnPresetExtended" onclick="loadPreset('extended')" class="px-2.5 py-1.5 rounded-lg font-medium text-slate-400 hover:text-slate-200 transition-all">
+            Red de Examen (8 Nodos)
+          </button>
+        </div>
+
+        <div class="flex lg:hidden items-center bg-slate-800/80 px-2 py-1 rounded-xl border border-slate-700/60 text-xs">
+          <select id="selectPresetMobile" onchange="loadPreset(this.value)" class="bg-slate-900 text-rose-300 font-bold px-2 py-0.5 rounded border border-slate-700 focus:outline-none">
+            <option value="page8">Ejemplo Pág. 8 (7 Nodos)</option>
+            <option value="page3">Ejemplo Pág. 3 (6 Nodos)</option>
+            <option value="extended">Red Examen (8 Nodos)</option>
+          </select>
+        </div>
+
+        <div class="flex items-center gap-2 bg-slate-800/80 px-3 py-1.5 rounded-xl border border-slate-700/60 text-xs">
+          <span class="text-slate-400 font-medium">Raíz DFS:</span>
+          <select id="selectRoot" onchange="changeRoot(this.value)" class="bg-slate-900 text-amber-400 font-bold px-2 py-0.5 rounded border border-slate-700 focus:outline-none focus:border-amber-500">
+            <!-- Se llena dinámicamente -->
+          </select>
+        </div>
+
+        <!-- Help Modal Button -->
+        <button onclick="toggleHelpModal(true)" class="p-2 rounded-xl bg-slate-800 border border-slate-700 text-slate-300 hover:text-white hover:bg-slate-700 transition" title="¿Cómo funciona el algoritmo de P.A.?">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+          </svg>
+        </button>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- ================= TOOLBAR CONTROLS ================= -->
+  <div class="bg-slate-900/60 border-b border-slate-800/80 px-4 py-3">
+    <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-3">
+
+      <!-- Stepper Controls -->
+      <div class="flex items-center gap-2">
+        <button id="btnReset" onclick="resetAlgorithm()" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 font-medium text-xs flex items-center gap-1.5 transition">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+          Reiniciar
+        </button>
+
+        <button id="btnPrev" onclick="stepBackward()" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 font-medium text-xs flex items-center gap-1.5 transition">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+          Anterior
+        </button>
+
+        <button id="btnPlay" onclick="togglePlay()" class="px-4 py-1.5 rounded-lg bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs flex items-center gap-1.5 shadow-md shadow-rose-600/30 transition">
+          <span id="playIcon">
+            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd"/></svg>
+          </span>
+          <span id="playText">Reproducir</span>
+        </button>
+
+        <button id="btnNext" onclick="stepForward()" class="px-4 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs flex items-center gap-1.5 shadow-md shadow-emerald-600/30 transition">
+          Siguiente
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+        </button>
+      </div>
+
+      <!-- Step Counter & Rules Callout -->
+      <div class="flex items-center gap-4 text-xs">
+        <div class="flex items-center gap-2">
+          <span class="text-slate-400">Progreso:</span>
+          <span id="badgeStepCount" class="px-2.5 py-0.5 rounded-full bg-slate-800 text-rose-400 font-mono font-bold border border-slate-700">
+            Paso 0 / 0
+          </span>
+        </div>
+
+        <div class="flex items-center gap-1.5">
+          <span class="text-slate-400">Velocidad:</span>
+          <select id="speedSelect" onchange="setPlaySpeed(Number(this.value))" class="bg-slate-800 text-slate-200 rounded px-2 py-0.5 border border-slate-700 focus:outline-none">
+            <option value="1800">0.5x (Lento)</option>
+            <option value="1000" selected>1.0x (Normal)</option>
+            <option value="500">2.0x (Rápido)</option>
+          </select>
+        </div>
+
+        <!-- Formula Callout -->
+        <div class="hidden xl:flex items-center gap-2 bg-slate-800/60 px-3 py-1 rounded-lg border border-slate-700/50">
+          <span class="text-xs text-amber-400 font-semibold">Criterio Cátedra:</span>
+          <div id="headerFormula" class="font-mono text-cyan-300 text-xs">
+            $bajo[w] \ge numero\_bp[v]$
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ================= MAIN WORKSPACE ================= -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex-1 w-full space-y-6">
+
+    <!-- Pedagogical Status / Context Alert -->
+    <div id="statusBar" class="p-4 rounded-2xl bg-gradient-to-r from-slate-900 via-slate-850 to-slate-900 border border-slate-700/80 shadow-lg flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div class="flex items-start sm:items-center gap-3">
+        <div id="statusIconBox" class="w-9 h-9 rounded-xl bg-rose-500/20 text-rose-400 flex items-center justify-center flex-shrink-0 border border-rose-500/30">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <span id="statusBadge" class="text-xs font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-rose-500/20 text-rose-300 border border-rose-500/30">Fase DFS</span>
+            <span id="statusSubhead" class="text-xs text-slate-400">Recorrido en Profundidad y Árbol Abarcador</span>
+          </div>
+          <p id="statusDescription" class="text-sm text-slate-200 mt-0.5">
+            Cargando estado inicial...
+          </p>
+        </div>
+      </div>
+
+      <!-- Quick Summary Badges -->
+      <div class="flex items-center gap-2 self-end md:self-center">
+        <div class="px-3 py-1.5 rounded-xl bg-slate-800/80 border border-slate-700/60 text-xs flex items-center gap-2">
+          <span class="w-2.5 h-2.5 rounded-full bg-rose-500 inline-block"></span>
+          <span class="text-slate-400">Puntos de Articulación:</span>
+          <span id="paSummaryList" class="font-mono font-bold text-rose-400">Calculando...</span>
+        </div>
+        <div class="px-3 py-1.5 rounded-xl bg-slate-800/80 border border-slate-700/60 text-xs flex items-center gap-2">
+          <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 inline-block"></span>
+          <span class="text-slate-400">¿Es Biconexo?:</span>
+          <span id="biconnectedBadge" class="font-mono font-bold text-slate-300">-</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Dual Graph Visualization & Interactive Cut Simulator -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+
+      <!-- LEFT: Grafo Original G = (V, A) + Simulador de Corte (6 cols) -->
+      <div class="lg:col-span-6 space-y-6">
+
+        <div class="bg-slate-900 rounded-2xl border border-slate-800 p-4 shadow-xl flex flex-col relative overflow-hidden">
+          <div class="flex items-center justify-between pb-3 border-b border-slate-800">
+            <div class="flex items-center gap-2">
+              <span class="w-2.5 h-2.5 rounded-full bg-cyan-400 shadow shadow-cyan-400/50"></span>
+              <h2 class="font-heading font-semibold text-white text-sm">Grafo Original $G = (V, A)$</h2>
+            </div>
+            <div class="flex items-center gap-3 text-xs text-slate-400">
+              <span class="inline-flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-rose-500 border border-rose-300"></span> Punto Articulación</span>
+              <span class="inline-flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-amber-400"></span> Raíz</span>
+              <span class="inline-flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span> Vértice Biconexo</span>
+            </div>
+          </div>
+
+          <!-- SVG Graph Original Container -->
+          <div class="relative w-full aspect-[4/3] max-h-[360px] my-2 flex items-center justify-center bg-slate-950/60 rounded-xl border border-slate-800/80 overflow-hidden">
+            <svg id="originalGraphSvg" class="w-full h-full select-none" viewBox="0 0 500 360">
+              <g id="origEdgesLayer"></g>
+              <g id="origNodesLayer"></g>
+            </svg>
+
+            <!-- Hint overlay -->
+            <div class="absolute bottom-2 left-2 text-[10px] text-slate-500 bg-slate-900/80 px-2 py-0.5 rounded border border-slate-800 pointer-events-none">
+              💡 Arrastra los nodos o usa el simulador inferior para comprobar la desconexión
+            </div>
+          </div>
+
+          <!-- Interactive Cut Simulator Widget -->
+          <div class="mt-2 pt-3 border-t border-slate-800/80 space-y-2">
+            <div class="flex items-center justify-between text-xs">
+              <span class="font-semibold text-slate-300 flex items-center gap-1.5">
+                ✂️ Simulador de Desconexión (Eliminar Vértice):
+              </span>
+              <button onclick="restoreCut()" id="btnRestoreCut" class="text-[11px] text-cyan-400 hover:underline hidden">
+                Restaurar Grafo Completo
+              </button>
+            </div>
+            <div class="flex flex-wrap items-center gap-1.5" id="cutButtonsContainer">
+              <!-- Botones dinámicos para cortar cada nodo -->
+            </div>
+            <div id="cutResultBanner" class="p-2.5 rounded-xl bg-slate-950/80 border border-slate-800 text-xs text-slate-300">
+              Selecciona un vértice para simular qué ocurre si falla o se elimina de la red.
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- RIGHT: Árbol Abarcador en Profundidad (DFS Spanning Tree) (6 cols) -->
+      <div class="lg:col-span-6 space-y-6">
+
+        <div class="bg-slate-900 rounded-2xl border border-slate-800 p-4 shadow-xl flex flex-col relative overflow-hidden">
+          <div class="flex items-center justify-between pb-3 border-b border-slate-800">
+            <div class="flex items-center gap-2">
+              <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 shadow shadow-emerald-400/50"></span>
+              <h2 class="font-heading font-semibold text-white text-sm">Árbol Abarcador DFS (Tree & Back Edges)</h2>
+            </div>
+            <div class="flex items-center gap-3 text-xs text-slate-400">
+              <span class="inline-flex items-center gap-1">
+                <span class="w-4 h-0.5 bg-emerald-400 inline-block"></span> Arista de Árbol
+              </span>
+              <span class="inline-flex items-center gap-1">
+                <span class="w-4 h-0.5 border-t border-dashed border-amber-400 inline-block"></span> Arista Retroceso
+              </span>
+            </div>
+          </div>
+
+          <!-- SVG DFS Tree Container -->
+          <div class="relative w-full aspect-[4/3] max-h-[360px] my-2 flex items-center justify-center bg-slate-950/60 rounded-xl border border-slate-800/80 overflow-hidden">
+            <svg id="dfsTreeSvg" class="w-full h-full select-none" viewBox="0 0 500 360">
+              <defs>
+                <marker id="treeArrow" markerWidth="8" markerHeight="6" refX="24" refY="3" orient="auto">
+                  <polygon points="0 0, 8 3, 0 6" fill="#10b981" />
+                </marker>
+                <marker id="backArrow" markerWidth="8" markerHeight="6" refX="24" refY="3" orient="auto">
+                  <polygon points="0 0, 8 3, 0 6" fill="#f59e0b" />
+                </marker>
+              </defs>
+              <g id="treeEdgesLayer"></g>
+              <g id="treeNodesLayer"></g>
+            </svg>
+            <div class="absolute bottom-2 right-2 text-[10px] text-slate-500 bg-slate-900/80 px-2 py-0.5 rounded border border-slate-800 pointer-events-none">
+              Jerarquía en orden previo de descubrimiento
+            </div>
+          </div>
+
+          <!-- Mini Legend / Rule Check -->
+          <div class="mt-2 pt-3 border-t border-slate-800/80 flex items-center justify-between text-xs text-slate-400">
+            <span>Raíz con $\ge 2$ hijos en árbol = <strong>P.A.</strong></span>
+            <span>Hijo con $bajo[w] \ge numero\_bp[v]$ = <strong>P.A.</strong></span>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- ================= TABLA DE CÁLCULO DE LA CÁTEDRA ================= -->
+    <div class="bg-slate-900 rounded-2xl border border-slate-800 p-4 shadow-xl">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b border-slate-800">
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="w-2.5 h-2.5 rounded-full bg-rose-500"></span>
+            <h2 class="font-heading font-semibold text-white text-sm">Cuadro de Evaluación de la Cátedra (Diapositiva 8)</h2>
+          </div>
+          <p class="text-xs text-slate-400">Pasa el cursor sobre los encabezados para ver el popover explicativo</p>
+        </div>
+        <div class="flex items-center gap-2 font-mono text-xs">
+          <span class="px-2.5 py-1 rounded-lg bg-slate-800 text-cyan-300 border border-slate-700">
+            $numero\_bp[v]$: Orden Previo
+          </span>
+          <span class="px-2.5 py-1 rounded-lg bg-slate-800 text-amber-300 border border-slate-700">
+            $bajo[v]$: Post-Orden
+          </span>
+        </div>
+      </div>
+
+      <!-- Table Container -->
+      <div class="mt-4 overflow-x-auto">
+        <table id="calcTable" class="w-full text-left font-mono text-xs border-collapse">
+          <thead>
+            <tr class="border-b-2 border-slate-700 text-slate-300">
+              
+              <!-- Column 1: Vértice v -->
+              <th class="py-2.5 px-3 bg-slate-800/60 rounded-tl-lg cursor-help transition hover:bg-slate-800" data-tippy-header="colV">
+                <div class="flex items-center gap-1.5 text-slate-200">
+                  <span>Vértice ($v$)</span>
+                  <svg class="w-3.5 h-3.5 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                </div>
+              </th>
+
+              <!-- Column 2: numero_bp[v] -->
+              <th class="py-2.5 px-3 bg-slate-800/60 cursor-help transition hover:bg-slate-800" data-tippy-header="colNumeroBp">
+                <div class="flex items-center gap-1.5 text-cyan-300">
+                  <span>$numero\_bp[v]$</span>
+                  <svg class="w-3.5 h-3.5 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                </div>
+              </th>
+
+              <!-- Column 3: Aristas de Retroceso -->
+              <th class="py-2.5 px-3 bg-slate-800/60 cursor-help transition hover:bg-slate-800" data-tippy-header="colBackEdges">
+                <div class="flex items-center gap-1.5 text-amber-300">
+                  <span>Retroceso $(v, z)$</span>
+                  <svg class="w-3.5 h-3.5 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                </div>
+              </th>
+
+              <!-- Column 4: Hijos en Árbol -->
+              <th class="py-2.5 px-3 bg-slate-800/60 cursor-help transition hover:bg-slate-800" data-tippy-header="colTreeChildren">
+                <div class="flex items-center gap-1.5 text-emerald-300">
+                  <span>Hijos en Árbol ($w$)</span>
+                  <svg class="w-3.5 h-3.5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                </div>
+              </th>
+
+              <!-- Column 5: bajo[v] -->
+              <th class="py-2.5 px-3 bg-slate-800/60 cursor-help transition hover:bg-slate-800 min-w-[200px]" data-tippy-header="colBajo">
+                <div class="flex items-center gap-1.5 text-pink-300">
+                  <span>$bajo[v] = \\min(\\dots)$</span>
+                  <svg class="w-3.5 h-3.5 text-pink-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                </div>
+              </th>
+
+              <!-- Column 6: Condición Evaluación -->
+              <th class="py-2.5 px-3 bg-slate-800/60 cursor-help transition hover:bg-slate-800" data-tippy-header="colCondition">
+                <div class="flex items-center gap-1.5 text-indigo-300">
+                  <span>Condición de Corte</span>
+                  <svg class="w-3.5 h-3.5 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                </div>
+              </th>
+
+              <!-- Column 7: ¿Es Punto de Articulación? -->
+              <th class="py-2.5 px-3 bg-slate-800/60 rounded-tr-lg cursor-help transition hover:bg-slate-800 text-center" data-tippy-header="colResult">
+                <div class="flex items-center justify-center gap-1.5 text-rose-300">
+                  <span>¿Es P.A.?</span>
+                  <svg class="w-3.5 h-3.5 text-rose-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                </div>
+              </th>
+
+            </tr>
+          </thead>
+          <tbody id="calcTableBody" class="divide-y divide-slate-800 text-slate-300">
+            <!-- Se llena dinámicamente con los pasos ejecutados -->
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Active Micro-step Callout inside Table -->
+      <div id="microStepCallout" class="mt-4 p-3 rounded-xl bg-slate-950 border border-rose-500/30 text-xs text-slate-300 flex items-start gap-2">
+        <span class="text-rose-400 font-bold flex-shrink-0">📌 Análisis del paso:</span>
+        <span id="microStepText">Presiona "Siguiente" o "Reproducir" para iniciar la búsqueda en profundidad.</span>
+      </div>
+    </div>
+
+    <!-- ================= BOTTOM PEDAGOGICAL TABS ================= -->
+    <div class="bg-slate-900 rounded-2xl border border-slate-800 overflow-hidden shadow-xl mt-8">
+      <div class="flex border-b border-slate-800 bg-slate-950/50">
+        <button onclick="switchTab('tabGuide')" id="btnTabGuide" class="px-5 py-3 text-xs font-semibold text-rose-400 border-b-2 border-rose-400 flex items-center gap-2">
+          📖 Metodología de Examen (Cómo hacer el cálculo a mano)
+        </button>
+        <button onclick="switchTab('tabCode')" id="btnTabCode" class="px-5 py-3 text-xs font-semibold text-slate-400 hover:text-slate-200 border-b-2 border-transparent flex items-center gap-2">
+          💻 Código C++ Cátedra (Sin STL / Sin Classes)
+        </button>
+        <button onclick="switchTab('tabTheory')" id="btnTabTheory" class="px-5 py-3 text-xs font-semibold text-slate-400 hover:text-slate-200 border-b-2 border-transparent flex items-center gap-2">
+          ❓ Preguntas Frecuentes & Teórico Oral
+        </button>
+      </div>
+
+      <div class="p-6">
+        
+        <!-- TAB 1: Guía para resolver a mano -->
+        <div id="tabGuide" class="space-y-4 text-sm text-slate-300">
+          <h3 class="font-heading font-bold text-white text-base text-rose-300">Algoritmo de la Cátedra (Búsqueda en Profundidad y Bajo):</h3>
+          <ol class="list-decimal list-inside space-y-2.5 leading-relaxed text-slate-300">
+            <li>
+              <strong class="text-white">Paso 1 - Recorrido DFS y $numero\_bp$:</strong> Elegir un nodo raíz (por ejemplo, $a$). Realizar la búsqueda en profundidad asignando $numero\_bp[v] = 1, 2, 3 \dots$ conforme se descubren los nodos. Dibujar las aristas del árbol en trazo continuo y las aristas hacia ancestros ya visitados como <em>aristas de retroceso</em> punteadas.
+            </li>
+            <li>
+              <strong class="text-white">Paso 2 - Cálculo de $bajo[v]$ (en recorrido posterior / post-orden):</strong> Empezar desde las hojas y subir hacia la raíz. Para cada vértice $v$, $bajo[v]$ es el valor más chico entre:
+              <ul class="list-disc list-inside ml-6 my-1.5 space-y-1 text-slate-400 text-xs">
+                <li>Su propio $numero\_bp[v]$.</li>
+                <li>El $numero\_bp[z]$ de cualquier arista de retroceso $(v, z)$ que salga de $v$.</li>
+                <li>El $bajo[y]$ de cualquier hijo $y$ de $v$ en el árbol DFS.</li>
+              </ul>
+            </li>
+            <li>
+              <strong class="text-white">Paso 3 - Evaluación de Puntos de Articulación:</strong>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 my-2">
+                <div class="p-3 rounded-lg bg-slate-950 border border-slate-800">
+                  <span class="font-bold text-amber-400 text-xs block mb-1">a) Para la Raíz del Árbol:</span>
+                  <p class="text-xs text-slate-300">Es punto de articulación <strong>si y sólo si</strong> tiene <strong>dos o más hijos</strong> directos en el árbol abarcador DFS.</p>
+                </div>
+                <div class="p-3 rounded-lg bg-slate-950 border border-slate-800">
+                  <span class="font-bold text-rose-400 text-xs block mb-1">b) Para cualquier vértice $v$ no raíz:</span>
+                  <p class="text-xs text-slate-300">Es punto de articulación <strong>si y sólo si</strong> existe al menos un hijo $w$ de $v$ tal que: $\mathbf{bajo[w] \ge numero\_bp[v]}$.</p>
+                </div>
+              </div>
+            </li>
+            <li>
+              <strong class="text-white">Paso 4 - Biconexidad y Componentes:</strong> Si el grafo no posee ningún punto de articulación, se concluye que el grafo es <strong>biconexo</strong>. Si tiene puntos de articulación, eliminarlos descompone al grafo en sus componentes biconexas (bloques).
+            </li>
+          </ol>
+        </div>
+
+        <!-- TAB 2: C++ Code according to rules.md -->
+        <div id="tabCode" class="hidden space-y-4">
+          <div class="flex items-center justify-between">
+            <span class="text-xs text-amber-400 font-mono">Respetando directivas de cátedra: struct, arreglos estáticos, sin &lt;vector&gt;, sin &lt;stack&gt;, sin class.</span>
+            <span class="text-xs text-slate-400">Lenguaje C++</span>
+          </div>
+          <pre class="p-4 rounded-xl bg-slate-950 border border-slate-850 font-mono text-xs text-emerald-400 overflow-x-auto leading-relaxed">
+#define MAX_VERTICES 20
+
+struct Grafo {
+    int n; // Cantidad de vertices (1..n)
+    bool adj[MAX_VERTICES][MAX_VERTICES]; // Matriz de Adyacencia no dirigida
+};
+
+int numero_bp[MAX_VERTICES];
+int bajo[MAX_VERTICES];
+bool es_articulacion[MAX_VERTICES];
+int tiempo_visita;
+int hijos_raiz;
+int raiz_dfs;
+
+int minInt(int a, int b) {
+    return (a &lt; b) ? a : b;
+}
+
+// Búsqueda en Profundidad para calcular numero_bp y bajo
+void DFS_Articulacion(const Grafo&amp; g, int u, int padre) {
+    tiempo_visita++;
+    numero_bp[u] = tiempo_visita;
+    bajo[u] = tiempo_visita;
+
+    int v;
+    for (v = 1; v &lt;= g.n; v++) {
+        if (!g.adj[u][v] || v == padre) continue;
+
+        if (numero_bp[v] != 0) {
+            // Arista de retroceso (u, v) hacia un ancestro
+            bajo[u] = minInt(bajo[u], numero_bp[v]);
+        } else {
+            // Arista de arbol (u, v) hacia un nuevo descendiente
+            if (u == raiz_dfs) {
+                hijos_raiz++;
+            }
+
+            DFS_Articulacion(g, v, u);
+
+            // Al retornar en post-orden
+            bajo[u] = minInt(bajo[u], bajo[v]);
+
+            // Condición para vértice no raíz
+            if (u != raiz_dfs &amp;&amp; bajo[v] &gt;= numero_bp[u]) {
+                es_articulacion[u] = true;
+            }
+        }
+    }
+}
+
+void ObtenerPuntosArticulacion(const Grafo&amp; g, int inicio) {
+    int i;
+    for (i = 1; i &lt;= g.n; i++) {
+        numero_bp[i] = 0;
+        bajo[i] = 0;
+        es_articulacion[i] = false;
+    }
+
+    tiempo_visita = 0;
+    hijos_raiz = 0;
+    raiz_dfs = inicio;
+
+    DFS_Articulacion(g, inicio, -1);
+
+    // Condición especial para la raíz
+    if (hijos_raiz &gt;= 2) {
+        es_articulacion[raiz_dfs] = true;
+    }
+}
+          </pre>
+        </div>
+
+        <!-- TAB 3: Preguntas teóricas de examen -->
+        <div id="tabTheory" class="hidden space-y-4 text-sm text-slate-300">
+          <div class="space-y-3">
+            <div class="p-3.5 rounded-xl bg-slate-950/70 border border-slate-800">
+              <h4 class="font-bold text-white text-rose-300">¿Qué significa conceptualmente que $bajo[w] \ge numero\_bp[v]$?</h4>
+              <p class="mt-1 text-slate-300 text-xs leading-relaxed">
+                Significa que ni el hijo $w$ ni ninguno de sus descendientes en el árbol DFS poseen una arista de retroceso que logre "saltar" por encima de $v$ hacia un ancestro más antiguo. Por ende, la única vía de comunicación que tiene el subárbol de $w$ con el resto del grafo es pasando obligatoriamente a través de $v$. Si $v$ es eliminado, dicho subárbol queda completamente aislado.
+              </p>
+            </div>
+
+            <div class="p-3.5 rounded-xl bg-slate-950/70 border border-slate-800">
+              <h4 class="font-bold text-white text-rose-300">¿Por qué una hoja del árbol abarcador nunca puede ser punto de articulación?</h4>
+              <p class="mt-1 text-slate-300 text-xs leading-relaxed">
+                Una hoja no tiene hijos en el árbol DFS. Al no existir ningún descendiente subordinado que dependa de ella para comunicarse con los ancestros, eliminarla no puede desconectar a otros vértices del grafo.
+              </p>
+            </div>
+
+            <div class="p-3.5 rounded-xl bg-slate-950/70 border border-slate-800">
+              <h4 class="font-bold text-white text-rose-300">¿Qué es un Grafo Biconexo y qué relación tiene con la tolerancia a fallos?</h4>
+              <p class="mt-1 text-slate-300 text-xs leading-relaxed">
+                Un grafo es biconexo si es conexo y no posee ningún punto de articulación. En redes de telecomunicaciones o computadoras, la biconexidad garantiza que ante la falla o desconexión de cualquier nodo o enlace, los demás nodos siempre conservan al menos una ruta alternativa disponible para seguir comunicados.
+              </p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </main>
+
+  <!-- ================= HELP MODAL ================= -->
+  <div id="helpModal" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 hidden">
+    <div class="bg-slate-900 border border-slate-700 max-w-2xl w-full rounded-2xl p-6 shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <h3 class="font-heading font-bold text-lg text-white flex items-center gap-2">
+          💡 Guía del Algoritmo de Puntos de Articulación
+        </h3>
+        <button onclick="toggleHelpModal(false)" class="text-slate-400 hover:text-white text-xl p-1 font-mono">✕</button>
+      </div>
+
+      <div class="space-y-3 text-xs text-slate-300 leading-relaxed">
+        <div class="p-3 rounded-lg bg-slate-950 border border-slate-800">
+          <strong class="text-cyan-400">1. numero_bp[v] (Orden de descubrimiento):</strong>
+          <p>Indica el orden en el que se visitó por primera vez el vértice durante la búsqueda en profundidad (1, 2, 3...).</p>
+        </div>
+        <div class="p-3 rounded-lg bg-slate-950 border border-slate-800">
+          <strong class="text-amber-400">2. Aristas de Árbol vs Retroceso:</strong>
+          <p>Las <em>aristas de árbol</em> descubren nodos nuevos. Las <em>aristas de retroceso</em> van desde un nodo hacia un ancestro en el árbol, formando caminos alternativos (ciclos).</p>
+        </div>
+        <div class="p-3 rounded-lg bg-slate-950 border border-slate-800">
+          <strong class="text-pink-400">3. bajo[v] (Mínimo alcanzable):</strong>
+          <p>Representa el menor $numero\_bp$ al que se puede llegar desde $v$ bajando por el árbol y usando a lo sumo una arista de retroceso. Se calcula de abajo hacia arriba (post-orden).</p>
+        </div>
+        <div class="p-3 rounded-lg bg-slate-950 border border-slate-800">
+          <strong class="text-rose-400">4. Reglas de P.A.:</strong>
+          <p>• Raíz: es P.A. $\iff$ tiene $\ge 2$ hijos en el árbol.<br>
+             • No raíz $v$: es P.A. $\iff$ algún hijo $w$ tiene $bajo[w] \ge numero\_bp[v]$.</p>
+        </div>
+      </div>
+
+      <div class="pt-3 border-t border-slate-800 flex justify-end">
+        <button onclick="toggleHelpModal(false)" class="px-4 py-1.5 bg-rose-600 hover:bg-rose-500 text-white rounded-lg font-semibold text-xs">
+          Entendido
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= JAVASCRIPT LOGIC ================= -->
+  <script>
+    // --- RENDERIZADO GLOBAL DE MATEMÁTICAS (KATEX) ---
+    function renderMath(target) {
+      const el = target || document.body;
+      if (typeof renderMathInElement === 'function' && el) {
+        try {
+          renderMathInElement(el, {
+            delimiters: [
+              { left: '$$', right: '$$', display: true },
+              { left: '$', right: '$', display: false },
+              { left: '\\(', right: '\\)', display: false },
+              { left: '\\[', right: '\\]', display: true }
+            ],
+            ignoredTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            throwOnError: false
+          });
+        } catch (err) {
+          console.warn('KaTeX render error:', err);
+        }
+      }
+    }
+    window.renderMath = renderMath;
+
+    // --- PRESETS DE LA CÁTEDRA ---
+    const PRESETS = {
+      // 1. Diapositiva 8: Ejemplo Canónico de la Cátedra (7 Vértices)
+      page8: {
+        id: 'page8',
+        name: 'Ejemplo Pág. 8 (7 Vértices - Clase Cátedra)',
+        defaultRoot: 'a',
+        nodes: [
+          { id: 'a', label: 'a', x: 250, y: 50,  treeX: 250, treeY: 50  },
+          { id: 'b', label: 'b', x: 120, y: 150, treeX: 140, treeY: 140 },
+          { id: 'c', label: 'c', x: 380, y: 150, treeX: 360, treeY: 140 },
+          { id: 'd', label: 'd', x: 90,  y: 260, treeX: 140, treeY: 230 },
+          { id: 'e', label: 'e', x: 190, y: 280, treeX: 140, treeY: 310 },
+          { id: 'f', label: 'f', x: 350, y: 260, treeX: 360, treeY: 230 },
+          { id: 'g', label: 'g', x: 440, y: 280, treeX: 360, treeY: 310 }
+        ],
+        // Aristas no dirigidas de la diapositiva 8
+        edges: [
+          { u: 'a', v: 'b' },
+          { u: 'a', v: 'c' },
+          { u: 'a', v: 'd' },
+          { u: 'a', v: 'e' },
+          { u: 'b', v: 'd' },
+          { u: 'b', v: 'e' },
+          { u: 'd', v: 'e' },
+          { u: 'c', v: 'f' },
+          { u: 'c', v: 'g' },
+          { u: 'f', v: 'g' }
+        ]
+      },
+
+      // 2. Diapositiva 3: Ejemplo Introductorio de Componentes Conexas (6 Vértices)
+      page3: {
+        id: 'page3',
+        name: 'Ejemplo Pág. 3 (6 Vértices - Introductorio)',
+        defaultRoot: 'A',
+        nodes: [
+          { id: 'A', label: 'A', x: 120, y: 120, treeX: 250, treeY: 50  },
+          { id: 'D', label: 'D', x: 80,  y: 260, treeX: 150, treeY: 140 },
+          { id: 'C', label: 'C', x: 230, y: 180, treeX: 340, treeY: 140 },
+          { id: 'B', label: 'B', x: 350, y: 100, treeX: 340, treeY: 220 },
+          { id: 'F', label: 'F', x: 350, y: 260, treeX: 340, treeY: 300 },
+          { id: 'E', label: 'E', x: 440, y: 180, treeX: 430, treeY: 260 }
+        ],
+        edges: [
+          { u: 'A', v: 'D' },
+          { u: 'A', v: 'C' },
+          { u: 'C', v: 'B' },
+          { u: 'C', v: 'F' },
+          { u: 'B', v: 'E' },
+          { u: 'F', v: 'E' }
+        ]
+      },
+
+      // 3. Grafo Extendido de Examen (8 Vértices con Puente y Múltiples Bloques)
+      extended: {
+        id: 'extended',
+        name: 'Red de Examen (8 Vértices - Ciclos y Puentes)',
+        defaultRoot: '1',
+        nodes: [
+          { id: '1', label: '1', x: 70,  y: 120, treeX: 250, treeY: 40  },
+          { id: '2', label: '2', x: 170, y: 70,  treeX: 150, treeY: 110 },
+          { id: '3', label: '3', x: 170, y: 190, treeX: 150, treeY: 180 },
+          { id: '4', label: '4', x: 270, y: 130, treeX: 250, treeY: 150 },
+          { id: '5', label: '5', x: 370, y: 130, treeX: 250, treeY: 230 },
+          { id: '6', label: '6', x: 450, y: 70,  treeX: 360, treeY: 170 },
+          { id: '7', label: '7', x: 450, y: 210, treeX: 360, treeY: 250 },
+          { id: '8', label: '8', x: 370, y: 290, treeX: 250, treeY: 310 }
+        ],
+        edges: [
+          { u: '1', v: '2' },
+          { u: '2', v: '3' },
+          { u: '3', v: '1' },
+          { u: '2', v: '4' },
+          { u: '3', v: '4' },
+          { u: '4', v: '5' }, // Puente clave entre bloque izquierdo y derecho
+          { u: '5', v: '6' },
+          { u: '6', v: '7' },
+          { u: '7', v: '5' },
+          { u: '5', v: '8' }
+        ]
+      }
+    };
+
+    // --- ESTADO GLOBAL ---
+    let currentPreset = PRESETS.page8;
+    let rootNodeId = 'a';
+    let steps = [];
+    let currentStepIndex = 0;
+    let isPlaying = false;
+    let playTimer = null;
+    let playSpeed = 1000;
+    let cutNodeId = null;
+
+    // --- POPOVERS DE ENCABEZADOS DE TABLA ---
+    const HEADER_POPOVERS = {
+      colV: `
+        <div class="space-y-1.5 p-1">
+          <div class="font-bold text-slate-200 text-xs">Vértice Evaluado ($v$)</div>
+          <p class="text-[11px] text-slate-300">
+            Nodo del grafo analizado para determinar si su eliminación provoca la partición del grafo en componentes disjuntas.
+          </p>
+        </div>
+      `,
+      colNumeroBp: `
+        <div class="space-y-1.5 p-1">
+          <div class="font-bold text-cyan-300 text-xs">Número de Búsqueda en Profundidad ($numero\\_bp[v]$)</div>
+          <p class="text-[11px] text-slate-300 leading-relaxed">
+            Orden correlativo de visita asignado al descubrir por primera vez el vértice durante el recorrido DFS (pre-orden del árbol abarcador).
+          </p>
+          <div class="text-[10px] text-slate-400 italic">Diapositiva 5: Ordena los vértices en orden previo.</div>
+        </div>
+      `,
+      colBackEdges: `
+        <div class="space-y-1.5 p-1">
+          <div class="font-bold text-amber-300 text-xs">Aristas de Retroceso ($(v, z)$)</div>
+          <p class="text-[11px] text-slate-300 leading-relaxed">
+            Aristas que conectan a $v$ con un <strong>ancestro $z$</strong> ya visitado en el árbol DFS. Crean rutas alternativas de escape hacia niveles superiores.
+          </p>
+        </div>
+      `,
+      colTreeChildren: `
+        <div class="space-y-1.5 p-1">
+          <div class="font-bold text-emerald-300 text-xs">Hijos en el Árbol DFS ($w$)</div>
+          <p class="text-[11px] text-slate-300 leading-relaxed">
+            Vértices descubiertos inmediatamente desde $v$ a través de <em>aristas de árbol</em> continuas.
+          </p>
+        </div>
+      `,
+      colBajo: `
+        <div class="space-y-1.5 p-1">
+          <div class="font-bold text-pink-300 text-xs">Función $bajo[v]$ (Lowlink)</div>
+          <p class="text-[11px] text-slate-300 leading-relaxed">
+            Menor $numero\\_bp$ accesible desde $v$ bajando por cero o más aristas de árbol y a lo sumo una arista de retroceso:
+          </p>
+          <div class="text-[10px] text-pink-300 font-mono bg-slate-950 p-1 rounded">
+            $bajo[v] = \\min( numero\\_bp[v], numero\\_bp[z], bajo[w] )$
+          </div>
+          <p class="text-[10px] text-slate-400">Se calcula en recorrido posterior (post-orden).</p>
+        </div>
+      `,
+      colCondition: `
+        <div class="space-y-1.5 p-1">
+          <div class="font-bold text-indigo-300 text-xs">Regla de Detección de Punto de Articulación</div>
+          <p class="text-[11px] text-slate-300 leading-relaxed">
+            • <strong>Si $v$ es la raíz:</strong> Es P.A. $\\iff$ tiene $\\ge 2$ hijos en el árbol.<br>
+            • <strong>Si $v$ no es raíz:</strong> Es P.A. $\\iff \\exists$ hijo $w$ con $bajo[w] \\ge numero\\_bp[v]$.
+          </p>
+        </div>
+      `,
+      colResult: `
+        <div class="space-y-1.5 p-1">
+          <div class="font-bold text-rose-300 text-xs">Veredicto Final: ¿Punto de Articulación?</div>
+          <p class="text-[11px] text-slate-300">
+            Indica si el nodo es crítico para mantener la conexidad global del grafo.
+          </p>
+        </div>
+      `
+    };
+
+    // --- INICIALIZACIÓN ---
+    window.addEventListener('DOMContentLoaded', () => {
+      initHeaderPopovers();
+      loadPreset('page8');
+      renderMath(document.body);
+    });
+
+    function initHeaderPopovers() {
+      document.querySelectorAll('[data-tippy-header]').forEach(el => {
+        const key = el.getAttribute('data-tippy-header');
+        if (HEADER_POPOVERS[key]) {
+          tippy(el, {
+            content: HEADER_POPOVERS[key],
+            allowHTML: true,
+            theme: 'articulation',
+            placement: 'bottom',
+            animation: 'scale',
+            interactive: true,
+            onShow(instance) {
+              setTimeout(() => renderMath(instance.popper), 0);
+            }
+          });
+        }
+      });
+    }
+
+    // --- CARGA DE PRESETS ---
+    function loadPreset(presetKey) {
+      if (isPlaying) togglePlay();
+      currentPreset = PRESETS[presetKey] || PRESETS.page8;
+      rootNodeId = currentPreset.defaultRoot;
+      cutNodeId = null;
+
+      // Actualizar botones de preset
+      const presetKeys = ['page8', 'page3', 'extended'];
+      presetKeys.forEach(k => {
+        const btn = document.getElementById('btnPreset' + k.charAt(0).toUpperCase() + k.slice(1));
+        if (btn) {
+          if (k === presetKey) {
+            btn.className = "px-2.5 py-1.5 rounded-lg font-medium transition-all bg-rose-600 text-white shadow";
+          } else {
+            btn.className = "px-2.5 py-1.5 rounded-lg font-medium text-slate-400 hover:text-slate-200 transition-all";
+          }
+        }
+      });
+
+      const mobileSelect = document.getElementById('selectPresetMobile');
+      if (mobileSelect) mobileSelect.value = presetKey;
+
+      // Actualizar selector de raíz
+      const selectRoot = document.getElementById('selectRoot');
+      selectRoot.innerHTML = '';
+      currentPreset.nodes.forEach(n => {
+        const opt = document.createElement('option');
+        opt.value = n.id;
+        opt.textContent = `Vértice ${n.label}`;
+        if (n.id === rootNodeId) opt.selected = true;
+        selectRoot.appendChild(opt);
+      });
+
+      // Renderizar botones del simulador de corte
+      renderCutButtons();
+
+      // Renderizar ambos SVGs
+      renderOriginalGraph();
+      renderDfsTreeStatic();
+
+      // Generar pasos del algoritmo
+      generateAlgorithmSteps();
+
+      // Aplicar paso 0
+      applyStep(0);
+    }
+
+    function changeRoot(newRoot) {
+      if (isPlaying) togglePlay();
+      rootNodeId = newRoot;
+      cutNodeId = null;
+      renderCutButtons();
+      renderOriginalGraph();
+      renderDfsTreeStatic();
+      generateAlgorithmSteps();
+      applyStep(0);
+    }
+
+    // --- ALGORITMO COMPLETO DE LA CÁTEDRA: DFS, NUMERO_BP, BAJO Y P.A. ---
+    function generateAlgorithmSteps() {
+      steps = [];
+      const nodes = currentPreset.nodes;
+      const edges = currentPreset.edges;
+
+      // Matriz de adyacencia
+      const adj = {};
+      nodes.forEach(n => adj[n.id] = []);
+      edges.forEach(e => {
+        adj[e.u].push(e.v);
+        adj[e.v].push(e.u);
+      });
+
+      // Ordenar vecinos de manera canónica según el PDF de la cátedra
+      // En el PDF Page 8: desde 'a' visita primero 'b' (no 'c'), desde 'b' a 'd', etc.
+      nodes.forEach(n => {
+        adj[n.id].sort((x, y) => {
+          const idxX = nodes.findIndex(node => node.id === x);
+          const idxY = nodes.findIndex(node => node.id === y);
+          return idxX - idxY;
+        });
+      });
+
+      let visitTime = 0;
+      let numero_bp = {};
+      let bajo = {};
+      let treeChildren = {};
+      let backEdges = {};
+      let parent = {};
+      let visitedOrder = [];
+      let isArticulation = {};
+      let evalDetails = {};
+
+      nodes.forEach(n => {
+        numero_bp[n.id] = 0;
+        bajo[n.id] = 0;
+        treeChildren[n.id] = [];
+        backEdges[n.id] = [];
+        parent[n.id] = null;
+        isArticulation[n.id] = false;
+      });
+
+      // Paso 0: Estado inicial
+      steps.push({
+        type: 'INIT',
+        title: 'Inicialización',
+        activeNode: null,
+        activeEdge: null,
+        numero_bp: { ...numero_bp },
+        bajo: { ...bajo },
+        treeChildren: JSON.parse(JSON.stringify(treeChildren)),
+        backEdges: JSON.parse(JSON.stringify(backEdges)),
+        isArticulation: { ...isArticulation },
+        evaluatedRows: [],
+        description: `Inicio del algoritmo con raíz ${rootNodeId}. Todos los $numero\\_bp$ y $bajo$ están en 0.`
+      });
+
+      // Estructura para registrar los eventos del DFS
+      // 1. Recorrido DFS y clasificación de aristas
+      function dfsTraverse(u, p) {
+        visitTime++;
+        numero_bp[u] = visitTime;
+        bajo[u] = visitTime;
+        visitedOrder.push(u);
+
+        steps.push({
+          type: 'DISCOVER_NODE',
+          title: `Descubrimiento ${u}`,
+          activeNode: u,
+          activeEdge: p ? { u: p, v: u, type: 'tree' } : null,
+          numero_bp: { ...numero_bp },
+          bajo: { ...bajo },
+          treeChildren: JSON.parse(JSON.stringify(treeChildren)),
+          backEdges: JSON.parse(JSON.stringify(backEdges)),
+          isArticulation: { ...isArticulation },
+          evaluatedRows: [],
+          description: `Se visita el vértice ${u} en orden previo: $numero\\_bp[${u}] = ${visitTime}$.`
+        });
+
+        for (const v of adj[u]) {
+          if (v === p) continue;
+
+          if (numero_bp[v] !== 0) {
+            // Ya visitado: si numero_bp[v] < numero_bp[u], es arista de retroceso desde u hacia ancestro v
+            if (numero_bp[v] < numero_bp[u]) {
+              backEdges[u].push(v);
+              // Actualizar bajo preliminarmente con la arista de retroceso
+              bajo[u] = Math.min(bajo[u], numero_bp[v]);
+
+              steps.push({
+                type: 'BACK_EDGE',
+                title: `Retroceso (${u}, ${v})`,
+                activeNode: u,
+                activeEdge: { u: u, v: v, type: 'back' },
+                numero_bp: { ...numero_bp },
+                bajo: { ...bajo },
+                treeChildren: JSON.parse(JSON.stringify(treeChildren)),
+                backEdges: JSON.parse(JSON.stringify(backEdges)),
+                isArticulation: { ...isArticulation },
+                evaluatedRows: [],
+                description: `Arista de retroceso (${u}, ${v}) hacia el ancestro ${v} ($numero\\_bp[${v}] = ${numero_bp[v]}$). Actualiza $bajo[${u}] = \\min(${bajo[u]}, ${numero_bp[v]}) = ${bajo[u]}$.`
+              });
+            }
+          } else {
+            // No visitado: arista de árbol
+            treeChildren[u].push(v);
+            parent[v] = u;
+
+            dfsTraverse(v, u);
+
+            // Al retornar en post-orden: actualizar bajo[u] con bajo[v]
+            const oldBajo = bajo[u];
+            bajo[u] = Math.min(bajo[u], bajo[v]);
+
+            steps.push({
+              type: 'POST_ORDER_LOW',
+              title: `Retorno Post-Orden a ${u}`,
+              activeNode: u,
+              activeEdge: { u: u, v: v, type: 'tree' },
+              numero_bp: { ...numero_bp },
+              bajo: { ...bajo },
+              treeChildren: JSON.parse(JSON.stringify(treeChildren)),
+              backEdges: JSON.parse(JSON.stringify(backEdges)),
+              isArticulation: { ...isArticulation },
+              evaluatedRows: [],
+              description: `Retornando de hijo ${v}: $bajo[${u}] = \\min(${oldBajo}, bajo[${v}]=${bajo[v]}) = ${bajo[u]}$.`
+            });
+          }
+        }
+      }
+
+      dfsTraverse(rootNodeId, null);
+
+      // 2. Fase de Evaluación de Puntos de Articulación (tabla final de cátedra)
+      let tableRows = [];
+      const isRoot = (nodeId) => (nodeId === rootNodeId);
+
+      // Evaluamos en orden de descubrimiento
+      for (const node of nodes) {
+        const u = node.id;
+        const children = treeChildren[u] || [];
+        const backs = backEdges[u] || [];
+        let condStr = '';
+        let isArt = false;
+        let explanation = '';
+
+        if (isRoot(u)) {
+          const numHijos = children.length;
+          isArt = (numHijos >= 2);
+          condStr = `Raíz: ${numHijos} hijo${numHijos === 1 ? '' : 's'} en árbol ${isArt ? '≥ 2' : '< 2'}`;
+          explanation = isArt
+            ? `¡PUNTO DE ARTICULACIÓN! La raíz ${u} tiene ${numHijos} ramas independientes en el árbol abarcador DFS. Al removerla, dichas ramas quedan incomunicadas entre sí.`
+            : `La raíz ${u} tiene sólo ${numHijos} hijo directo en el árbol DFS; no divide el grafo al eliminarse.`;
+        } else {
+          if (children.length === 0) {
+            isArt = false;
+            condStr = 'Hoja (sin hijos en árbol)';
+            explanation = `El vértice ${u} es una hoja del árbol DFS. No tiene descendientes que dependan de él, por lo que nunca puede ser punto de articulación.`;
+          } else {
+            // Verificar si algún hijo w cumple bajo[w] >= numero_bp[u]
+            let criticalChild = null;
+            for (const w of children) {
+              if (bajo[w] >= numero_bp[u]) {
+                isArt = true;
+                criticalChild = w;
+                break;
+              }
+            }
+
+            if (isArt) {
+              condStr = `Hijo ${criticalChild}: $bajo[${criticalChild}]=${bajo[criticalChild]} \\ge numero\\_bp[${u}]=${numero_bp[u]}$`;
+              explanation = `¡PUNTO DE ARTICULACIÓN! Para el hijo ${criticalChild}, se cumple $bajo[${criticalChild}] = ${bajo[criticalChild]} \\ge numero\\_bp[${u}] = ${numero_bp[u]}$. Esto demuestra que el subárbol de ${criticalChild} no tiene aristas de escape por encima de ${u}.`;
+            } else {
+              const details = children.map(w => `$bajo[${w}]=${bajo[w]} < ${numero_bp[u]}$`).join(', ');
+              condStr = details;
+              explanation = `Todos los hijos de ${u} pueden escapar a niveles superiores mediante aristas de retroceso (${details}). ${u} NO es punto de articulación.`;
+            }
+          }
+        }
+
+        isArticulation[u] = isArt;
+
+        const rowObj = {
+          nodeId: u,
+          numero_bp: numero_bp[u],
+          backEdges: backs.length ? backs.map(z => `(${u}, ${z})`).join(', ') : '-',
+          children: children.length ? children.join(', ') : 'Ninguno (Hoja)',
+          bajoExpr: `bajo[${u}] = ${bajo[u]}`,
+          condStr: condStr,
+          isArt: isArt,
+          explanation: explanation
+        };
+
+        tableRows.push(rowObj);
+
+        steps.push({
+          type: 'EVAL_ARTICULATION',
+          title: `Evaluación P.A. ${u}`,
+          activeNode: u,
+          activeEdge: null,
+          numero_bp: { ...numero_bp },
+          bajo: { ...bajo },
+          treeChildren: JSON.parse(JSON.stringify(treeChildren)),
+          backEdges: JSON.parse(JSON.stringify(backEdges)),
+          isArticulation: { ...isArticulation },
+          evaluatedRows: JSON.parse(JSON.stringify(tableRows)),
+          description: `Evaluando vértice ${u}: ${explanation}`
+        });
+      }
+
+      // Paso Final: Resumen Completo
+      const articulacionList = Object.keys(isArticulation).filter(k => isArticulation[k]);
+      steps.push({
+        type: 'FINISHED',
+        title: 'Análisis Completo',
+        activeNode: null,
+        activeEdge: null,
+        numero_bp: { ...numero_bp },
+        bajo: { ...bajo },
+        treeChildren: JSON.parse(JSON.stringify(treeChildren)),
+        backEdges: JSON.parse(JSON.stringify(backEdges)),
+        isArticulation: { ...isArticulation },
+        evaluatedRows: JSON.parse(JSON.stringify(tableRows)),
+        description: `¡Proceso concluido! Puntos de Articulación detectados: { ${articulacionList.join(', ') || 'Ninguno'} }. El grafo ${articulacionList.length === 0 ? 'ES BICONEXO' : 'NO ES BICONEXO'}.`
+      });
+    }
+
+    // --- APLICACIÓN VISUAL DEL PASO ---
+    function applyStep(index) {
+      if (index < 0 || index >= steps.length) return;
+      currentStepIndex = index;
+      const step = steps[index];
+
+      // Actualizar contador y status
+      document.getElementById('badgeStepCount').textContent = `Paso ${index + 1} / ${steps.length}`;
+      document.getElementById('statusBadge').textContent = step.title;
+      document.getElementById('statusDescription').textContent = step.description;
+      document.getElementById('microStepText').textContent = step.description;
+
+      // Botones navegación
+      document.getElementById('btnPrev').disabled = (index === 0);
+      document.getElementById('btnPrev').classList.toggle('opacity-40', index === 0);
+      document.getElementById('btnNext').disabled = (index === steps.length - 1);
+      document.getElementById('btnNext').classList.toggle('opacity-40', index === steps.length - 1);
+
+      // Actualizar lista de P.A. y biconexidad en el header
+      const paList = Object.keys(step.isArticulation).filter(k => step.isArticulation[k]);
+      document.getElementById('paSummaryList').textContent = paList.length ? `{ ${paList.join(', ')} }` : 'Ninguno';
+      const biconnBadge = document.getElementById('biconnectedBadge');
+      if (paList.length === 0 && index === steps.length - 1) {
+        biconnBadge.textContent = 'SÍ (Biconexo)';
+        biconnBadge.className = 'font-mono font-bold text-emerald-400';
+      } else if (paList.length > 0) {
+        biconnBadge.textContent = 'NO (Tiene P.A.)';
+        biconnBadge.className = 'font-mono font-bold text-rose-400';
+      } else {
+        biconnBadge.textContent = 'En cálculo...';
+        biconnBadge.className = 'font-mono font-bold text-slate-400';
+      }
+
+      // Renderizar tabla
+      renderCalcTable(step);
+
+      // Renderizar grafos SVG
+      updateOriginalGraphVisuals(step);
+      updateDfsTreeVisuals(step);
+
+      // Renderizar fórmulas KaTeX
+      renderMath(document.getElementById('statusBar'));
+      renderMath(document.getElementById('microStepCallout'));
+    }
+
+    // --- RENDERIZAR TABLA DE CÁLCULO ---
+    function renderCalcTable(step) {
+      const tbody = document.getElementById('calcTableBody');
+      const rows = step.evaluatedRows;
+
+      if (!rows || rows.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="7" class="text-center py-6 text-slate-500 italic">
+              La tabla de la cátedra se irá completando a medida que se calculen los valores de $numero\\_bp$ y $bajo$...
+            </td>
+          </tr>
+        `;
+        renderMath(tbody);
+        return;
+      }
+
+      let html = '';
+      rows.forEach(r => {
+        const isCurrent = (step.activeNode === r.nodeId);
+        let trClass = "border-b border-slate-800 transition-colors ";
+        if (isCurrent) {
+          trClass += "bg-rose-950/30 ";
+        }
+
+        const badgeResult = r.isArt
+          ? `<span class="px-2 py-0.5 rounded bg-rose-500/20 text-rose-300 font-bold border border-rose-500/40">SÍ (P.A.)</span>`
+          : `<span class="px-2 py-0.5 rounded bg-slate-800 text-slate-400 border border-slate-700">NO</span>`;
+
+        html += `
+          <tr class="${trClass}">
+            <td class="py-2 px-3 font-bold text-slate-200 border-r border-slate-800/80">${r.nodeId}</td>
+            <td class="py-2 px-3 font-bold text-cyan-300 border-r border-slate-800/80">${r.numero_bp}</td>
+            <td class="py-2 px-3 text-amber-300 border-r border-slate-800/80">${r.backEdges}</td>
+            <td class="py-2 px-3 text-emerald-300 border-r border-slate-800/80">${r.children}</td>
+            <td class="py-2 px-3 font-bold text-pink-300 border-r border-slate-800/80">${r.bajoExpr}</td>
+            <td class="py-2 px-3 text-indigo-200 border-r border-slate-800/80 text-[11px]">${r.condStr}</td>
+            <td class="py-2 px-3 text-center cursor-help" data-tippy-content="${r.explanation}">
+              ${badgeResult}
+            </td>
+          </tr>
+        `;
+      });
+
+      tbody.innerHTML = html;
+      renderMath(tbody);
+
+      // Tooltips de celdas
+      tippy(tbody.querySelectorAll('[data-tippy-content]'), {
+        theme: 'articulation',
+        animation: 'scale',
+        placement: 'top',
+        onShow(instance) {
+          setTimeout(() => renderMath(instance.popper), 0);
+        }
+      });
+    }
+
+    // --- RENDERIZADO DEL GRAFO ORIGINAL EN SVG ---
+    function renderOriginalGraph() {
+      const nodes = currentPreset.nodes;
+      const edges = currentPreset.edges;
+      const edgesLayer = document.getElementById('origEdgesLayer');
+      const nodesLayer = document.getElementById('origNodesLayer');
+
+      edgesLayer.innerHTML = '';
+      nodesLayer.innerHTML = '';
+
+      // Dibujar aristas
+      edges.forEach(e => {
+        const u = nodes.find(n => n.id === e.u);
+        const v = nodes.find(n => n.id === e.v);
+        if (!u || !v) return;
+
+        const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+        line.setAttribute("x1", u.x);
+        line.setAttribute("y1", u.y);
+        line.setAttribute("x2", v.x);
+        line.setAttribute("y2", v.y);
+        line.setAttribute("stroke", "#334155");
+        line.setAttribute("stroke-width", "3");
+        line.setAttribute("stroke-linecap", "round");
+        line.id = `origEdge_${e.u}_${e.v}`;
+        edgesLayer.appendChild(line);
+      });
+
+      // Dibujar nodos
+      nodes.forEach(node => {
+        const g = document.createElementNS("http://www.w3.org/2000/svg", "g");
+        g.id = `origNode_${node.id}`;
+        g.setAttribute("transform", `translate(${node.x}, ${node.y})`);
+        g.setAttribute("class", "cursor-pointer group select-none");
+
+        // Pulso
+        const pulse = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+        pulse.setAttribute("r", "26");
+        pulse.setAttribute("fill", "none");
+        pulse.setAttribute("stroke", "#f43f5e");
+        pulse.setAttribute("stroke-width", "2");
+        pulse.setAttribute("class", "hidden animate-pulse-ring");
+        pulse.id = `origPulse_${node.id}`;
+        g.appendChild(pulse);
+
+        // Círculo
+        const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+        circle.setAttribute("r", "20");
+        circle.setAttribute("fill", "#1e293b");
+        circle.setAttribute("stroke", "#64748b");
+        circle.setAttribute("stroke-width", "2.5");
+        circle.id = `origCircle_${node.id}`;
+        g.appendChild(circle);
+
+        // Texto del nombre
+        const text = document.createElementNS("http://www.w3.org/2000/svg", "text");
+        text.setAttribute("y", "5");
+        text.setAttribute("text-anchor", "middle");
+        text.setAttribute("fill", "#f8fafc");
+        text.setAttribute("font-size", "13");
+        text.setAttribute("font-weight", "bold");
+        text.setAttribute("font-family", "monospace");
+        text.textContent = node.label;
+        g.appendChild(text);
+
+        // Badge de números [bp, bajo]
+        const badgeG = document.createElementNS("http://www.w3.org/2000/svg", "g");
+        badgeG.setAttribute("transform", "translate(15, -15)");
+        badgeG.id = `origBadgeGroup_${node.id}`;
+
+        const badgeRect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+        badgeRect.setAttribute("x", "-16");
+        badgeRect.setAttribute("y", "-8");
+        badgeRect.setAttribute("width", "36");
+        badgeRect.setAttribute("height", "16");
+        badgeRect.setAttribute("rx", "4");
+        badgeRect.setAttribute("fill", "#0f172a");
+        badgeRect.setAttribute("stroke", "#475569");
+        badgeRect.setAttribute("stroke-width", "1");
+        badgeG.appendChild(badgeRect);
+
+        const badgeText = document.createElementNS("http://www.w3.org/2000/svg", "text");
+        badgeText.setAttribute("text-anchor", "middle");
+        badgeText.setAttribute("x", "2");
+        badgeText.setAttribute("y", "4");
+        badgeText.setAttribute("font-size", "9");
+        badgeText.setAttribute("font-weight", "bold");
+        badgeText.setAttribute("fill", "#94a3b8");
+        badgeText.textContent = "0/0";
+        badgeText.id = `origBadgeText_${node.id}`;
+        badgeG.appendChild(badgeText);
+
+        g.appendChild(badgeG);
+
+        // Drag & drop
+        attachDragBehavior(g, node);
+
+        nodesLayer.appendChild(g);
+      });
+    }
+
+    // --- RENDERIZADO DEL ÁRBOL DFS EN SVG ---
+    function renderDfsTreeStatic() {
+      const nodes = currentPreset.nodes;
+      const edgesLayer = document.getElementById('treeEdgesLayer');
+      const nodesLayer = document.getElementById('treeNodesLayer');
+
+      edgesLayer.innerHTML = '';
+      nodesLayer.innerHTML = '';
+
+      // Dibujar nodos en posición de árbol
+      nodes.forEach(node => {
+        const g = document.createElementNS("http://www.w3.org/2000/svg", "g");
+        g.id = `treeNode_${node.id}`;
+        g.setAttribute("transform", `translate(${node.treeX}, ${node.treeY})`);
+
+        const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+        circle.setAttribute("r", "19");
+        circle.setAttribute("fill", "#1e293b");
+        circle.setAttribute("stroke", "#64748b");
+        circle.setAttribute("stroke-width", "2.5");
+        circle.id = `treeCircle_${node.id}`;
+        g.appendChild(circle);
+
+        const text = document.createElementNS("http://www.w3.org/2000/svg", "text");
+        text.setAttribute("y", "5");
+        text.setAttribute("text-anchor", "middle");
+        text.setAttribute("fill", "#f8fafc");
+        text.setAttribute("font-size", "13");
+        text.setAttribute("font-weight", "bold");
+        text.setAttribute("font-family", "monospace");
+        text.textContent = node.label;
+        g.appendChild(text);
+
+        // Etiqueta lateral con bajo
+        const lowText = document.createElementNS("http://www.w3.org/2000/svg", "text");
+        lowText.setAttribute("x", "26");
+        lowText.setAttribute("y", "4");
+        lowText.setAttribute("fill", "#f43f5e");
+        lowText.setAttribute("font-size", "11");
+        lowText.setAttribute("font-weight", "bold");
+        lowText.setAttribute("font-family", "monospace");
+        lowText.textContent = "";
+        lowText.id = `treeLowText_${node.id}`;
+        g.appendChild(lowText);
+
+        nodesLayer.appendChild(g);
+      });
+    }
+
+    // --- ACTUALIZACIÓN VISUAL DE LOS GRAFOS CON EL PASO ACTUAL ---
+    function updateOriginalGraphVisuals(step) {
+      const nodes = currentPreset.nodes;
+      const edges = currentPreset.edges;
+
+      // Si hay un corte activo, dejar que el simulador mande
+      if (cutNodeId) return;
+
+      // Reset aristas
+      edges.forEach(e => {
+        const line = getOrigEdgeLine(e.u, e.v);
+        if (line) {
+          line.setAttribute("stroke", "#334155");
+          line.setAttribute("stroke-width", "3");
+          line.removeAttribute("stroke-dasharray");
+        }
+      });
+
+      // Arista activa
+      if (step.activeEdge) {
+        const line = getOrigEdgeLine(step.activeEdge.u, step.activeEdge.v);
+        if (line) {
+          if (step.activeEdge.type === 'back') {
+            line.setAttribute("stroke", "#f59e0b");
+            line.setAttribute("stroke-width", "4");
+            line.setAttribute("stroke-dasharray", "6 4");
+          } else {
+            line.setAttribute("stroke", "#06b6d4");
+            line.setAttribute("stroke-width", "4");
+          }
+        }
+      }
+
+      // Actualizar nodos
+      nodes.forEach(node => {
+        const id = node.id;
+        const circle = document.getElementById(`origCircle_${id}`);
+        const pulse = document.getElementById(`origPulse_${id}`);
+        const badgeText = document.getElementById(`origBadgeText_${id}`);
+        const badgeRect = document.querySelector(`#origBadgeGroup_${id} rect`);
+
+        const isVisited = (step.numero_bp[id] > 0);
+        const isActive = (step.activeNode === id);
+        const isArt = (step.isArticulation[id]);
+        const isRoot = (id === rootNodeId);
+
+        // Texto bp/bajo
+        if (badgeText) {
+          badgeText.textContent = `${step.numero_bp[id]}/${step.bajo[id]}`;
+        }
+
+        if (pulse) pulse.classList.toggle('hidden', !isActive);
+
+        if (isArt) {
+          circle.setAttribute("fill", "#881337");
+          circle.setAttribute("stroke", "#f43f5e");
+          circle.setAttribute("stroke-width", "3.5");
+          if (badgeRect) badgeRect.setAttribute("stroke", "#f43f5e");
+        } else if (isActive) {
+          circle.setAttribute("fill", "#78350f");
+          circle.setAttribute("stroke", "#f59e0b");
+          circle.setAttribute("stroke-width", "3.5");
+          if (badgeRect) badgeRect.setAttribute("stroke", "#f59e0b");
+        } else if (isVisited) {
+          circle.setAttribute("fill", isRoot ? "#1e1b4b" : "#064e3b");
+          circle.setAttribute("stroke", isRoot ? "#818cf8" : "#10b981");
+          circle.setAttribute("stroke-width", "2.5");
+          if (badgeRect) badgeRect.setAttribute("stroke", isRoot ? "#818cf8" : "#10b981");
+        } else {
+          circle.setAttribute("fill", "#1e293b");
+          circle.setAttribute("stroke", "#64748b");
+          circle.setAttribute("stroke-width", "2.5");
+          if (badgeRect) badgeRect.setAttribute("stroke", "#475569");
+        }
+      });
+    }
+
+    function updateDfsTreeVisuals(step) {
+      const nodes = currentPreset.nodes;
+      const edgesLayer = document.getElementById('treeEdgesLayer');
+      edgesLayer.innerHTML = '';
+
+      // Dibujar aristas de árbol y retroceso activas en este paso
+      nodes.forEach(uNode => {
+        const u = uNode.id;
+
+        // Aristas de árbol hacia los hijos
+        const children = step.treeChildren[u] || [];
+        children.forEach(v => {
+          const vNode = nodes.find(n => n.id === v);
+          if (!vNode) return;
+
+          const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+          line.setAttribute("x1", uNode.treeX);
+          line.setAttribute("y1", uNode.treeY);
+          line.setAttribute("x2", vNode.treeX);
+          line.setAttribute("y2", vNode.treeY);
+          line.setAttribute("stroke", "#10b981");
+          line.setAttribute("stroke-width", "3");
+          line.setAttribute("marker-end", "url(#treeArrow)");
+          edgesLayer.appendChild(line);
+        });
+
+        // Aristas de retroceso (curvadas)
+        const backs = step.backEdges[u] || [];
+        backs.forEach(v => {
+          const vNode = nodes.find(n => n.id === v);
+          if (!vNode) return;
+
+          const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+          // Curva Bezier hacia un lado
+          const dx = (uNode.treeX + vNode.treeX) / 2 + 35;
+          const dy = (uNode.treeY + vNode.treeY) / 2;
+          path.setAttribute("d", `M ${uNode.treeX} ${uNode.treeY} Q ${dx} ${dy} ${vNode.treeX} ${vNode.treeY}`);
+          path.setAttribute("stroke", "#f59e0b");
+          path.setAttribute("stroke-width", "2");
+          path.setAttribute("stroke-dasharray", "4 3");
+          path.setAttribute("fill", "none");
+          path.setAttribute("marker-end", "url(#backArrow)");
+          edgesLayer.appendChild(path);
+        });
+      });
+
+      // Actualizar nodos del árbol
+      nodes.forEach(node => {
+        const id = node.id;
+        const circle = document.getElementById(`treeCircle_${id}`);
+        const lowText = document.getElementById(`treeLowText_${id}`);
+
+        const isVisited = (step.numero_bp[id] > 0);
+        const isArt = (step.isArticulation[id]);
+        const isRoot = (id === rootNodeId);
+
+        if (lowText) {
+          lowText.textContent = isVisited ? `b=${step.bajo[id]}` : '';
+        }
+
+        if (isArt) {
+          circle.setAttribute("fill", "#881337");
+          circle.setAttribute("stroke", "#f43f5e");
+        } else if (isVisited) {
+          circle.setAttribute("fill", isRoot ? "#1e1b4b" : "#064e3b");
+          circle.setAttribute("stroke", isRoot ? "#818cf8" : "#10b981");
+        } else {
+          circle.setAttribute("fill", "#1e293b");
+          circle.setAttribute("stroke", "#475569");
+        }
+      });
+    }
+
+    function getOrigEdgeLine(u, v) {
+      return document.getElementById(`origEdge_${u}_${v}`) || document.getElementById(`origEdge_${v}_${u}`);
+    }
+
+    // --- SIMULADOR DE CORTE / DESCONEXIÓN INTERACTIVA ---
+    function renderCutButtons() {
+      const container = document.getElementById('cutButtonsContainer');
+      container.innerHTML = '';
+      currentPreset.nodes.forEach(n => {
+        const btn = document.createElement('button');
+        btn.id = `btnCut_${n.id}`;
+        btn.onclick = () => simulateCut(n.id);
+        btn.className = "px-2 py-1 rounded bg-slate-800 hover:bg-rose-900/60 border border-slate-700 text-slate-300 font-mono text-xs transition";
+        btn.textContent = `Cortar ${n.label}`;
+        container.appendChild(btn);
+      });
+    }
+
+    function simulateCut(targetId) {
+      cutNodeId = targetId;
+      document.getElementById('btnRestoreCut').classList.remove('hidden');
+
+      // Resaltar botón activo
+      currentPreset.nodes.forEach(n => {
+        const btn = document.getElementById(`btnCut_${n.id}`);
+        if (btn) {
+          btn.className = (n.id === targetId)
+            ? "px-2 py-1 rounded bg-rose-600 text-white font-mono text-xs font-bold ring-2 ring-rose-400"
+            : "px-2 py-1 rounded bg-slate-800 border border-slate-700 text-slate-400 font-mono text-xs";
+        }
+      });
+
+      // Calcular componentes conexas restantes al eliminar targetId
+      const remainingNodes = currentPreset.nodes.filter(n => n.id !== targetId);
+      const remainingIds = remainingNodes.map(n => n.id);
+      const remainingEdges = currentPreset.edges.filter(e => e.u !== targetId && e.v !== targetId);
+
+      // BFS para detectar partición
+      const adjRem = {};
+      remainingIds.forEach(id => adjRem[id] = []);
+      remainingEdges.forEach(e => {
+        adjRem[e.u].push(e.v);
+        adjRem[e.v].push(e.u);
+      });
+
+      let visited = new Set();
+      let components = [];
+
+      remainingIds.forEach(start => {
+        if (!visited.has(start)) {
+          let comp = [];
+          let q = [start];
+          visited.add(start);
+          while (q.length > 0) {
+            let curr = q.shift();
+            comp.push(curr);
+            for (let neigh of adjRem[curr]) {
+              if (!visited.has(neigh)) {
+                visited.add(neigh);
+                q.push(neigh);
+              }
+            }
+          }
+          components.push(comp);
+        }
+      });
+
+      const isRealArticulation = (components.length > 1);
+      const banner = document.getElementById('cutResultBanner');
+
+      if (isRealArticulation) {
+        banner.className = "p-2.5 rounded-xl bg-rose-950/40 border border-rose-500/60 text-xs text-rose-200";
+        banner.innerHTML = `
+          <strong>💥 ¡PUNTO DE ARTICULACIÓN CONFIRMADO!</strong><br>
+          Al eliminar el vértice <span class="font-bold underline">${targetId}</span>, el grafo se parte en 
+          <span class="font-bold">${components.length} componentes desconectadas</span>: 
+          ${components.map((c, i) => `<span class="px-1.5 py-0.5 rounded bg-slate-900 border border-rose-400 font-mono">C${i+1}: {${c.join(', ')}}</span>`).join(' ')}.
+        `;
+      } else {
+        banner.className = "p-2.5 rounded-xl bg-emerald-950/40 border border-emerald-500/60 text-xs text-emerald-200";
+        banner.innerHTML = `
+          <strong>🛡️ NO ES PUNTO DE ARTICULACIÓN</strong><br>
+          Al eliminar el vértice <span class="font-bold underline">${targetId}</span>, el grafo 
+          <strong>sigue siendo conexo</strong> en un único bloque: 
+          <span class="px-1.5 py-0.5 rounded bg-slate-900 border border-emerald-400 font-mono">{${components[0].join(', ')}}</span>.
+        `;
+      }
+
+      // Visual en SVG del Grafo Original
+      // Nodo cortado queda en rojo con cruz
+      const cutCircle = document.getElementById(`origCircle_${targetId}`);
+      if (cutCircle) {
+        cutCircle.setAttribute("fill", "#0f172a");
+        cutCircle.setAttribute("stroke", "#f43f5e");
+        cutCircle.setAttribute("stroke-dasharray", "4 3");
+      }
+
+      // Colorear cada componente restante con un color distinto
+      const compColors = [
+        { fill: '#064e3b', stroke: '#10b981' }, // Verde
+        { fill: '#1e1b4b', stroke: '#818cf8' }, // Índigo
+        { fill: '#701a75', stroke: '#f472b6' }, // Fucsia
+        { fill: '#164e63', stroke: '#06b6d4' }  // Cian
+      ];
+
+      components.forEach((comp, idx) => {
+        const color = compColors[idx % compColors.length];
+        comp.forEach(id => {
+          const circle = document.getElementById(`origCircle_${id}`);
+          if (circle) {
+            circle.setAttribute("fill", color.fill);
+            circle.setAttribute("stroke", color.stroke);
+            circle.removeAttribute("stroke-dasharray");
+          }
+        });
+      });
+
+      // Apagar aristas incidentes al nodo cortado
+      currentPreset.edges.forEach(e => {
+        const line = getOrigEdgeLine(e.u, e.v);
+        if (line) {
+          if (e.u === targetId || e.v === targetId) {
+            line.setAttribute("stroke", "#334155");
+            line.setAttribute("stroke-dasharray", "2 4");
+            line.setAttribute("opacity", "0.3");
+          } else {
+            line.setAttribute("stroke", "#64748b");
+            line.removeAttribute("stroke-dasharray");
+            line.setAttribute("opacity", "1");
+          }
+        }
+      });
+    }
+
+    function restoreCut() {
+      cutNodeId = null;
+      document.getElementById('btnRestoreCut').classList.add('hidden');
+      document.getElementById('cutResultBanner').className = "p-2.5 rounded-xl bg-slate-950/80 border border-slate-800 text-xs text-slate-300";
+      document.getElementById('cutResultBanner').textContent = "Selecciona un vértice para simular qué ocurre si falla o se elimina de la red.";
+
+      currentPreset.nodes.forEach(n => {
+        const btn = document.getElementById(`btnCut_${n.id}`);
+        if (btn) btn.className = "px-2 py-1 rounded bg-slate-800 hover:bg-rose-900/60 border border-slate-700 text-slate-300 font-mono text-xs transition";
+      });
+
+      // Restaurar opacidad y estilos del paso actual
+      currentPreset.edges.forEach(e => {
+        const line = getOrigEdgeLine(e.u, e.v);
+        if (line) line.removeAttribute("opacity");
+      });
+
+      applyStep(currentStepIndex);
+    }
+
+    // --- ARRASTRAR NODOS (DRAG & DROP SVG) ---
+    function attachDragBehavior(nodeGroup, nodeData) {
+      let isDragging = false;
+      let startX, startY;
+
+      nodeGroup.addEventListener('mousedown', (e) => {
+        isDragging = true;
+        startX = e.clientX - nodeData.x;
+        startY = e.clientY - nodeData.y;
+        e.stopPropagation();
+      });
+
+      window.addEventListener('mousemove', (e) => {
+        if (!isDragging) return;
+        const svg = document.getElementById('originalGraphSvg');
+        const rect = svg.getBoundingClientRect();
+        const scaleX = 500 / rect.width;
+        const scaleY = 360 / rect.height;
+
+        let newX = (e.clientX - rect.left) * scaleX;
+        let newY = (e.clientY - rect.top) * scaleY;
+
+        newX = Math.max(30, Math.min(470, newX));
+        newY = Math.max(30, Math.min(330, newY));
+
+        nodeData.x = newX;
+        nodeData.y = newY;
+        nodeGroup.setAttribute("transform", `translate(${newX}, ${newY})`);
+
+        // Actualizar aristas conectadas en el SVG original
+        currentPreset.edges.forEach(edge => {
+          if (edge.u === nodeData.id || edge.v === nodeData.id) {
+            const u = currentPreset.nodes.find(n => n.id === edge.u);
+            const v = currentPreset.nodes.find(n => n.id === edge.v);
+            const line = getOrigEdgeLine(edge.u, edge.v);
+            if (line && u && v) {
+              line.setAttribute("x1", u.x);
+              line.setAttribute("y1", u.y);
+              line.setAttribute("x2", v.x);
+              line.setAttribute("y2", v.y);
+            }
+          }
+        });
+      });
+
+      window.addEventListener('mouseup', () => {
+        isDragging = false;
+      });
+    }
+
+    // --- CONTROLES DE REPRODUCCIÓN Y STEPPER ---
+    function stepForward() {
+      if (currentStepIndex < steps.length - 1) {
+        applyStep(currentStepIndex + 1);
+      } else if (isPlaying) {
+        togglePlay();
+      }
+    }
+
+    function stepBackward() {
+      if (currentStepIndex > 0) {
+        applyStep(currentStepIndex - 1);
+      }
+    }
+
+    function resetAlgorithm() {
+      if (isPlaying) togglePlay();
+      restoreCut();
+      applyStep(0);
+    }
+
+    function togglePlay() {
+      isPlaying = !isPlaying;
+      const playIcon = document.getElementById('playIcon');
+      const playText = document.getElementById('playText');
+      const btnPlay = document.getElementById('btnPlay');
+
+      if (isPlaying) {
+        playText.textContent = "Pausar";
+        playIcon.innerHTML = `<svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zM7 8a1 1 0 012 0v4a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v4a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd"/></svg>`;
+        btnPlay.className = "px-4 py-1.5 rounded-lg bg-amber-600 hover:bg-amber-500 text-white font-bold text-xs flex items-center gap-1.5 shadow-md shadow-amber-600/30 transition";
+
+        playTimer = setInterval(() => {
+          if (currentStepIndex < steps.length - 1) {
+            stepForward();
+          } else {
+            togglePlay();
+          }
+        }, playSpeed);
+      } else {
+        playText.textContent = "Reproducir";
+        playIcon.innerHTML = `<svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd"/></svg>`;
+        btnPlay.className = "px-4 py-1.5 rounded-lg bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs flex items-center gap-1.5 shadow-md shadow-rose-600/30 transition";
+        clearInterval(playTimer);
+        playTimer = null;
+      }
+    }
+
+    function setPlaySpeed(newSpeed) {
+      playSpeed = newSpeed;
+      if (isPlaying) {
+        clearInterval(playTimer);
+        playTimer = setInterval(() => {
+          if (currentStepIndex < steps.length - 1) {
+            stepForward();
+          } else {
+            togglePlay();
+          }
+        }, playSpeed);
+      }
+    }
+
+    // --- TABS Y MODAL ---
+    function switchTab(tabId) {
+      ['tabGuide', 'tabCode', 'tabTheory'].forEach(id => {
+        document.getElementById(id).classList.add('hidden');
+      });
+      ['btnTabGuide', 'btnTabCode', 'btnTabTheory'].forEach(btnId => {
+        const btn = document.getElementById(btnId);
+        btn.className = "px-5 py-3 text-xs font-semibold text-slate-400 hover:text-slate-200 border-b-2 border-transparent flex items-center gap-2";
+      });
+
+      const activeContent = document.getElementById(tabId);
+      activeContent.classList.remove('hidden');
+      const activeBtn = document.getElementById('btn' + tabId.charAt(0).toUpperCase() + tabId.slice(1));
+      if (activeBtn) {
+        activeBtn.className = "px-5 py-3 text-xs font-semibold text-rose-400 border-b-2 border-rose-400 flex items-center gap-2";
+      }
+      renderMath(activeContent);
+    }
+
+    function toggleHelpModal(show) {
+      const modal = document.getElementById('helpModal');
+      modal.classList.toggle('hidden', !show);
+      if (show) {
+        renderMath(modal);
+      }
+    }
+  </script>
+</body>
+</html>

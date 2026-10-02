@@ -1,0 +1,45 @@
+<div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 850px; margin: 0 auto; display: flex; flex-wrap: wrap; gap: 15px; background: #f4f6f9; padding: 20px; border-radius: 12px;">
+  
+  <div style="flex: 1; min-width: 250px; background: white; border-radius: 8px; border-top: 4px solid #dc3545; box-shadow: 0 2px 5px rgba(0,0,0,0.05); overflow: hidden;">
+    <h4 style="margin: 0; padding: 12px; background: #f8d7da; color: #842029; text-align: center; border-bottom: 1px solid #f5c2c7;">
+      AND ( && ) <br><small style="font-weight: normal; font-size: 0.85rem;">Todas deben cumplirse</small>
+    </h4>
+    <table style="width: 100%; text-align: center; border-collapse: collapse;">
+      <tr style="background: #f8f9fa; color: #495057; font-size: 0.9rem;">
+        <th style="padding: 8px;">Cond. 1</th><th style="padding: 8px;">Cond. 2</th><th style="padding: 8px;">Resultado</th>
+      </tr>
+      <tr><td style="padding: 8px; color: #198754;">V</td><td style="padding: 8px; color: #198754;">V</td><td style="padding: 8px; font-weight: bold; color: #198754; background: #e8f5e9;">V</td></tr>
+      <tr style="border-top: 1px solid #dee2e6;"><td style="padding: 8px; color: #198754;">V</td><td style="padding: 8px; color: #dc3545;">F</td><td style="padding: 8px; font-weight: bold; color: #dc3545;">F</td></tr>
+      <tr style="border-top: 1px solid #dee2e6;"><td style="padding: 8px; color: #dc3545;">F</td><td style="padding: 8px; color: #198754;">V</td><td style="padding: 8px; font-weight: bold; color: #dc3545;">F</td></tr>
+      <tr style="border-top: 1px solid #dee2e6;"><td style="padding: 8px; color: #dc3545;">F</td><td style="padding: 8px; color: #dc3545;">F</td><td style="padding: 8px; font-weight: bold; color: #dc3545;">F</td></tr>
+    </table>
+  </div>
+
+  <div style="flex: 1; min-width: 250px; background: white; border-radius: 8px; border-top: 4px solid #198754; box-shadow: 0 2px 5px rgba(0,0,0,0.05); overflow: hidden;">
+    <h4 style="margin: 0; padding: 12px; background: #d1e7dd; color: #0f5132; text-align: center; border-bottom: 1px solid #badbcc;">
+      OR ( || ) <br><small style="font-weight: normal; font-size: 0.85rem;">Al menos una debe cumplirse</small>
+    </h4>
+    <table style="width: 100%; text-align: center; border-collapse: collapse;">
+      <tr style="background: #f8f9fa; color: #495057; font-size: 0.9rem;">
+        <th style="padding: 8px;">Cond. 1</th><th style="padding: 8px;">Cond. 2</th><th style="padding: 8px;">Resultado</th>
+      </tr>
+      <tr><td style="padding: 8px; color: #198754;">V</td><td style="padding: 8px; color: #198754;">V</td><td style="padding: 8px; font-weight: bold; color: #198754;">V</td></tr>
+      <tr style="border-top: 1px solid #dee2e6;"><td style="padding: 8px; color: #198754;">V</td><td style="padding: 8px; color: #dc3545;">F</td><td style="padding: 8px; font-weight: bold; color: #198754; background: #e8f5e9;">V</td></tr>
+      <tr style="border-top: 1px solid #dee2e6;"><td style="padding: 8px; color: #dc3545;">F</td><td style="padding: 8px; color: #198754;">V</td><td style="padding: 8px; font-weight: bold; color: #198754; background: #e8f5e9;">V</td></tr>
+      <tr style="border-top: 1px solid #dee2e6;"><td style="padding: 8px; color: #dc3545;">F</td><td style="padding: 8px; color: #dc3545;">F</td><td style="padding: 8px; font-weight: bold; color: #dc3545;">F</td></tr>
+    </table>
+  </div>
+
+  <div style="flex: 1; min-width: 150px; background: white; border-radius: 8px; border-top: 4px solid #0d6efd; box-shadow: 0 2px 5px rgba(0,0,0,0.05); overflow: hidden;">
+    <h4 style="margin: 0; padding: 12px; background: #cce5ff; color: #004085; text-align: center; border-bottom: 1px solid #b8daff;">
+      NOT ( ! ) <br><small style="font-weight: normal; font-size: 0.85rem;">Invierte la realidad</small>
+    </h4>
+    <table style="width: 100%; text-align: center; border-collapse: collapse;">
+      <tr style="background: #f8f9fa; color: #495057; font-size: 0.9rem;">
+        <th style="padding: 8px;">Estado Inicial</th><th style="padding: 8px;">Resultado</th>
+      </tr>
+      <tr><td style="padding: 18px 8px; color: #198754;">V</td><td style="padding: 18px 8px; font-weight: bold; color: #dc3545;">F</td></tr>
+      <tr style="border-top: 1px solid #dee2e6;"><td style="padding: 18px 8px; color: #dc3545;">F</td><td style="padding: 18px 8px; font-weight: bold; color: #198754;">V</td></tr>
+    </table>
+  </div>
+</div>

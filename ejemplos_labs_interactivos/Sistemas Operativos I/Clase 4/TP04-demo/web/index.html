@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UNJu SO II - TP N° 4 DEMO: Demostración Docente</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <!-- SortableJS para Drag & Drop fluido -->
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+    <!-- Canvas Confetti -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+</head>
+<body>
+    <div class="bg-glow"></div>
+
+    <!-- Sticky Toolbar Superior -->
+    <header class="sticky-toolbar">
+        <div class="toolbar-brand">
+            <span>👨‍🏫</span>
+            <span>UNJu SO II — TP N° 4 DEMO (Demostración Docente)</span>
+        </div>
+        <div class="toolbar-progress">
+            <div class="progress-track">
+                <div class="progress-fill" id="progress-fill"></div>
+            </div>
+            <span class="progress-label" id="progress-label">0% (0/25)</span>
+        </div>
+        <div class="toolbar-actions">
+            <button class="btn btn-icon" id="btn-theme-toggle" title="Alternar Modo Claro / Oscuro">🌓</button>
+            <button class="btn btn-outline" id="btn-import-json" title="Cargar respuestas">📂 Cargar</button>
+            <input type="file" id="file-import-input" accept=".json" style="display: none;">
+            <button class="btn btn-primary" id="btn-download-json" disabled title="Descargar respuestas resueltas de la demo">
+                📥 Descargar respuestas_tp4_demo.json
+            </button>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- Header Hero -->
+        <section class="header-hero">
+            <div class="header-meta">
+                <div class="badge-group">
+                    <span class="badge-tag blue">UNJu — Facultad de Ingeniería</span>
+                    <span class="badge-tag purple">Sistemas Operativos II — 2026</span>
+                    <span class="badge-tag emerald">Módulo Docente Live-Coding</span>
+                </div>
+                <span class="badge-tag blue">Proyección en Pantalla</span>
+            </div>
+            <h1>Demostración Docente: Módulo Web de Seguridad y Criptografía</h1>
+            <p>
+                Repositorio proyectado durante la clase magistral para modelar la resolución de consignas, el uso del simulador criptográfico RSA y la verificación local con <code>autograder_tp4_demo.py</code>.
+            </p>
+        </section>
+
+        <!-- Datos del Docente -->
+        <section class="glass-card" id="card-alumno">
+            <h2 class="section-title">👨‍🏫 Datos del Docente</h2>
+            <p class="section-desc">Identificación de la cátedra para el registro de la sesión demostrativa.</p>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="alumno-nombre">Nombre y Apellido</label>
+                    <input type="text" id="alumno-nombre" class="form-control" value="Ing. Fabio Damián Argañaraz Azua" required>
+                </div>
+                <div class="form-group">
+                    <label for="alumno-legajo">Identificador Docente</label>
+                    <input type="text" id="alumno-legajo" class="form-control" value="DOC-2026-SOII" required>
+                </div>
+                <div class="form-group">
+                    <label for="alumno-github">Organización GitHub</label>
+                    <input type="text" id="alumno-github" class="form-control" value="Catedra-SOII-UNJu" required>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECCIÓN 1: Conceptos Fundamentales (Radio Cards) -->
+        <section class="glass-card" id="seccion-1">
+            <h2 class="section-title">1️⃣ Conceptos Fundamentales de Protección y Seguridad</h2>
+            <p class="section-desc">Demostración de los fundamentos teóricos evaluados en la Unidad 4.</p>
+
+            <details class="biblio-panel">
+                <summary class="biblio-summary">📖 Dónde estudiar este tema en la bibliografía</summary>
+                <div class="biblio-content">
+                    Silberschatz, Galvin & Gagne (7ma Ed.): Capítulo 14 y 15. Diapositivas Unidad 4 (Slides 3-27 y 40-43).
+                </div>
+            </details>
+
+            <!-- Q1 -->
+            <div class="question-block" data-qid="q1_proteccion_vs_seguridad">
+                <div class="question-header">1. ¿Cuál es la distinción técnica precisa entre Protección y Seguridad en el contexto del sistema operativo?</div>
+                <div class="radio-cards-grid">
+                    <label class="radio-card">
+                        <input type="radio" name="q1_proteccion_vs_seguridad" value="A">
+                        <span class="radio-letter">A)</span>
+                        <span class="radio-text">La protección resguarda la integridad física de los componentes electrónicos y la seguridad administra la ejecución concurrente de hilos en CPU.</span>
+                    </label>
+                    <label class="radio-card">
+                        <input type="radio" name="q1_proteccion_vs_seguridad" value="B">
+                        <span class="radio-letter">B)</span>
+                        <span class="radio-text">Ambos conceptos son totalmente idénticos y se refieren únicamente al cifrado simétrico de unidades de almacenamiento secundario.</span>
+                    </label>
+                    <label class="radio-card">
+                        <input type="radio" name="q1_proteccion_vs_seguridad" value="C">
+                        <span class="radio-letter">C)</span>
+                        <span class="radio-text">La protección es un problema interno de control de acceso a recursos; la seguridad contempla el entorno externo y el uso previsto.</span>
+                    </label>
+                    <label class="radio-card">
+                        <input type="radio" name="q1_proteccion_vs_seguridad" value="D">
+                        <span class="radio-letter">D)</span>
+                        <span class="radio-text">La seguridad supervisa de forma exclusiva los descriptores de sockets abiertos y la protección evita la pérdida de paquetes en enrutadores.</span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Q2 -->
+            <div class="question-block" data-qid="q2_metas_amenazas">
+                <div class="question-header">2. En la relación entre metas de seguridad y categorías de ataques, ¿qué asociación describe correctamente los pilares fundamentales?</div>
+                <div class="radio-cards-grid">
+                    <label class="radio-card">
+                        <input type="radio" name="q2_metas_amenazas" value="A">
+                        <span class="radio-letter">A)</span>
+                        <span class="radio-text">Confidencialidad contra intercepción, Integridad contra modificación, y Disponibilidad contra interrupción.</span>
+                    </label>
+                    <label class="radio-card">
+                        <input type="radio" name="q2_metas_amenazas" value="B">
+                        <span class="radio-letter">B)</span>
+                        <span class="radio-text">Confidencialidad contra desbordamiento de pila, Integridad contra latencia de red, y Disponibilidad contra cifrado asimétrico.</span>
+                    </label>
+                    <label class="radio-card">
+                        <input type="radio" name="q2_metas_amenazas" value="C">
+                        <span class="radio-letter">C)</span>
+                        <span class="radio-text">Disponibilidad contra escuchas pasivas, Integridad contra corte de energía física, y Confidencialidad contra fabricación de paquetes.</span>
+                    </label>
+                    <label class="radio-card">
+                        <input type="radio" name="q2_metas_amenazas" value="D">
+                        <span class="radio-letter">D)</span>
+                        <span class="radio-text">Autenticación contra particionado de disco, Disponibilidad contra modificación de memoria, y Confidencialidad contra multiplexación.</span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Q3 -->
+            <div class="question-block" data-qid="q3_modelo_virus_das">
+                <div class="question-header">3. En la taxonomía del malware analizada en la teoría, ¿qué propiedades caracterizan al modelo DAS de los virus informáticos?</div>
+                <div class="radio-cards-grid">
+                    <label class="radio-card">
+                        <input type="radio" name="q3_modelo_virus_das" value="A">
+                        <span class="radio-letter">A)</span>
+                        <span class="radio-text">Descentralizado, Asincrónico y Sincronizado, indicando su propagación mediante llamadas RPC distribuidas entre nodos de cómputo.</span>
+                    </label>
+                    <label class="radio-card">
+                        <input type="radio" name="q3_modelo_virus_das" value="B">
+                        <span class="radio-letter">B)</span>
+                        <span class="radio-text">Dañino, Autorreplicante y Subrepticio, contemplando su capacidad destructiva, su propagación y su ejecución oculta.</span>
+                    </label>
+                    <label class="radio-card">
+                        <input type="radio" name="q3_modelo_virus_das" value="C">
+                        <span class="radio-letter">C)</span>
+                        <span class="radio-text">Dinámico, Autónomo y Silencioso, reflejando su capacidad para minar criptoactivos utilizando memoria GPU en segundo plano.</span>
+                    </label>
+                    <label class="radio-card">
+                        <input type="radio" name="q3_modelo_virus_das" value="D">
+                        <span class="radio-letter">D)</span>
+                        <span class="radio-text">Distribuido, Autenticado y Segmentado, describiendo su ejecución en contenedores aislados de espacio de usuario sin permisos.</span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Q4 -->
+            <div class="question-block" data-qid="q4_factores_autenticacion">
+                <div class="question-header">4. ¿Cuáles son los tres principios generales utilizados por los sistemas operativos para autenticar la identidad de un usuario?</div>
+                <div class="radio-cards-grid">
+                    <label class="radio-card">
+                        <input type="radio" name="q4_factores_autenticacion" value="A">
+                        <span class="radio-letter">A)</span>
+                        <span class="radio-text">Algo que procesa el microprocesador, algo que transmite el bus PCI Express, y algo que persiste en los extents de disco.</span>
+                    </label>
+                    <label class="radio-card">
+                        <input type="radio" name="q4_factores_autenticacion" value="B">
+                        <span class="radio-letter">B)</span>
+                        <span class="radio-text">Algo que programa el desarrollador, algo que audita el sistema de logging, y algo que compila el ensamblador del kernel.</span>
+                    </label>
+                    <label class="radio-card">
+                        <input type="radio" name="q4_factores_autenticacion" value="C">
+                        <span class="radio-letter">C)</span>
+                        <span class="radio-text">Algo que conoce (contraseñas), algo que tiene (tarjetas/tokens), y algo que es (biometría como huellas o iris).</span>
+                    </label>
+                    <label class="radio-card">
+                        <input type="radio" name="q4_factores_autenticacion" value="D">
+                        <span class="radio-letter">D)</span>
+                        <span class="radio-text">Algo que solicita el navegador, algo que encripta la capa TLS de transporte, y algo que firma la autoridad certificante.</span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Q5 -->
+            <div class="question-block" data-qid="q5_politicas_firewall">
+                <div class="question-header">5. En la configuración de un cortafuegos (firewall), ¿cuál es la diferencia clave entre una política restrictiva y una permisiva?</div>
+                <div class="radio-cards-grid">
+                    <label class="radio-card">
+                        <input type="radio" name="q5_politicas_firewall" value="A">
+                        <span class="radio-letter">A)</span>
+                        <span class="radio-text">La política restrictiva elimina el malware de las cargas útiles y la permisiva lo aísla en una partición de cuarentena.</span>
+                    </label>
+                    <label class="radio-card">
+                        <input type="radio" name="q5_politicas_firewall" value="B">
+                        <span class="radio-letter">B)</span>
+                        <span class="radio-text">La política permisiva solo opera sobre protocolos de capa de enlace y la restrictiva requiere conmutadores de fibra óptica.</span>
+                    </label>
+                    <label class="radio-card">
+                        <input type="radio" name="q5_politicas_firewall" value="C">
+                        <span class="radio-letter">C)</span>
+                        <span class="radio-text">Ambas políticas filtran exactamente el mismo tráfico y se diferencian únicamente en la velocidad de conmutación del chip.</span>
+                    </label>
+                    <label class="radio-card">
+                        <input type="radio" name="q5_politicas_firewall" value="D">
+                        <span class="radio-letter">D)</span>
+                        <span class="radio-text">La política restrictiva deniega todo excepto lo explícitamente permitido; la permisiva autoriza todo salvo lo bloqueado.</span>
+                    </label>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECCIÓN 2: Switches Segmentados -->
+        <section class="glass-card" id="seccion-2">
+            <h2 class="section-title">2️⃣ Matriz de Clasificación con Switches Segmentados</h2>
+            <p class="section-desc">Clasificación binaria estructurada según los temas de la Unidad 4.</p>
+
+            <details class="biblio-panel">
+                <summary class="biblio-summary">📖 Dónde estudiar este tema en la bibliografía</summary>
+                <div class="biblio-content">
+                    Diapositivas Unidad 4 (Slides 7, 23, 33-35, 43, 49).
+                </div>
+            </details>
+
+            <div class="switches-grid">
+                <div class="switch-item" data-swid="sw1_control_acceso_posix">
+                    <span class="switch-label">1. Control de Acceso por Permisos POSIX en el Kernel</span>
+                    <span class="switch-desc">Validación interna de llamadas al sistema open() y chmod()</span>
+                    <div class="segment-control">
+                        <button type="button" class="segment-btn" data-val="MECANISMO_PROTECCION">Mecanismo Interno de Protección</button>
+                        <button type="button" class="segment-btn" data-val="POLITICA_SEGURIDAD_EXTERNA">Política Externa de Seguridad</button>
+                    </div>
+                </div>
+
+                <div class="switch-item" data-swid="sw2_ataque_escucha">
+                    <span class="switch-label">2. Escucha Clandestina de Tráfico de Red (Sniffing)</span>
+                    <span class="switch-desc">Acceso ilícito a la información sin alterar los datos</span>
+                    <div class="segment-control">
+                        <button type="button" class="segment-btn" data-val="ATAQUE_PASIVO">Ataque Pasivo (Intercepción)</button>
+                        <button type="button" class="segment-btn" data-val="ATAQUE_ACTIVO">Ataque Activo (Modificación)</button>
+                    </div>
+                </div>
+
+                <div class="switch-item" data-swid="sw3_algoritmo_aes">
+                    <span class="switch-label">3. Estándar de Cifrado Avanzado (AES - 128/256 bits)</span>
+                    <span class="switch-desc">Cifrado de bloques que utiliza la misma clave en emisión y recepción</span>
+                    <div class="segment-control">
+                        <button type="button" class="segment-btn" data-val="CIFRADO_SIMETRICO">Criptografía Simétrica</button>
+                        <button type="button" class="segment-btn" data-val="CIFRADO_ASIMETRICO">Criptografía Asimétrica</button>
+                    </div>
+                </div>
+
+                <div class="switch-item" data-swid="sw4_algoritmo_rsa">
+                    <span class="switch-label">4. Esquema de Cifra de Clave Pública RSA</span>
+                    <span class="switch-desc">Basado en funciones trampilla unidireccionales y par de claves</span>
+                    <div class="segment-control">
+                        <button type="button" class="segment-btn" data-val="CIFRADO_SIMETRICO">Criptografía Simétrica</button>
+                        <button type="button" class="segment-btn" data-val="CIFRADO_ASIMETRICO">Criptografía Asimétrica</button>
+                    </div>
+                </div>
+
+                <div class="switch-item" data-swid="sw5_tarjeta_chip">
+                    <span class="switch-label">5. Tarjeta Inteligente con Chip Criptográfico (Smart Card)</span>
+                    <span class="switch-desc">Dispositivo físico insertado por el usuario en una terminal lectora</span>
+                    <div class="segment-control">
+                        <button type="button" class="segment-btn" data-val="ALGO_QUE_TIENE">Algo que TIENE el usuario</button>
+                        <button type="button" class="segment-btn" data-val="ALGO_QUE_ES">Algo que ES el usuario</button>
+                    </div>
+                </div>
+
+                <div class="switch-item" data-swid="sw6_firewall_default_deny">
+                    <span class="switch-label">6. Cortafuegos con Denegación por Defecto (Default Deny)</span>
+                    <span class="switch-desc">Se rechaza todo el tráfico de red salvo los puertos habilitados explícitamente</span>
+                    <div class="segment-control">
+                        <button type="button" class="segment-btn" data-val="POLITICA_RESTRICTIVA">Política Restrictiva</button>
+                        <button type="button" class="segment-btn" data-val="POLITICA_PERMISIVA">Política Permisiva</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECCIÓN 3: Laboratorio RSA Docente (Caso Slide 36: p=7, q=13) -->
+        <section class="glass-card" id="seccion-3">
+            <h2 class="section-title">3️⃣ Laboratorio Criptográfico RSA (Caso Diapositiva 36)</h2>
+            <p class="section-desc">Cálculo guiado para los parámetros de la clase teórica: primos p = 7 y q = 13.</p>
+
+            <details class="biblio-panel">
+                <summary class="biblio-summary">📖 Dónde estudiar este tema en la bibliografía</summary>
+                <div class="biblio-content">
+                    Diapositivas Unidad 4 (Slide 36): Ejemplo oficial: p=7, q=13, N=91, phi(N)=72, e=5, d=29, M=69 -> C=62.
+                </div>
+            </details>
+
+            <div class="sim-container">
+                <div class="rsa-flow-diagram">
+                    <div class="rsa-node">
+                        <div class="rsa-node-icon">✉️</div>
+                        <div class="rsa-node-title">Mensaje Plano</div>
+                        <div class="rsa-node-value">M = 69</div>
+                    </div>
+                    <div class="rsa-arrow">➔</div>
+                    <div class="rsa-node">
+                        <div class="rsa-node-icon">🔑</div>
+                        <div class="rsa-node-title">Clave Pública</div>
+                        <div class="rsa-node-value">e = 5, N = 91</div>
+                    </div>
+                    <div class="rsa-arrow">➔</div>
+                    <div class="rsa-node">
+                        <div class="rsa-node-icon">🔒</div>
+                        <div class="rsa-node-title">Criptograma</div>
+                        <div class="rsa-node-value">C = 62</div>
+                    </div>
+                    <div class="rsa-arrow">➔</div>
+                    <div class="rsa-node">
+                        <div class="rsa-node-icon">🗝️</div>
+                        <div class="rsa-node-title">Clave Privada</div>
+                        <div class="rsa-node-value">d = 29, N = 91</div>
+                    </div>
+                    <div class="rsa-arrow">➔</div>
+                    <div class="rsa-node">
+                        <div class="rsa-node-icon">📜</div>
+                        <div class="rsa-node-title">Mensaje Descifrado</div>
+                        <div class="rsa-node-value">M = 69</div>
+                    </div>
+                </div>
+
+                <div class="rsa-controls-grid">
+                    <div class="form-group">
+                        <label for="sim_modulo_n">Módulo del Sistema (N = p * q) para p = 7 y q = 13:</label>
+                        <select id="sim_modulo_n" class="form-control" data-item="sim_modulo_n">
+                            <option value="">-- Seleccione el valor resultante --</option>
+                            <option value="65">65</option>
+                            <option value="84">84</option>
+                            <option value="91">91</option>
+                            <option value="104">104</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="sim_euler_phi">Función de Euler φ(N) = (p - 1)(q - 1):</label>
+                        <select id="sim_euler_phi" class="form-control" data-item="sim_euler_phi">
+                            <option value="">-- Seleccione el valor resultante --</option>
+                            <option value="60">60</option>
+                            <option value="72">72</option>
+                            <option value="84">84</option>
+                            <option value="96">96</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="sim_clave_privada_d">Clave Privada d para e = 5 tal que (e * d) mod φ(N) = 1:</label>
+                        <select id="sim_clave_privada_d" class="form-control" data-item="sim_clave_privada_d">
+                            <option value="">-- Seleccione el valor resultante --</option>
+                            <option value="17">17</option>
+                            <option value="23">23</option>
+                            <option value="29">29</option>
+                            <option value="37">37</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="sim_criptograma_m69">Criptograma C resultante de cifrar M = 69 (C = 69^5 mod 91):</label>
+                        <select id="sim_criptograma_m69" class="form-control" data-item="sim_criptograma_m69">
+                            <option value="">-- Seleccione el valor resultante --</option>
+                            <option value="44">44</option>
+                            <option value="53">53</option>
+                            <option value="62">62</option>
+                            <option value="71">71</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECCIÓN 4: Inicio de Sesión Seguro en Linux -->
+        <section class="glass-card" id="seccion-4">
+            <h2 class="section-title">4️⃣ Flujo Secuencial de Inicio de Sesión Seguro en GNU/Linux</h2>
+            <p class="section-desc">Ordenamiento de las 6 etapas del login seguro según la Slide 56.</p>
+
+            <details class="biblio-panel">
+                <summary class="biblio-summary">📖 Dónde estudiar este tema en la bibliografía</summary>
+                <div class="biblio-content">
+                    Diapositiva Unidad 4 (Slide 56): Implementación de la seguridad e inicio de sesión.
+                </div>
+            </details>
+
+            <div class="dnd-container">
+                <div>
+                    <h3 style="font-size: 0.95rem; margin-bottom: 0.5rem; color: var(--text-muted);">Banco de Etapas de Seguridad:</h3>
+                    <div class="action-bank" id="dnd-action-bank">
+                        <div class="dnd-chip" data-token="HASH_FUNCTION">
+                            <span>🔐</span>
+                            <span>Función Hash Criptográfica a la Contraseña</span>
+                        </div>
+                        <div class="dnd-chip" data-token="SHELL_EXEC">
+                            <span>💻</span>
+                            <span>Ejecución del Shell Asignado al Usuario</span>
+                        </div>
+                        <div class="dnd-chip" data-token="LOGIN_PROMPT">
+                            <span>👤</span>
+                            <span>Ingreso de Nombre de Usuario y Clave</span>
+                        </div>
+                        <div class="dnd-chip" data-token="CHILD_INHERIT">
+                            <span>🌳</span>
+                            <span>Herencia de Credenciales en Procesos Hijos</span>
+                        </div>
+                        <div class="dnd-chip" data-token="SHADOW_VERIFY">
+                            <span>🔍</span>
+                            <span>Verificación de Coincidencia con /etc/shadow</span>
+                        </div>
+                        <div class="dnd-chip" data-token="UID_GID_LOOKUP">
+                            <span>🆔</span>
+                            <span>Obtención de UID y GID desde /etc/passwd</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                        <h3 style="font-size: 0.95rem; color: var(--text-muted);">Secuencia Temporal de Ejecución:</h3>
+                        <button type="button" class="btn btn-outline" id="btn-reset-dnd" style="font-size: 0.8rem; padding: 0.3rem 0.75rem;">Reiniciar Orden</button>
+                    </div>
+                    <div class="slots-grid" id="dnd-slots-grid">
+                        <div class="slot-row" data-slot="0">
+                            <span class="slot-index">Paso 1</span>
+                            <div class="slot-dropzone" data-pos="0"></div>
+                        </div>
+                        <div class="slot-row" data-slot="1">
+                            <span class="slot-index">Paso 2</span>
+                            <div class="slot-dropzone" data-pos="1"></div>
+                        </div>
+                        <div class="slot-row" data-slot="2">
+                            <span class="slot-index">Paso 3</span>
+                            <div class="slot-dropzone" data-pos="2"></div>
+                        </div>
+                        <div class="slot-row" data-slot="3">
+                            <span class="slot-index">Paso 4</span>
+                            <div class="slot-dropzone" data-pos="3"></div>
+                        </div>
+                        <div class="slot-row" data-slot="4">
+                            <span class="slot-index">Paso 5</span>
+                            <div class="slot-dropzone" data-pos="4"></div>
+                        </div>
+                        <div class="slot-row" data-slot="5">
+                            <span class="slot-index">Paso 6</span>
+                            <div class="slot-dropzone" data-pos="5"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECCIÓN 5: Permisos POSIX y Bit SETUID -->
+        <section class="glass-card" id="seccion-5">
+            <h2 class="section-title">5️⃣ Matriz de Permisos POSIX y Bit Especial SETUID</h2>
+            <p class="section-desc">Auditoría y cálculo de permisos para los archivos fundamentales del sistema operativo.</p>
+
+            <details class="biblio-panel">
+                <summary class="biblio-summary">📖 Dónde estudiar este tema en la bibliografía</summary>
+                <div class="biblio-content">
+                    Diapositivas Unidad 4 (Slides 49 a 55).
+                </div>
+            </details>
+
+            <div class="posix-matrix-container">
+                <div class="posix-interactive-box">
+                    <h3 style="font-size: 0.95rem; color: var(--text-muted);">Calculadora Interactiva de Permisos POSIX en Vivo</h3>
+                    <table class="posix-table">
+                        <thead>
+                            <tr>
+                                <th>Bits Especiales</th>
+                                <th>Propietario (u)</th>
+                                <th>Grupo (g)</th>
+                                <th>Otros (o)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <label><input type="checkbox" id="chk-suid" class="posix-checkbox"> SUID (4)</label><br>
+                                    <label><input type="checkbox" id="chk-sgid" class="posix-checkbox"> SGID (2)</label><br>
+                                    <label><input type="checkbox" id="chk-sticky" class="posix-checkbox"> Sticky (1)</label>
+                                </td>
+                                <td>
+                                    <label><input type="checkbox" id="chk-u-r" class="posix-checkbox" checked> Lectura (r=4)</label><br>
+                                    <label><input type="checkbox" id="chk-u-w" class="posix-checkbox" checked> Escritura (w=2)</label><br>
+                                    <label><input type="checkbox" id="chk-u-x" class="posix-checkbox" checked> Ejecución (x=1)</label>
+                                </td>
+                                <td>
+                                    <label><input type="checkbox" id="chk-g-r" class="posix-checkbox" checked> Lectura (r=4)</label><br>
+                                    <label><input type="checkbox" id="chk-g-w" class="posix-checkbox" checked> Escritura (w=2)</label><br>
+                                    <label><input type="checkbox" id="chk-g-x" class="posix-checkbox" checked> Ejecución (x=1)</label>
+                                </td>
+                                <td>
+                                    <label><input type="checkbox" id="chk-o-r" class="posix-checkbox" checked> Lectura (r=4)</label><br>
+                                    <label><input type="checkbox" id="chk-o-w" class="posix-checkbox" checked> Escritura (w=2)</label><br>
+                                    <label><input type="checkbox" id="chk-o-x" class="posix-checkbox" checked> Ejecución (x=1)</label>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="posix-output-banner">
+                        <div class="posix-out-item">
+                            <span class="posix-out-label">Cadena Simbólica</span>
+                            <span class="posix-out-val" id="disp-sym">-rwxr-xr-x</span>
+                        </div>
+                        <div class="posix-out-item">
+                            <span class="posix-out-label">Representación Octal</span>
+                            <span class="posix-out-val" id="disp-oct">0755</span>
+                        </div>
+                        <div class="posix-out-item">
+                            <span class="posix-out-label">Syscall POSIX</span>
+                            <span class="posix-out-val" id="disp-syscall">chmod(path, 0755)</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="rsa-controls-grid">
+                    <div class="form-group">
+                        <label for="permisos_etc_passwd">Permisos recomendados para '/etc/passwd' (público pero solo root escribe):</label>
+                        <select id="permisos_etc_passwd" class="form-control" data-item="permisos_etc_passwd">
+                            <option value="">-- Seleccione permisos octales --</option>
+                            <option value="600">600 (rw-------)</option>
+                            <option value="644">644 (rw-r--r--)</option>
+                            <option value="755">755 (rwxr-xr-x)</option>
+                            <option value="777">777 (rwxrwxrwx)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="permisos_etc_shadow">Permisos recomendados para '/etc/shadow' (hashes confidenciales):</label>
+                        <select id="permisos_etc_shadow" class="form-control" data-item="permisos_etc_shadow">
+                            <option value="">-- Seleccione permisos octales --</option>
+                            <option value="640">640 (rw-r-----)</option>
+                            <option value="644">644 (rw-r--r--)</option>
+                            <option value="755">755 (rwxr-xr-x)</option>
+                            <option value="777">777 (rwxrwxrwx)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="permisos_bin_passwd">Permisos del binario ejecutable '/usr/bin/passwd' con SETUID:</label>
+                        <select id="permisos_bin_passwd" class="form-control" data-item="permisos_bin_passwd">
+                            <option value="">-- Seleccione permisos octales --</option>
+                            <option value="0755">0755 (-rwxr-xr-x)</option>
+                            <option value="1755">1755 (-rwxr-xr-t)</option>
+                            <option value="2755">2755 (-rwxr-sr-x)</option>
+                            <option value="4755">4755 (-rwsr-xr-x)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="proposito_setuid">Propósito de seguridad del bit SETUID en '/usr/bin/passwd':</label>
+                        <select id="proposito_setuid" class="form-control" data-item="proposito_setuid">
+                            <option value="">-- Seleccione el propósito técnico --</option>
+                            <option value="ADOPTAR_UID_PROPIETARIO_TEMPORALMENTE">Adoptar temporalmente el UID del dueño (root) para escribir en shadow</option>
+                            <option value="EVITAR_ACCESO_ROOT">Evitar que el usuario root acceda a la clave de los usuarios comunes</option>
+                            <option value="ENCRIPTAR_BINARIO_DISCO">Encriptar el binario en disco para evitar desensamblado</option>
+                            <option value="PERMITIR_ACCESO_RED">Habilitar el acceso remoto al comando mediante sockets TCP</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer / Exportación -->
+        <footer class="footer-export">
+            <div class="footer-actions">
+                <button class="btn btn-primary" id="btn-download-json-footer" disabled>
+                    📥 Descargar respuestas_tp4_demo.json
+                </button>
+            </div>
+        </footer>
+    </main>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast-notify">
+        <span id="toast-icon">ℹ️</span>
+        <span id="toast-msg">Mensaje del sistema</span>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

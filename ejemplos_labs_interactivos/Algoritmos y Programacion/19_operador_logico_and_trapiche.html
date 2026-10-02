@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        :root {
+            --ledesma-green: #1b5e20;
+            --sugar-white: #ffffff;
+            --trapiche-gray: #455a64;
+            --success: #2e7d32;
+            --danger: #d32f2f;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            background-color: transparent;
+            display: flex;
+            justify-content: center;
+            padding: 10px;
+        }
+
+        .control-card {
+            background: var(--sugar-white);
+            width: 100%;
+            max-width: 450px;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+            border-left: 8px solid var(--ledesma-green);
+            overflow: hidden;
+            box-sizing: border-box;
+        }
+
+        .header {
+            background-color: var(--ledesma-green);
+            color: white;
+            padding: 15px;
+            text-align: center;
+        }
+
+        .header h2 { margin: 0; font-size: 1.1rem; text-transform: uppercase; }
+
+        .content { padding: 20px; }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .input-group { display: flex; flex-direction: column; }
+
+        label {
+            font-size: 0.75rem;
+            font-weight: bold;
+            color: var(--trapiche-gray);
+            margin-bottom: 5px;
+        }
+
+        input {
+            padding: 10px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        input:focus { border-color: var(--ledesma-green); }
+
+        .full-width { grid-column: 1 / span 2; }
+
+        .display-panel {
+            background: #f5f5f5;
+            padding: 15px;
+            border-radius: 12px;
+            text-align: center;
+            border: 2px solid #eee;
+        }
+
+        .calc-info {
+            font-size: 0.85rem;
+            color: #666;
+            margin-bottom: 8px;
+        }
+
+        .verdict-box {
+            font-size: 1.4rem;
+            font-weight: 900;
+            padding: 10px;
+            border-radius: 8px;
+            margin: 10px 0;
+        }
+
+        .logic-view {
+            background: #263238;
+            color: #81d4fa;
+            font-family: 'Courier New', monospace;
+            font-size: 0.75rem;
+            padding: 10px;
+            border-radius: 6px;
+            text-align: left;
+            line-height: 1.4;
+        }
+
+        /* Estados de Validación */
+        .accepted { background-color: #e8f5e9; color: var(--success); border: 1px solid var(--success); }
+        .rejected { background-color: #ffebee; color: var(--danger); border: 1px solid var(--danger); }
+    </style>
+</head>
+<body>
+
+<div class="control-card">
+    <div class="header">
+        <h2>🚜 Control de Recepción - Trapiche</h2>
+    </div>
+
+    <div class="content">
+        <div class="form-grid">
+            <div class="input-group">
+                <label>Peso Lleno (t):</label>
+                <input type="number" id="pesoLleno" step="0.1" placeholder="Ej: 45.5" oninput="validarCarga()">
+            </div>
+            <div class="input-group">
+                <label>Tara/Vacío (t):</label>
+                <input type="number" id="pesoTara" step="0.1" placeholder="Ej: 18.2" oninput="validarCarga()">
+            </div>
+            <div class="input-group full-width">
+                <label>Porcentaje de Humedad (%):</label>
+                <input type="number" id="humedad" step="0.1" placeholder="Ej: 12.5" oninput="validarCarga()">
+            </div>
+        </div>
+
+        <div id="panel" class="display-panel">
+            <div class="calc-info">Peso Neto: <strong id="netoDisplay">0.0</strong> t</div>
+            <div style="font-size: 0.75rem; color: #777;">¿La carga es aceptada para el trapiche?</div>
+            <div id="verdicto" class="verdict-box">---</div>
+            
+            <div class="logic-view">
+                (neto >= 25 && neto <= 30) <span style="color: #ffb74d;">&&</span> (humedad < 15)
+                <br>
+                <span style="color: #90a4ae;">// Veredicto: </span><span id="rawRes">?</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function validarCarga() {
+        const lleno = parseFloat(document.getElementById('pesoLleno').value) || 0;
+        const tara = parseFloat(document.getElementById('pesoTara').value) || 0;
+        const humedad = parseFloat(document.getElementById('humedad').value) || 0;
+
+        const neto = lleno - tara;
+        document.getElementById('netoDisplay').innerText = neto.toFixed(1);
+
+        // --- LÓGICA DEL ALGORITMO ---
+        // 1. El peso neto debe estar entre 25 y 30 inclusive.
+        // 2. La humedad debe ser estrictamente menor a 15.
+        const esPesoValido = (neto >= 25 && neto <= 30);
+        const esHumedadValida = (humedad < 15);
+        const cargaAceptada = esPesoValido && esHumedadValida;
+
+        const panel = document.getElementById('panel');
+        const verdicto = document.getElementById('verdicto');
+        const rawRes = document.getElementById('rawRes');
+
+        if (lleno === 0 || tara === 0) {
+            verdicto.innerText = "---";
+            verdicto.className = "verdict-box";
+            rawRes.innerText = "?";
+            return;
+        }
+
+        if (cargaAceptada) {
+            verdicto.innerText = "VERDADERO";
+            verdicto.className = "verdict-box accepted";
+            rawRes.innerText = "true";
+        } else {
+            verdicto.innerText = "FALSO";
+            verdicto.className = "verdict-box rejected";
+            rawRes.innerText = "false";
+        }
+    }
+</script>
+
+</body>
+</html>

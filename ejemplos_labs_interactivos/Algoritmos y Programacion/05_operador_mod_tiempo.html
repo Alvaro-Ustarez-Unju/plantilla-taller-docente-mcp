@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        :root {
+            --primary-color: #2e7d32; /* Verde Quebrada */
+            --accent-color: #f57c00;  /* Naranja Atardecer */
+            --bg-color: #f9f9f9;
+            --card-bg: #ffffff;
+            --text-color: #333;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: transparent;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            padding: 10px;
+        }
+
+        .widget-container {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 450px;
+            padding: 20px;
+            border-top: 5px solid var(--primary-color);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .header h2 {
+            color: var(--primary-color);
+            margin: 0;
+            font-size: 1.4rem;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: var(--text-color);
+        }
+
+        input[type="number"] {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            box-sizing: border-box;
+            transition: border-color 0.3s;
+        }
+
+        input[type="number"]:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+
+        .btn-calcular {
+            width: 100%;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .btn-calcular:hover {
+            background-color: #1b5e20;
+        }
+
+        .resultado-panel {
+            margin-top: 20px;
+            background-color: #f1f8e9;
+            border-radius: 8px;
+            padding: 15px;
+            display: none; /* Se activa con JS */
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .res-main {
+            font-size: 1.1rem;
+            text-align: center;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+
+        .logic-card {
+            background: #fff;
+            border-left: 4px solid var(--accent-color);
+            padding: 8px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.85rem;
+            color: #444;
+        }
+
+        .logic-card b { color: var(--accent-color); }
+
+        .footer-info {
+            margin-top: 15px;
+            font-size: 0.8rem;
+            color: #888;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+<div class="widget-container">
+    <div class="header">
+        <h2>⏱️ De Jujuy a Tilcara</h2>
+        <p>Conversor de tiempo (Operador MOD)</p>
+    </div>
+
+    <div class="input-group">
+        <label for="minutosInput">Minutos totales de viaje:</label>
+        <input type="number" id="minutosInput" placeholder="Ej: 135" min="0">
+    </div>
+
+    <button class="btn-calcular" onclick="convertirTiempo()">Calcular Tiempo de Viaje</button>
+
+    <div id="panelResultado" class="resultado-panel">
+        <div id="resTexto" class="res-main"></div>
+        <div class="logic-card">
+            <div><b>TRUNC</b>(min / 60) → <span id="logHoras"></span> h</div>
+            <div><b>MOD</b>(min % 60) → <span id="logMinutos"></span> m</div>
+        </div>
+    </div>
+
+    <div class="footer-info">
+        Ruta Nacional 9 - Jujuy, Argentina
+    </div>
+</div>
+
+<script>
+    function convertirTiempo() {
+        const input = document.getElementById('minutosInput');
+        const panel = document.getElementById('panelResultado');
+        const resTexto = document.getElementById('resTexto');
+        const logHoras = document.getElementById('logHoras');
+        const logMinutos = document.getElementById('logMinutos');
+
+        const totalMinutos = parseInt(input.value);
+
+        if (isNaN(totalMinutos) || totalMinutos < 0) {
+            alert("Por favor, ingresa una cantidad válida de minutos.");
+            return;
+        }
+
+        // --- LÓGICA DEL DESAFÍO ---
+        // 1. Obtener horas enteras (Truncar la división)
+        const horas = Math.floor(totalMinutos / 60);
+        
+        // 2. Obtener minutos restantes (Operador Módulo %)
+        const minutosRestantes = totalMinutos % 60;
+
+        // Mostrar resultados
+        resTexto.innerHTML = `🚌 El viaje duró: <br><strong>${horas} hora(s) y ${minutosRestantes} minuto(s)</strong>`;
+        
+        // Mostrar lógica técnica
+        logHoras.innerText = horas;
+        logMinutos.innerText = minutosRestantes;
+
+        // Mostrar panel con animación
+        panel.style.display = 'block';
+    }
+</script>
+
+</body>
+</html>

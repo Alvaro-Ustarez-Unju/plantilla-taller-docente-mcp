@@ -13,6 +13,17 @@ Dentro de este repositorio encontrarás la carpeta `/toolkit_docente`. Esta carp
 
 ---
 
+## 🧪 Ejemplos de Laboratorios Interactivos
+En la carpeta `/ejemplos_labs_interactivos` encontrarás un catálogo de 19 ejemplos prácticos de laboratorios web listos para usar, especialmente diseñados para la cátedra *Algoritmos y Programación*. Estos ejemplos demuestran cómo crear interfaces visuales e interactivas (widgets) en HTML/JS para evaluar de forma didáctica:
+- Expresiones algebraicas y linealización.
+- Operadores Relacionales (>, <, ==).
+- Operadores Lógicos (AND, OR, NOT) y Tablas de Verdad.
+- Uso matemático y de extracción del operador Módulo (%).
+
+¡Explóralos haciendo doble clic en cualquiera de los archivos `.html` para verlos en acción en tu navegador!
+
+---
+
 ## 🚀 Tareas del Día 1: Fundamentos y Persistencia (Onboarding)
 Tu objetivo es inicializar este repositorio como el núcleo de tu materia. Para aprobar esta etapa, debes realizar lo siguiente:
 

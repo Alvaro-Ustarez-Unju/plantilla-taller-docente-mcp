@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Finanzas del Asado</title>
+<style>
+    /* Estilos base y variables */
+    :root {
+        --primary-color: #FF6B6B;
+        --secondary-color: #4ECDC4;
+        --bg-color: #F7F9FC;
+        --text-color: #2D3436;
+        --border-radius: 8px;
+    }
+
+    body {
+        font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        background-color: transparent;
+        color: var(--text-color);
+        margin: 0;
+        padding: 10px;
+        box-sizing: border-box;
+    }
+
+    .widget-container {
+        width: 100%;
+        max-width: 450px;
+        margin: 0 auto;
+        background-color: #ffffff;
+        padding: 24px;
+        border-radius: var(--border-radius);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        border-top: 5px solid var(--primary-color);
+        box-sizing: border-box;
+    }
+
+    .widget-header {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    .widget-header h2 {
+        margin: 0;
+        font-size: 1.4rem;
+        color: var(--text-color);
+    }
+
+    .input-group {
+        margin-bottom: 16px;
+    }
+
+    .input-group label {
+        display: block;
+        margin-bottom: 6px;
+        font-weight: 600;
+        font-size: 0.9rem;
+    }
+
+    .input-group input {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #dfe6e9;
+        border-radius: 4px;
+        font-size: 1rem;
+        box-sizing: border-box;
+        transition: border-color 0.3s ease;
+    }
+
+    .input-group input:focus {
+        outline: none;
+        border-color: var(--primary-color);
+    }
+
+    .btn-calcular {
+        width: 100%;
+        background-color: var(--primary-color);
+        color: white;
+        border: none;
+        padding: 12px;
+        font-size: 1rem;
+        font-weight: bold;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background-color 0.3s ease, transform 0.1s ease;
+    }
+
+    .btn-calcular:hover {
+        background-color: #ff5252;
+    }
+
+    .btn-calcular:active {
+        transform: scale(0.98);
+    }
+
+    .resultado-panel {
+        margin-top: 20px;
+        padding: 16px;
+        background-color: var(--bg-color);
+        border-left: 4px solid var(--secondary-color);
+        border-radius: 4px;
+        display: none; /* Oculto inicialmente */
+        animation: fadeIn 0.4s ease-in-out;
+    }
+
+    .resultado-item {
+        margin: 8px 0;
+        font-size: 1rem;
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .resultado-item span {
+        font-weight: bold;
+        color: var(--primary-color);
+    }
+
+    .error-msg {
+        color: #d63031;
+        font-size: 0.85rem;
+        margin-top: 5px;
+        display: none;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(-5px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+</style>
+</head>
+<body>
+
+<div class="widget-container">
+    <div class="widget-header">
+        <h2>🥩 Finanzas del Asado</h2>
+        <p style="font-size: 0.85rem; color: #636e72;">Calculadora de gastos compartidos y contingencia</p>
+    </div>
+
+    <div class="input-group">
+        <label for="costoTotal">Costo total de la compra ($)</label>
+        <input type="number" id="costoTotal" placeholder="Ej: 15000" min="0" step="0.01">
+    </div>
+
+    <div class="input-group">
+        <label for="cantidadAmigos">Cantidad de amigos</label>
+        <input type="number" id="cantidadAmigos" placeholder="Ej: 5" min="1" step="1">
+        <div id="errorMensaje" class="error-msg">Por favor, ingresa valores numéricos válidos mayores a cero.</div>
+    </div>
+
+    <button class="btn-calcular" onclick="ejecutarCalculo()">Calcular División</button>
+
+    <div id="panelResultados" class="resultado-panel">
+        <div class="resultado-item">
+            Cuota por persona: <span id="outCuota">$0.00</span>
+        </div>
+        <div class="resultado-item">
+            Fondo de contingencia (15%): <span id="outFondo">$0.00</span>
+        </div>
+    </div>
+</div>
+
+<script>
+    function ejecutarCalculo() {
+        // 1. Obtener valores del DOM
+        const inputCosto = document.getElementById('costoTotal').value;
+        const inputAmigos = document.getElementById('cantidadAmigos').value;
+        
+        const costoTotal = parseFloat(inputCosto);
+        const cantidadAmigos = parseInt(inputAmigos);
+        
+        const panelResultados = document.getElementById('panelResultados');
+        const errorMensaje = document.getElementById('errorMensaje');
+
+        // 2. Validación de datos
+        if (isNaN(costoTotal) || isNaN(cantidadAmigos) || costoTotal < 0 || cantidadAmigos <= 0) {
+            errorMensaje.style.display = 'block';
+            panelResultados.style.display = 'none';
+            return;
+        }
+
+        // 3. Ocultar error si los datos son válidos
+        errorMensaje.style.display = 'none';
+
+        // 4. Lógica del algoritmo
+        const cuotaPersona = costoTotal / cantidadAmigos;
+        const fondoContingencia = costoTotal * 0.15; // 15% del costo total
+
+        // 5. Actualizar la UI
+        document.getElementById('outCuota').textContent = '$' + cuotaPersona.toFixed(2);
+        document.getElementById('outFondo').textContent = '$' + fondoContingencia.toFixed(2);
+        
+        // 6. Mostrar el panel con feedback visual
+        panelResultados.style.display = 'block';
+    }
+</script>
+
+</body>
+</html>

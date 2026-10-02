@@ -1,0 +1,45 @@
+{
+  "estudiante": {
+    "nombre": "Ing. Fabio Damián Argañaraz Azua",
+    "legajo": "DOC-2026-SOII",
+    "github": "Catedra-SOII-UNJu",
+    "timestamp": "2026-09-24T12:00:00Z"
+  },
+  "seccion1_conceptos": {
+    "q1_proteccion_vs_seguridad": "C",
+    "q2_metas_amenazas": "A",
+    "q3_modelo_virus_das": "B",
+    "q4_factores_autenticacion": "C",
+    "q5_politicas_firewall": "D"
+  },
+  "seccion2_switches": {
+    "sw1_control_acceso_posix": "MECANISMO_PROTECCION",
+    "sw2_ataque_escucha": "ATAQUE_PASIVO",
+    "sw3_algoritmo_aes": "CIFRADO_SIMETRICO",
+    "sw4_algoritmo_rsa": "CIFRADO_ASIMETRICO",
+    "sw5_tarjeta_chip": "ALGO_QUE_TIENE",
+    "sw6_firewall_default_deny": "POLITICA_RESTRICTIVA"
+  },
+  "seccion3_laboratorio_rsa": {
+    "sim_modulo_n": "91",
+    "sim_euler_phi": "72",
+    "sim_clave_privada_d": "29",
+    "sim_criptograma_m69": "62"
+  },
+  "seccion4_login_linux": {
+    "orden_login_linux": [
+      "LOGIN_PROMPT",
+      "HASH_FUNCTION",
+      "SHADOW_VERIFY",
+      "UID_GID_LOOKUP",
+      "SHELL_EXEC",
+      "CHILD_INHERIT"
+    ]
+  },
+  "seccion5_permisos_suid": {
+    "permisos_etc_passwd": "644",
+    "permisos_etc_shadow": "640",
+    "permisos_bin_passwd": "4755",
+    "proposito_setuid": "ADOPTAR_UID_PROPIETARIO_TEMPORALMENTE"
+  }
+}

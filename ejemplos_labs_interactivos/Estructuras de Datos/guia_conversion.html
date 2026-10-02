@@ -1,0 +1,1843 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Guía didáctica y técnica de conversión de estructuras de datos dinámicas (Listas, Pilas, Colas, Bicolas y Circulares) para la Cátedra de Estructura de Datos - UCSE DASS.">
+  <title>Cátedra de Estructura de Datos | Guía Maestra de Conversión de TADs Dinámicos</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --bg-main: #0b0f19;
+      --bg-card: #111827;
+      --bg-card-hover: #17223b;
+      --bg-code: #070a12;
+      --border-subtle: #1e293b;
+      --border-accent: #3b82f6;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --text-dim: #64748b;
+      --accent-blue: #38bdf8;
+      --accent-indigo: #6366f1;
+      --accent-purple: #a855f7;
+      --accent-green: #10b981;
+      --accent-amber: #f59e0b;
+      --accent-rose: #f43f5e;
+      --radius-sm: 6px;
+      --radius-md: 12px;
+      --radius-lg: 18px;
+      --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 8px 10px -6px rgba(0, 0, 0, 0.5);
+      --transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      background-color: var(--bg-main);
+      color: var(--text-main);
+      line-height: 1.65;
+      padding: 0;
+      overflow-x: hidden;
+      background-image: 
+        radial-gradient(at 0% 0%, rgba(56, 189, 248, 0.08) 0px, transparent 50%),
+        radial-gradient(at 100% 100%, rgba(99, 102, 241, 0.08) 0px, transparent 50%);
+      background-attachment: fixed;
+    }
+
+    /* TOP HEADER / NAVBAR */
+    header {
+      background: rgba(11, 15, 25, 0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border-subtle);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      padding: 0.85rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .brand-logo {
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(135deg, var(--accent-blue), var(--accent-indigo));
+      border-radius: var(--radius-sm);
+      display: grid;
+      place-items: center;
+      font-family: 'Outfit', sans-serif;
+      font-weight: 800;
+      color: #fff;
+      font-size: 1.25rem;
+      box-shadow: 0 0 15px rgba(56, 189, 248, 0.3);
+    }
+
+    .brand-text h1 {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.05rem;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      color: #fff;
+    }
+
+    .brand-text p {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 1.5rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.875rem;
+      font-weight: 500;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+
+    .nav-links a:hover {
+      color: var(--accent-blue);
+    }
+
+    /* HERO */
+    .hero {
+      max-width: 1200px;
+      margin: 3rem auto 2rem auto;
+      padding: 0 2rem;
+      text-align: center;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(56, 189, 248, 0.1);
+      border: 1px solid rgba(56, 189, 248, 0.25);
+      color: var(--accent-blue);
+      padding: 0.35rem 1rem;
+      border-radius: 9999px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      margin-bottom: 1.5rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .hero h2 {
+      font-family: 'Outfit', sans-serif;
+      font-size: clamp(2rem, 4vw, 3.25rem);
+      font-weight: 800;
+      line-height: 1.15;
+      margin-bottom: 1rem;
+      background: linear-gradient(to right, #ffffff, #94a3b8, #38bdf8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero p {
+      color: var(--text-muted);
+      font-size: 1.125rem;
+      max-width: 800px;
+      margin: 0 auto 2rem auto;
+    }
+
+    /* PROFESSOR CALLOUT */
+    .prof-intro {
+      max-width: 1100px;
+      margin: 0 auto 3rem auto;
+      background: linear-gradient(145deg, rgba(30, 41, 59, 0.6), rgba(15, 23, 42, 0.8));
+      border: 1px solid rgba(56, 189, 248, 0.2);
+      border-left: 5px solid var(--accent-blue);
+      border-radius: var(--radius-md);
+      padding: 1.75rem 2rem;
+      display: flex;
+      gap: 1.5rem;
+      align-items: flex-start;
+      box-shadow: var(--shadow-lg);
+    }
+
+    .prof-avatar {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent-indigo), var(--accent-purple));
+      display: grid;
+      place-items: center;
+      font-size: 1.8rem;
+      flex-shrink: 0;
+      border: 2px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .prof-text h3 {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.2rem;
+      color: #fff;
+      margin-bottom: 0.35rem;
+    }
+
+    .prof-text p {
+      font-size: 0.95rem;
+      color: var(--text-muted);
+    }
+
+    .prof-text p strong {
+      color: var(--text-main);
+    }
+
+    /* MAIN CONTAINER */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 2rem 4rem 2rem;
+    }
+
+    /* SECTION TITLES */
+    .section-header {
+      margin-bottom: 2rem;
+    }
+
+    .section-header h2 {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.85rem;
+      font-weight: 700;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .section-header p {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      margin-top: 0.25rem;
+    }
+
+    /* INTERACTIVE CONVERSION HUB */
+    .hub-wrapper {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 2rem;
+      box-shadow: var(--shadow-lg);
+      margin-bottom: 3.5rem;
+    }
+
+    .selector-nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.65rem;
+      margin-bottom: 2rem;
+      padding-bottom: 1.5rem;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .selector-btn {
+      background: #1e293b;
+      color: var(--text-muted);
+      border: 1px solid transparent;
+      padding: 0.65rem 1.15rem;
+      border-radius: 9999px;
+      font-size: 0.875rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .selector-btn:hover {
+      background: #283548;
+      color: #fff;
+      border-color: rgba(56, 189, 248, 0.3);
+    }
+
+    .selector-btn.active {
+      background: linear-gradient(135deg, var(--accent-blue), var(--accent-indigo));
+      color: #fff;
+      border-color: transparent;
+      box-shadow: 0 0 16px rgba(56, 189, 248, 0.4);
+    }
+
+    /* CARD DETAILS CONTENT */
+    .conversion-panel {
+      display: none;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .conversion-panel.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .panel-header-badge {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .target-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.7rem;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .pill-tags {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .pill {
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 0.25rem 0.75rem;
+      border-radius: 9999px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .pill-lifo { background: rgba(244, 63, 94, 0.15); color: var(--accent-rose); border: 1px solid rgba(244, 63, 94, 0.3); }
+    .pill-fifo { background: rgba(56, 189, 248, 0.15); color: var(--accent-blue); border: 1px solid rgba(56, 189, 248, 0.3); }
+    .pill-circ { background: rgba(245, 158, 11, 0.15); color: var(--accent-amber); border: 1px solid rgba(245, 158, 11, 0.3); }
+    .pill-cent { background: rgba(16, 185, 129, 0.15); color: var(--accent-green); border: 1px solid rgba(16, 185, 129, 0.3); }
+
+    /* ACTION COLUMNS */
+    .conversion-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .action-box {
+      background: rgba(15, 23, 42, 0.65);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 1.5rem;
+    }
+
+    .action-box.keep {
+      border-top: 4px solid var(--accent-green);
+    }
+
+    .action-box.remove {
+      border-top: 4px solid var(--accent-rose);
+    }
+
+    .action-box.change {
+      border-top: 4px solid var(--accent-amber);
+    }
+
+    .action-box h4 {
+      font-size: 1.05rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .action-box.keep h4 { color: var(--accent-green); }
+    .action-box.remove h4 { color: var(--accent-rose); }
+    .action-box.change h4 { color: var(--accent-amber); }
+
+    .op-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.85rem;
+    }
+
+    .op-item {
+      font-size: 0.9rem;
+      background: rgba(30, 41, 59, 0.4);
+      padding: 0.65rem 0.85rem;
+      border-radius: var(--radius-sm);
+      border-left: 2px solid transparent;
+    }
+
+    .op-item strong {
+      display: block;
+      color: #fff;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.85rem;
+      margin-bottom: 0.15rem;
+    }
+
+    .op-item span {
+      color: var(--text-muted);
+      font-size: 0.825rem;
+    }
+
+    .action-box.keep .op-item { border-left-color: var(--accent-green); }
+    .action-box.remove .op-item { border-left-color: var(--accent-rose); }
+    .action-box.change .op-item { border-left-color: var(--accent-amber); }
+
+    /* CODE COMPARISON SIDE BY SIDE */
+    .code-diff-container {
+      background: var(--bg-code);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      margin-top: 1.5rem;
+    }
+
+    .code-diff-header {
+      background: #0f172a;
+      padding: 0.75rem 1.25rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border-subtle);
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    .code-tabs {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .code-tab-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-size: 0.8rem;
+      font-weight: 600;
+      padding: 0.35rem 0.75rem;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+    }
+
+    .code-tab-btn.active {
+      background: #1e293b;
+      color: var(--accent-blue);
+    }
+
+    pre code {
+      display: block;
+      padding: 1.25rem;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.85rem;
+      line-height: 1.6;
+      color: #e2e8f0;
+      overflow-x: auto;
+    }
+
+    .hl-comment { color: #64748b; font-style: italic; }
+    .hl-type { color: #38bdf8; font-weight: 600; }
+    .hl-kw { color: #f43f5e; font-weight: 600; }
+    .hl-func { color: #a855f7; }
+    .hl-var { color: #f59e0b; }
+    .hl-num { color: #10b981; }
+
+    /* EXAM ALERT BOX */
+    .exam-alert {
+      background: rgba(244, 63, 94, 0.08);
+      border: 1px solid rgba(244, 63, 94, 0.25);
+      border-left: 4px solid var(--accent-rose);
+      border-radius: var(--radius-md);
+      padding: 1rem 1.25rem;
+      margin-top: 1.5rem;
+      display: flex;
+      gap: 1rem;
+      align-items: flex-start;
+    }
+
+    .exam-alert-icon {
+      font-size: 1.35rem;
+      line-height: 1;
+    }
+
+    .exam-alert-content h5 {
+      color: #f87171;
+      font-size: 0.95rem;
+      font-weight: 700;
+      margin-bottom: 0.25rem;
+    }
+
+    .exam-alert-content p {
+      color: #cbd5e1;
+      font-size: 0.875rem;
+      margin: 0;
+    }
+
+    /* GLOBAL MATRIX TABLE */
+    .matrix-wrapper {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 2rem;
+      box-shadow: var(--shadow-lg);
+      margin-bottom: 3.5rem;
+      overflow-x: auto;
+    }
+
+    .matrix-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.875rem;
+      text-align: left;
+    }
+
+    .matrix-table th {
+      background: #0f172a;
+      color: #cbd5e1;
+      font-family: 'Outfit', sans-serif;
+      font-weight: 600;
+      padding: 1rem;
+      border-bottom: 2px solid var(--border-subtle);
+      white-space: nowrap;
+    }
+
+    .matrix-table td {
+      padding: 1rem;
+      border-bottom: 1px solid var(--border-subtle);
+      color: var(--text-muted);
+      vertical-align: middle;
+    }
+
+    .matrix-table tr:hover td {
+      background: rgba(30, 41, 59, 0.3);
+      color: var(--text-main);
+    }
+
+    .td-struct-name {
+      font-weight: 700;
+      color: #fff !important;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .badge-check {
+      background: rgba(16, 185, 129, 0.15);
+      color: #34d399;
+      padding: 0.2rem 0.5rem;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      display: inline-block;
+    }
+
+    .badge-forbidden {
+      background: rgba(244, 63, 94, 0.15);
+      color: #fb7185;
+      padding: 0.2rem 0.5rem;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      display: inline-block;
+    }
+
+    .badge-restricted {
+      background: rgba(245, 158, 11, 0.15);
+      color: #fbbf24;
+      padding: 0.2rem 0.5rem;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      display: inline-block;
+    }
+
+    /* INTERACTIVE SIMULATOR */
+    .simulator-wrapper {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 2rem;
+      box-shadow: var(--shadow-lg);
+      margin-bottom: 3.5rem;
+    }
+
+    .sim-controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      align-items: center;
+      margin-bottom: 2rem;
+      background: #0f172a;
+      padding: 1.25rem;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-subtle);
+    }
+
+    .sim-select-group {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .sim-select-group label {
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--accent-blue);
+    }
+
+    .sim-select {
+      background: #1e293b;
+      color: #fff;
+      border: 1px solid var(--border-subtle);
+      padding: 0.5rem 1rem;
+      border-radius: var(--radius-sm);
+      font-family: inherit;
+      font-size: 0.875rem;
+      cursor: pointer;
+    }
+
+    .sim-btn-group {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      margin-left: auto;
+    }
+
+    .sim-btn {
+      background: #1e293b;
+      color: #fff;
+      border: 1px solid transparent;
+      padding: 0.5rem 0.95rem;
+      border-radius: var(--radius-sm);
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .sim-btn:hover:not(:disabled) {
+      background: var(--accent-indigo);
+    }
+
+    .sim-btn:disabled {
+      opacity: 0.35;
+      cursor: not-allowed;
+      border-color: rgba(244, 63, 94, 0.4);
+    }
+
+    .sim-canvas {
+      min-height: 180px;
+      background: var(--bg-code);
+      border: 1px dashed var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 1.25rem;
+      overflow-x: auto;
+      position: relative;
+    }
+
+    .sim-node {
+      display: flex;
+      align-items: center;
+      background: #1e293b;
+      border: 2px solid var(--accent-blue);
+      border-radius: var(--radius-sm);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+      animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    @keyframes popIn {
+      from { transform: scale(0.7); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    .sim-node-val {
+      padding: 0.75rem 1.25rem;
+      font-family: 'Fira Code', monospace;
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #fff;
+      border-right: 1px solid var(--border-subtle);
+    }
+
+    .sim-node-ptr {
+      padding: 0.75rem 0.85rem;
+      font-size: 0.8rem;
+      color: var(--accent-amber);
+      font-family: 'Fira Code', monospace;
+    }
+
+    .sim-arrow {
+      color: var(--text-dim);
+      font-size: 1.5rem;
+      font-weight: bold;
+    }
+
+    .sim-pointer-tag {
+      font-size: 0.75rem;
+      font-weight: 800;
+      color: var(--accent-rose);
+      background: rgba(244, 63, 94, 0.15);
+      border: 1px solid rgba(244, 63, 94, 0.4);
+      padding: 0.2rem 0.5rem;
+      border-radius: 4px;
+      margin-bottom: 0.25rem;
+      text-align: center;
+    }
+
+    .sim-log {
+      margin-top: 1rem;
+      background: #0f172a;
+      border-radius: var(--radius-sm);
+      padding: 0.75rem 1.25rem;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      border-left: 3px solid var(--accent-blue);
+    }
+
+    /* DECALOGO CARDS */
+    .decalogo-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.25rem;
+      margin-bottom: 3.5rem;
+    }
+
+    .rule-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 1.5rem;
+      transition: var(--transition);
+      position: relative;
+    }
+
+    .rule-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(56, 189, 248, 0.4);
+      box-shadow: 0 10px 20px -5px rgba(0,0,0,0.5);
+    }
+
+    .rule-num {
+      position: absolute;
+      top: 1rem;
+      right: 1.25rem;
+      font-family: 'Outfit', sans-serif;
+      font-size: 2rem;
+      font-weight: 800;
+      color: rgba(255, 255, 255, 0.05);
+      line-height: 1;
+    }
+
+    .rule-card h4 {
+      font-size: 1.05rem;
+      color: #fff;
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .rule-card p {
+      font-size: 0.875rem;
+      color: var(--text-muted);
+    }
+
+    /* FOOTER */
+    footer {
+      border-top: 1px solid var(--border-subtle);
+      background: #080c14;
+      padding: 2.5rem 2rem;
+      text-align: center;
+      color: var(--text-dim);
+      font-size: 0.85rem;
+    }
+
+    footer p {
+      margin-bottom: 0.5rem;
+    }
+
+    footer a {
+      color: var(--accent-blue);
+      text-decoration: none;
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 768px) {
+      header {
+        padding: 0.75rem 1rem;
+      }
+      .nav-links {
+        display: none;
+      }
+      .container {
+        padding: 0 1rem 3rem 1rem;
+      }
+      .hub-wrapper, .matrix-wrapper, .simulator-wrapper {
+        padding: 1.25rem;
+      }
+      .sim-controls {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .sim-btn-group {
+        margin-left: 0;
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header>
+    <div class="brand">
+      <div class="brand-logo">&lt;/&gt;</div>
+      <div class="brand-text">
+        <h1>Cátedra de Estructura de Datos</h1>
+        <p>UCSE - DASS | Guía Maestra de Conversión de TADs</p>
+      </div>
+    </div>
+    <ul class="nav-links">
+      <li><a href="#filosofia">Filosofía de TAD</a></li>
+      <li><a href="#hub-conversion">Guía de Conversión</a></li>
+      <li><a href="#matriz-comparativa">Matriz General</a></li>
+      <li><a href="#simulador">Simulador</a></li>
+      <li><a href="#decalogo">Consejos de Examen</a></li>
+    </ul>
+  </header>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-badge">🎓 Manual del Catedrático para Exámenes y Coloquios</div>
+    <h2>Cómo Convertir Listas Dinámicas en Otras Estructuras</h2>
+    <p>
+      La <strong>Lista Dinámica</strong> es la estructura lineal suprema y de acceso abierto. Toda Pila, Cola, Bicola o Lista Circular no es más que una <em>especialización restringida</em> de la misma. Aprendé qué operaciones conservar, cuáles prohibir y cómo reconfigurar los punteros para no equivocarte nunca en un examen.
+    </p>
+  </section>
+
+  <!-- PROFESSOR CALLOUT -->
+  <div class="container">
+    <div class="prof-intro" id="filosofia">
+      <div class="prof-avatar">👨‍🏫</div>
+      <div class="prof-text">
+        <h3>Palabras del Profesor: "El Principio de Restricción Disciplinaria"</h3>
+        <p>
+          "Estimados alumnos: En los exámenes parciales y finales libres, el error más grave no es equivocarse de sintaxis, sino <strong>violar la abstracción del TAD</strong>. Una Pila <em>no</em> es un archivo de acceso aleatorio; una Cola <em>no</em> permite meter elementos en el medio. Cuando les pedimos diseñar un TAD Pila o Cola a partir del concepto de Lista Enlazada, lo que evaluamos es su capacidad de <strong>amputar las libertades innecesarias</strong> para garantizar por contrato la disciplina de acceso (LIFO o FIFO)."
+        </p>
+      </div>
+    </div>
+
+    <!-- CONVERSION HUB -->
+    <div class="section-header" id="hub-conversion">
+      <h2>🔄 Selector de Transformaciones Dinámicas</h2>
+      <p>Seleccioná la estructura de destino para ver la receta exacta de conversión desde una Lista Dinámica.</p>
+    </div>
+
+    <div class="hub-wrapper">
+      <!-- SELECTOR BUTTONS -->
+      <div class="selector-nav" id="selectorNav">
+        <button class="selector-btn active" data-target="panel-pila" id="btn-pila">
+          📚 A Pila Dinámica (LIFO)
+        </button>
+        <button class="selector-btn" data-target="panel-cola-simple" id="btn-cola-simple">
+          🚶 A Cola Simple (FIFO)
+        </button>
+        <button class="selector-btn" data-target="panel-cola-circ" id="btn-cola-circ">
+          🔄 A Cola Circular Dinámica
+        </button>
+        <button class="selector-btn" data-target="panel-bicola" id="btn-bicola">
+          ↔️ A Bicola Dinámica (Deque)
+        </button>
+        <button class="selector-btn" data-target="panel-lcs" id="btn-lcs">
+          ⭕ A Lista Circular Simple
+        </button>
+        <button class="selector-btn" data-target="panel-lcde" id="btn-lcde">
+          ♾️ A Lista Circular Doble
+        </button>
+        <button class="selector-btn" data-target="panel-centinela" id="btn-centinela">
+          🛡️ A Lista con Nodo Cabecera
+        </button>
+      </div>
+
+      <!-- PANEL 1: PILA DINAMICA -->
+      <div class="conversion-panel active" id="panel-pila">
+        <div class="panel-header-badge">
+          <div class="target-title">
+            <span>📚 De Lista Simple Dinámica &rarr; Pila Dinámica</span>
+          </div>
+          <div class="pill-tags">
+            <span class="pill pill-lifo">Disciplina LIFO</span>
+            <span class="pill">1 Puntero (TOPE)</span>
+            <span class="pill">Acceso O(1)</span>
+          </div>
+        </div>
+
+        <p style="color: var(--text-muted); margin-bottom: 1.5rem;">
+          La Pila es la estructura más restringida: <strong>únicamente se inserta y extrae por el mismo extremo superior</strong>. Se aprovecha que la cabeza de la lista simple ofrece inserción y borrado en tiempo constante \(O(1)\).
+        </p>
+
+        <div class="conversion-grid">
+          <!-- QUE MANTENER -->
+          <div class="action-box keep">
+            <h4>✅ Operaciones que se MANTIENEN</h4>
+            <ul class="op-list">
+              <li class="op-item">
+                <strong>InsertarPrincipio &rarr; Apilar (Push)</strong>
+                <span>Crea nodo y enlaza: <code>nuevo-&gt;sig = TOPE; TOPE = nuevo;</code>. Complejidad \(O(1)\).</span>
+              </li>
+              <li class="op-item">
+                <strong>EliminarPrincipio &rarr; Desapilar (Pop)</strong>
+                <span>Desengancha y libera el tope: <code>TOPE = TOPE-&gt;sig; delete aux;</code>. Complejidad \(O(1)\).</span>
+              </li>
+              <li class="op-item">
+                <strong>ListaVacia &rarr; PilaVacia</strong>
+                <span>Condición exacta: <code>return (TOPE == NULL);</code>.</span>
+              </li>
+              <li class="op-item">
+                <strong>CrearLista &rarr; CrearPila</strong>
+                <span>Inicializa el único puntero: <code>TOPE = NULL;</code>.</span>
+              </li>
+            </ul>
+          </div>
+
+          <!-- QUE QUITAR -->
+          <div class="action-box remove">
+            <h4>❌ Operaciones que se DEBEN QUITAR</h4>
+            <ul class="op-list">
+              <li class="op-item">
+                <strong>InsertarFinal / EliminarFinal</strong>
+                <span>¡TERMINANTEMENTE PROHIBIDAS! Una pila no permite interacción por la base.</span>
+              </li>
+              <li class="op-item">
+                <strong>InsertarOrdenado / En Posición</strong>
+                <span>Viola la disciplina temporal LIFO. El orden lo define la cronología de llegada, no el valor de la clave.</span>
+              </li>
+              <li class="op-item">
+                <strong>EliminarValor / EliminarEnMedio</strong>
+                <span>No podés extraer un elemento que está debajo sin desapilar previamente los que están por encima.</span>
+              </li>
+            </ul>
+          </div>
+
+          <!-- QUE CAMBIA EN PUNTEROS -->
+          <div class="action-box change">
+            <h4>⚠️ Punteros y Metadatos Clave</h4>
+            <ul class="op-list">
+              <li class="op-item">
+                <strong>Puntero de Acceso:</strong>
+                <span>Se renombra <code>lista</code> a <code>TOPE</code> o <code>pila</code>. Solo existe UN puntero de control.</span>
+              </li>
+              <li class="op-item">
+                <strong>Fondo de la Pila:</strong>
+                <span>El último nodo del fondo siempre apunta a <code>NULL</code> de manera natural.</span>
+              </li>
+              <li class="op-item">
+                <strong>Nueva Operación Clave:</strong>
+                <span><code>TopePila(pila, &valor)</code> para inspeccionar el elemento superior sin destruirlo.</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="code-diff-container">
+          <div class="code-diff-header">
+            <span>Comparativa de Código C++</span>
+            <div class="code-tabs">
+              <button class="code-tab-btn active">Transformación de TAD</button>
+            </div>
+          </div>
+          <pre><code><span class="hl-comment">// EN LISTA SIMPLE DINAMICA:</span>
+<span class="hl-kw">void</span> <span class="hl-func">InsertarPrincipio</span>(<span class="hl-type">tlistaS</span> &amp;lista, <span class="hl-type">int</span> valor) {
+    <span class="hl-type">tlistaS</span> nuevo = <span class="hl-kw">new</span> <span class="hl-type">lsd_tnodo</span>{valor, lista};
+    lista = nuevo;
+}
+
+<span class="hl-comment">// SE CONVIERTE EN TAD PILA DINAMICA:</span>
+<span class="hl-kw">void</span> <span class="hl-func">Apilar</span>(<span class="hl-type">tpila</span> &amp;tope, <span class="hl-type">int</span> valor) {
+    <span class="hl-type">tpila</span> nuevo = <span class="hl-kw">new</span> <span class="hl-type">pila_tnodo</span>;
+    nuevo-&gt;elem = valor;
+    nuevo-&gt;sig = tope;  <span class="hl-comment">// El nuevo nodo se apoya sobre el tope actual</span>
+    tope = nuevo;       <span class="hl-comment">// El tope asciende al nuevo nodo</span>
+}</code></pre>
+        </div>
+
+        <div class="exam-alert">
+          <div class="exam-alert-icon">🚨</div>
+          <div class="exam-alert-content">
+            <h5>Trampa de Examen - Pila Vacía (Underflow):</h5>
+            <p>Antes de desapilar, es obligatorio verificar <code>if (PilaVacia(p))</code>. Intentar hacer <code>aux = TOPE; TOPE = TOPE-&gt;sig;</code> con <code>TOPE == NULL</code> producirá un segmentation fault que te costará el punto práctico.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- PANEL 2: COLA DINAMICA SIMPLE -->
+      <div class="conversion-panel" id="panel-cola-simple">
+        <div class="panel-header-badge">
+          <div class="target-title">
+            <span>🚶 De Lista Simple Dinámica &rarr; Cola Simple (FIFO)</span>
+          </div>
+          <div class="pill-tags">
+            <span class="pill pill-fifo">Disciplina FIFO</span>
+            <span class="pill">2 Punteros (FRENTE y FINAL)</span>
+            <span class="pill">Ambas O(1)</span>
+          </div>
+        </div>
+
+        <p style="color: var(--text-muted); margin-bottom: 1.5rem;">
+          La Cola atiende por un extremo y despacha por el opuesto. En una lista simple común, insertar al final costaba \(O(n)\) por tener que recorrer hasta encontrar <code>NULL</code>. <strong>Para convertirla en Cola eficiente, es obligatorio agregar un segundo puntero: <code>FINAL</code></strong>.
+        </p>
+
+        <div class="conversion-grid">
+          <div class="action-box keep">
+            <h4>✅ Operaciones que se MANTIENEN</h4>
+            <ul class="op-list">
+              <li class="op-item">
+                <strong>InsertarFinal &rarr; Encolar (Push_Back)</strong>
+                <span>Se conecta al nodo apuntado por <code>FINAL</code> en \(O(1)\): <code>co.final-&gt;sig = nuevo; co.final = nuevo;</code>.</span>
+              </li>
+              <li class="op-item">
+                <strong>EliminarPrincipio &rarr; Desencolar (Pop_Front)</strong>
+                <span>Sale el primero apuntado por <code>FRENTE</code>: <code>co.frente = co.frente-&gt;sig;</code>. Complejidad \(O(1)\).</span>
+              </li>
+              <li class="op-item">
+                <strong>ColaVacia</strong>
+                <span><code>return (co.frente == NULL);</code>.</span>
+              </li>
+            </ul>
+          </div>
+
+          <div class="action-box remove">
+            <h4>❌ Operaciones que se DEBEN QUITAR</h4>
+            <ul class="op-list">
+              <li class="op-item">
+                <strong>InsertarPrincipio</strong>
+                <span>¡PROHIBIDO! Sería "colarse" al frente de la fila, destruyendo el principio FIFO.</span>
+              </li>
+              <li class="op-item">
+                <strong>EliminarFinal</strong>
+                <span>¡PROHIBIDO! No se puede retirar al último recién llegado.</span>
+              </li>
+              <li class="op-item">
+                <strong>Cualquier Inserción/Borrado Intermedio</strong>
+                <span>En una cola solo existen el primero (atención) y el último (ingreso).</span>
+              </li>
+            </ul>
+          </div>
+
+          <div class="action-box change">
+            <h4>⚠️ Modificación de Estructura de Control</h4>
+            <ul class="op-list">
+              <li class="op-item">
+                <strong>De 1 Puntero &rarr; A un Registro de Control:</strong>
+                <span>Ya no se usa <code>tlista lista</code>. Se define un <code>struct tcola { tnodo* frente; tnodo* final; };</code>.</span>
+              </li>
+              <li class="op-item">
+                <strong>Sincronización Crítica:</strong>
+                <span>Al insertar el 1° elemento, <code>frente = final = nuevo</code>. Al quitar el último, <code>frente = final = NULL</code>.</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="code-diff-container">
+          <div class="code-diff-header">
+            <span>Diferencia Estructural C++</span>
+          </div>
+          <pre><code><span class="hl-comment">// ESTRUCTURA DE CONTROL PARA COLA:</span>
+<span class="hl-kw">struct</span> <span class="hl-type">tcola</span> {
+    <span class="hl-type">nodo*</span> frente;  <span class="hl-comment">// Por donde se extrae O(1)</span>
+    <span class="hl-type">nodo*</span> final;   <span class="hl-comment">// Por donde se inserta O(1)</span>
+};
+
+<span class="hl-kw">void</span> <span class="hl-func">Encolar</span>(<span class="hl-type">tcola</span> &amp;co, <span class="hl-type">int</span> valor) {
+    <span class="hl-type">nodo*</span> nuevo = <span class="hl-kw">new</span> <span class="hl-type">nodo</span>{valor, <span class="hl-kw">NULL</span>};
+    <span class="hl-kw">if</span> (co.frente == <span class="hl-kw">NULL</span>) {
+        co.frente = co.final = nuevo; <span class="hl-comment">// Caso cola vacía</span>
+    } <span class="hl-kw">else</span> {
+        co.final-&gt;sig = nuevo;        <span class="hl-comment">// El ex-último apunta al nuevo</span>
+        co.final = nuevo;             <span class="hl-comment">// El puntero final avanza</span>
+    }
+}</code></pre>
+        </div>
+
+        <div class="exam-alert">
+          <div class="exam-alert-icon">⚠️</div>
+          <div class="exam-alert-content">
+            <h5>Peligro de Examen - Puntero Huérfano (Dangling Pointer):</h5>
+            <p>Al desencolar el último elemento de la cola, si hacés <code>frente = frente-&gt;sig;</code>, frente queda en <code>NULL</code> pero <code>final</code> queda apuntando a la memoria liberada por <code>delete</code>. ¡Debés hacer <code>if (frente == NULL) final = NULL;</code>!</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- PANEL 3: COLA CIRCULAR DINAMICA -->
+      <div class="conversion-panel" id="panel-cola-circ">
+        <div class="panel-header-badge">
+          <div class="target-title">
+            <span>🔄 De Lista Simple &rarr; Cola Dinámica Circular</span>
+          </div>
+          <div class="pill-tags">
+            <span class="pill pill-circ">Anillo Dinámico</span>
+            <span class="pill">Cero NULL</span>
+            <span class="pill">final-&gt;sig = frente</span>
+          </div>
+        </div>
+
+        <p style="color: var(--text-muted); margin-bottom: 1.5rem;">
+          En la Cola Dinámica Circular, el puntero <code>sig</code> del nodo <code>final</code> nunca apunta a <code>NULL</code>, sino que <strong>vuelve a apuntar a <code>frente</code></strong>. Esto crea un anillo infinito cerrado con disciplina FIFO.
+        </p>
+
+        <div class="conversion-grid">
+          <div class="action-box keep">
+            <h4>✅ Operaciones que se MANTIENEN</h4>
+            <ul class="op-list">
+              <li class="op-item">
+                <strong>Encolar y Desencolar</strong>
+                <span>Conserva los nombres de la cola simple, pero ajusta los enlaces para mantener cerrado el ciclo circular.</span>
+              </li>
+              <li class="op-item">
+                <strong>ColaVacia</strong>
+                <span><code>return (co.frente == NULL);</code>.</span>
+              </li>
+            </ul>
+          </div>
+
+          <div class="action-box remove">
+            <h4>❌ Operaciones que se DEBEN QUITAR</h4>
+            <ul class="op-list">
+              <li class="op-item">
+                <strong>Bucle while(p != NULL)</strong>
+                <span>¡JAMÁS! En una cola circular, un bucle que busque <code>NULL</code> causará un bucle infinito que colgará la computadora.</span>
+              </li>
+              <li class="op-item">
+                <strong>Acceso a posiciones intermedias</strong>
+                <span>Continúa prohibido al ser una cola estricta.</span>
+              </li>
+            </ul>
+          </div>
+
+          <div class="action-box change">
+            <h4>⚠️ Ajustes Circulares Fundamentales</h4>
+            <ul class="op-list">
+              <li class="op-item">
+                <strong>Al Encolar:</strong>
+                <span><code>co.final-&gt;sig = nuevo; co.final = nuevo; nuevo-&gt;sig = co.frente;</code>.</span>
+              </li>
+              <li class="op-item">
+                <strong>Al Desencolar:</strong>
+                <span><code>co.frente = co.frente-&gt;sig; co.final-&gt;sig = co.frente;</code> (el final actualiza su enlace hacia el nuevo frente).</span>
+              </li>
+              <li class="op-item">
+                <strong>Para Mostrar / Recorrer:</strong>
+                <span>Se usa estructura <code>do { ... p = p-&gt;sig; } while(p != co.frente);</code>.</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- PANEL 4: BICOLA DINAMICA -->
+      <div class="conversion-panel" id="panel-bicola">
+        <div class="panel-header-badge">
+          <div class="target-title">
+            <span>↔️ De Lista Doble &rarr; Bicola Dinámica (Deque)</span>
+          </div>
+          <div class="pill-tags">
+            <span class="pill pill-fifo">Doble Fin (Deque)</span>
+            <span class="pill">Nodo Doble (sig, ant)</span>
+            <span class="pill">Ambos Extremos O(1)</span>
+          </div>
+        </div>
+
+        <p style="color: var(--text-muted); margin-bottom: 1.5rem;">
+          Una <strong>Bicola</strong> (Doble Cola) permite insertar y eliminar por <em>ambos extremos</em> (Frente y Final), pero <strong>prohíbe el acceso a cualquier posición intermedia</strong>. Se construye típicamente sobre una <strong>Lista Doblemente Enlazada</strong> para que eliminar al final sea \(O(1)\).
+        </p>
+
+        <div class="conversion-grid">
+          <div class="action-box keep">
+            <h4>✅ Operaciones que se MANTIENEN</h4>
+            <ul class="op-list">
+              <li class="op-item">
+                <strong>InsertarPrincipio &rarr; EncolarFrente</strong>
+                <span>Inserta por el frente de la bicola en \(O(1)\).</span>
+              </li>
+              <li class="op-item">
+                <strong>InsertarFinal &rarr; EncolarFinal</strong>
+                <span>Inserta por el final en \(O(1)\) gracias al puntero <code>final</code>.</span>
+              </li>
+              <li class="op-item">
+                <strong>EliminarPrincipio &rarr; DesencolarFrente</strong>
+                <span>Extrae por el extremo delantero en \(O(1)\).</span>
+              </li>
+              <li class="op-item">
+                <strong>EliminarFinal &rarr; DesencolarFinal</strong>
+                <span>Extrae por el extremo posterior en \(O(1)\) (gracias a <code>p-&gt;ant</code> del nodo doble).</span>
+              </li>
+            </ul>
+          </div>
+
+          <div class="action-box remove">
+            <h4>❌ Operaciones que se DEBEN QUITAR</h4>
+            <ul class="op-list">
+              <li class="op-item">
+                <strong>InsertarOrdenado / En Posición K</strong>
+                <span>Completamente prohibido. Toda inserción va a un extremo.</span>
+              </li>
+              <li class="op-item">
+                <strong>EliminarAntesDe / EliminarDespuesDe</strong>
+                <span>Elimina la capacidad de manipular elementos internos.</span>
+              </li>
+              <li class="op-item">
+                <strong>Búsqueda y Modificación Interna</strong>
+                <span>El usuario del TAD solo ve el frente y el final.</span>
+              </li>
+            </ul>
+          </div>
+
+          <div class="action-box change">
+            <h4>⚠️ ¿Por qué exige Nodos Dobles?</h4>
+            <ul class="op-list">
+              <li class="op-item">
+                <strong>Eliminar al Final en O(1):</strong>
+                <span>En una lista simple con puntero final, eliminar al final te obliga a recorrer todo el camino para encontrar el penúltimo (\(O(n)\)). Con enlace doble, el penúltimo es directamente <code>final-&gt;ant</code> (\(O(1)\)).</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- PANEL 5: LISTA CIRCULAR SIMPLE -->
+      <div class="conversion-panel" id="panel-lcs">
+        <div class="panel-header-badge">
+          <div class="target-title">
+            <span>⭕ De Lista Simple Abierta &rarr; Lista Circular Simple (LCS)</span>
+          </div>
+          <div class="pill-tags">
+            <span class="pill pill-circ">Anillo Cerrado</span>
+            <span class="pill">Sin NULL</span>
+            <span class="pill">Caso Ejercicio 3 Examen</span>
+          </div>
+        </div>
+
+        <p style="color: var(--text-muted); margin-bottom: 1.5rem;">
+          Se mantiene la capacidad de inserción ordenada y eliminaciones relativas ("antes de", "después de"), pero <strong>el último nodo debe reconectarse siempre al nodo <code>INICIO</code></strong> en lugar de tener <code>sig = NULL</code>.
+        </p>
+
+        <div class="conversion-grid">
+          <div class="action-box keep">
+            <h4>✅ Operaciones que se MANTIENEN (con adaptación)</h4>
+            <ul class="op-list">
+              <li class="op-item">
+                <strong>InsertarOrdenado</strong>
+                <span>Si el nuevo valor es menor al primer nodo, ¡hay que recorrer hasta el último nodo para que su enlace apunte al nuevo inicio!</span>
+              </li>
+              <li class="op-item">
+                <strong>EliminarDespuesDe(valorRef)</strong>
+                <span>Localiza el nodo referencia y desconecta su siguiente en el circuito.</span>
+              </li>
+              <li class="op-item">
+                <strong>EliminarAntesDe(valorRef)</strong>
+                <span>Requiere recorrer todo el ciclo hasta encontrar el nodo cuyo <code>sig-&gt;sig == ref</code>.</span>
+              </li>
+            </ul>
+          </div>
+
+          <div class="action-box remove">
+            <h4>❌ Lo que DEBES QUITAR / CAMBIAR</h4>
+            <ul class="op-list">
+              <li class="op-item">
+                <strong>Asignar NULL al crear nodos</strong>
+                <span>En el caso de lista vacía, el primer nodo hace <code>nuevo-&gt;sig = nuevo;</code>. ¡Nunca <code>NULL</code>!</span>
+              </li>
+              <li class="op-item">
+                <strong>Condición de parada while(p != NULL)</strong>
+                <span>Reemplazar por <code>do { ... } while(p != inicio);</code> o <code>while(p-&gt;sig != inicio)</code>.</span>
+              </li>
+            </ul>
+          </div>
+
+          <div class="action-box change">
+            <h4>⚠️ Caso Crítico de Examen</h4>
+            <ul class="op-list">
+              <li class="op-item">
+                <strong>Actualizar el Último Nodo:</strong>
+                <span>Si insertás o eliminás el elemento apuntado por <code>INICIO</code>, es <strong>obligatorio</strong> actualizar el puntero <code>sig</code> del último nodo del anillo. Si no lo hacés, la lista se rompe.</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- PANEL 6: LISTA CIRCULAR DOBLE -->
+      <div class="conversion-panel" id="panel-lcde">
+        <div class="panel-header-badge">
+          <div class="target-title">
+            <span>♾️ De Lista Doble Abierta &rarr; Lista Circular Doble (LCDE)</span>
+          </div>
+          <div class="pill-tags">
+            <span class="pill pill-circ">Doble Anillo</span>
+            <span class="pill">INICIO-&gt;ant = ULTIMO</span>
+            <span class="pill">ULTIMO-&gt;sig = INICIO</span>
+          </div>
+        </div>
+
+        <p style="color: var(--text-muted); margin-bottom: 1.5rem;">
+          Es la estructura lineal dinámica de <strong>máxima eficiencia y complejidad de punteros</strong>. Como <code>INICIO-&gt;ant</code> da acceso directo al último nodo en \(O(1)\), <strong>no hace falta un puntero auxiliar FIN</strong>.
+        </p>
+
+        <div class="conversion-grid">
+          <div class="action-box keep">
+            <h4>✅ Operaciones que se MANTIENEN</h4>
+            <ul class="op-list">
+              <li class="op-item">
+                <strong>Inserción y Eliminación en Extremos en O(1)</strong>
+                <span>Insertar al final es simplemente insertar antes de <code>INICIO</code> (entre <code>INICIO-&gt;ant</code> e <code>INICIO</code>).</span>
+              </li>
+              <li class="op-item">
+                <strong>EliminarAntesDe(ref) en O(1)</strong>
+                <span>Acceso directo a su predecesor mediante <code>ref-&gt;ant</code>. Sin recorrer.</span>
+              </li>
+            </ul>
+          </div>
+
+          <div class="action-box remove">
+            <h4>❌ Lo que se ELIMINA</h4>
+            <ul class="op-list">
+              <li class="op-item">
+                <strong>Puntero de Control FIN</strong>
+                <span>Redundante: <code>inicio-&gt;ant</code> es el fin.</span>
+              </li>
+              <li class="op-item">
+                <strong>Verificaciones if(p-&gt;ant == NULL) / if(p-&gt;sig == NULL)</strong>
+                <span>Nunca hay punteros nulos en el anillo. Todo nodo tiene predecesor y sucesor válidos.</span>
+              </li>
+            </ul>
+          </div>
+
+          <div class="action-box change">
+            <h4>⚠️ Cuatro Enlaces por Operación</h4>
+            <ul class="op-list">
+              <li class="op-item">
+                <strong>Reconexión Cuádruple:</strong>
+                <span>Toda inserción o eliminación intermedia requiere actualizar rigurosamente 4 enlaces bidireccionales en el orden correcto para no desreferenciar memoria liberada.</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- PANEL 7: LISTA CENTINELA -->
+      <div class="conversion-panel" id="panel-centinela">
+        <div class="panel-header-badge">
+          <div class="target-title">
+            <span>🛡️ De Lista Simple &rarr; Lista con Nodo Cabecera / Centinela</span>
+          </div>
+          <div class="pill-tags">
+            <span class="pill pill-cent">Nodo Ficticio Permanente</span>
+            <span class="pill">Cero Casos Especiales</span>
+            <span class="pill">CAB Jamás Cambia</span>
+          </div>
+        </div>
+
+        <p style="color: var(--text-muted); margin-bottom: 1.5rem;">
+          Se introduce un <strong>nodo dummy (centinela)</strong> al principio que no almacena información de usuario. Su función es puramente estructural para que la cabeza de los datos <em>siempre</em> tenga un nodo predecesor físico.
+        </p>
+
+        <div class="conversion-grid">
+          <div class="action-box keep">
+            <h4>✅ Todas las Operaciones de Lista se Conservan</h4>
+            <ul class="op-list">
+              <li class="op-item">
+                <strong>InsertarPrincipio &rarr; InsertarDespuesDe(CAB)</strong>
+                <span>El primer dato real se coloca inmediatamente después del centinela.</span>
+              </li>
+              <li class="op-item">
+                <strong>EliminarPrincipio &rarr; EliminarDespuesDe(CAB)</strong>
+                <span>Elimina <code>CAB-&gt;sig</code> sin tocar la dirección de <code>CAB</code>.</span>
+              </li>
+              <li class="op-item">
+                <strong>InsertarOrdenado Simplificado</strong>
+                <span>No hay <code>if (valor &lt; inicio-&gt;info)</code>. Todo valor va siempre después de algún nodo existente.</span>
+              </li>
+            </ul>
+          </div>
+
+          <div class="action-box remove">
+            <h4>❌ Lo que se ELIMINA</h4>
+            <ul class="op-list">
+              <li class="op-item">
+                <strong>Paso por Referencia de la Cabecera (&amp;lista)</strong>
+                <span>Como el puntero <code>CAB</code> nunca cambia de dirección tras su creación, las funciones de inserción y borrado pueden recibir <code>CAB</code> por valor.</span>
+              </li>
+              <li class="op-item">
+                <strong>Casos especiales de lista vacía en bucles</strong>
+                <span>Desaparecen las bifurcaciones condicionales que complican el código.</span>
+              </li>
+            </ul>
+          </div>
+
+          <div class="action-box change">
+            <h4>⚠️ Responsabilidad de Memoria</h4>
+            <ul class="op-list">
+              <li class="op-item">
+                <strong>Destrucción en Dos Fases:</strong>
+                <span>Primero vaciar los nodos de datos con <code>Vaciar(cab)</code> y luego ejecutar <code>delete cab;</code> para liberar el centinela.</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MATRIZ COMPARATIVA GLOBAL -->
+    <div class="section-header" id="matriz-comparativa">
+      <h2>📊 Matriz Maestra de Operaciones y Restricciones</h2>
+      <p>Cuadro de control sinóptico para saber en 1 segundo qué permite y qué prohíbe cada TAD evaluado en la cátedra.</p>
+    </div>
+
+    <div class="matrix-wrapper">
+      <table class="matrix-table">
+        <thead>
+          <tr>
+            <th>Estructura TAD</th>
+            <th>Punteros de Control</th>
+            <th>Inserción Inicio</th>
+            <th>Inserción Final</th>
+            <th>Inserción Ordenada</th>
+            <th>Eliminar Inicio</th>
+            <th>Eliminar Final</th>
+            <th>Eliminar Intermedio</th>
+            <th>¿Maneja NULL?</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="td-struct-name">📋 Lista Simple (LSE)</td>
+            <td><code>INICIO</code></td>
+            <td><span class="badge-check">O(1)</span></td>
+            <td><span class="badge-restricted">O(n)</span></td>
+            <td><span class="badge-restricted">O(n)</span></td>
+            <td><span class="badge-check">O(1)</span></td>
+            <td><span class="badge-restricted">O(n)</span></td>
+            <td><span class="badge-restricted">O(n)</span></td>
+            <td><span class="badge-check">Sí</span></td>
+          </tr>
+          <tr>
+            <td class="td-struct-name">📚 Pila Dinámica</td>
+            <td><code>TOPE</code></td>
+            <td><span class="badge-check">Apilar O(1)</span></td>
+            <td><span class="badge-forbidden">Prohibido</span></td>
+            <td><span class="badge-forbidden">Prohibido</span></td>
+            <td><span class="badge-check">Desapilar O(1)</span></td>
+            <td><span class="badge-forbidden">Prohibido</span></td>
+            <td><span class="badge-forbidden">Prohibido</span></td>
+            <td><span class="badge-check">Sí</span></td>
+          </tr>
+          <tr>
+            <td class="td-struct-name">🚶 Cola Dinámica Simple</td>
+            <td><code>FRENTE, FINAL</code></td>
+            <td><span class="badge-forbidden">Prohibido</span></td>
+            <td><span class="badge-check">Encolar O(1)</span></td>
+            <td><span class="badge-forbidden">Prohibido</span></td>
+            <td><span class="badge-check">Desencolar O(1)</span></td>
+            <td><span class="badge-forbidden">Prohibido</span></td>
+            <td><span class="badge-forbidden">Prohibido</span></td>
+            <td><span class="badge-check">Sí</span></td>
+          </tr>
+          <tr>
+            <td class="td-struct-name">🔄 Cola Circular Dinámica</td>
+            <td><code>FRENTE, FINAL</code></td>
+            <td><span class="badge-forbidden">Prohibido</span></td>
+            <td><span class="badge-check">Encolar O(1)</span></td>
+            <td><span class="badge-forbidden">Prohibido</span></td>
+            <td><span class="badge-check">Desencolar O(1)</span></td>
+            <td><span class="badge-forbidden">Prohibido</span></td>
+            <td><span class="badge-forbidden">Prohibido</span></td>
+            <td><span class="badge-forbidden">No (Anillo)</span></td>
+          </tr>
+          <tr>
+            <td class="td-struct-name">↔️ Bicola Dinámica (Deque)</td>
+            <td><code>FRENTE, FINAL</code></td>
+            <td><span class="badge-check">O(1)</span></td>
+            <td><span class="badge-check">O(1)</span></td>
+            <td><span class="badge-forbidden">Prohibido</span></td>
+            <td><span class="badge-check">O(1)</span></td>
+            <td><span class="badge-check">O(1)</span></td>
+            <td><span class="badge-forbidden">Prohibido</span></td>
+            <td><span class="badge-check">Sí</span></td>
+          </tr>
+          <tr>
+            <td class="td-struct-name">⭕ Lista Circular Simple</td>
+            <td><code>INICIO</code></td>
+            <td><span class="badge-restricted">O(n)*</span></td>
+            <td><span class="badge-restricted">O(n)</span></td>
+            <td><span class="badge-restricted">O(n)</span></td>
+            <td><span class="badge-restricted">O(n)*</span></td>
+            <td><span class="badge-restricted">O(n)</span></td>
+            <td><span class="badge-check">O(1) después</span></td>
+            <td><span class="badge-forbidden">No (Anillo)</span></td>
+          </tr>
+          <tr>
+            <td class="td-struct-name">♾️ Lista Circular Doble</td>
+            <td><code>INICIO</code></td>
+            <td><span class="badge-check">O(1)</span></td>
+            <td><span class="badge-check">O(1)</span></td>
+            <td><span class="badge-restricted">O(n)</span></td>
+            <td><span class="badge-check">O(1)</span></td>
+            <td><span class="badge-check">O(1)</span></td>
+            <td><span class="badge-check">O(1) antes/desp</span></td>
+            <td><span class="badge-forbidden">No (Anillo)</span></td>
+          </tr>
+          <tr>
+            <td class="td-struct-name">🛡️ Lista con Centinela</td>
+            <td><code>CAB (constante)</code></td>
+            <td><span class="badge-check">O(1)</span></td>
+            <td><span class="badge-restricted">O(n)</span></td>
+            <td><span class="badge-restricted">O(n) unif.</span></td>
+            <td><span class="badge-check">O(1)</span></td>
+            <td><span class="badge-restricted">O(n)</span></td>
+            <td><span class="badge-check">O(1) después</span></td>
+            <td><span class="badge-check">Sí</span></td>
+          </tr>
+        </tbody>
+      </table>
+      <p style="margin-top: 1rem; font-size: 0.8rem; color: var(--text-dim);">
+        * En Lista Circular Simple, insertar o eliminar en el nodo inicio toma \(O(n)\) a menos que se mantenga un puntero explícito al último elemento del anillo.
+      </p>
+    </div>
+
+    <!-- INTERACTIVE SIMULATOR -->
+    <div class="section-header" id="simulador">
+      <h2>🧪 Simulador Interactivo de Disciplinas TAD</h2>
+      <p>Cambiá el modo de estructura para ver cómo los botones de acción se bloquean en tiempo real según las restricciones del TAD.</p>
+    </div>
+
+    <div class="simulator-wrapper">
+      <div class="sim-controls">
+        <div class="sim-select-group">
+          <label for="simMode">Disciplina Activa:</label>
+          <select id="simMode" class="sim-select">
+            <option value="lista">Lista Simple (Abierta)</option>
+            <option value="pila">Pila (LIFO - Solo Tope)</option>
+            <option value="cola">Cola (FIFO - Entrada Final / Salida Frente)</option>
+          </select>
+        </div>
+
+        <div class="sim-btn-group">
+          <button class="sim-btn" id="btnPushFront">Insertar Principio / Apilar</button>
+          <button class="sim-btn" id="btnPushBack">Insertar Final / Encolar</button>
+          <button class="sim-btn" id="btnPopFront">Eliminar Principio / Desapilar / Desencolar</button>
+          <button class="sim-btn" id="btnPopBack">Eliminar Final</button>
+          <button class="sim-btn" id="btnReset" style="background: rgba(244, 63, 94, 0.2); color: #f87171;">Reiniciar</button>
+        </div>
+      </div>
+
+      <div class="sim-canvas" id="simCanvas">
+        <!-- Generado dinamicamente con JS -->
+      </div>
+
+      <div class="sim-log" id="simLog">
+        Consola de Estado: Seleccioná una operación para observar el comportamiento de los punteros.
+      </div>
+    </div>
+
+    <!-- DECALOGO DE ORO -->
+    <div class="section-header" id="decalogo">
+      <h2>🏆 Decálogo de Oro del Profesor para Rendir el Examen</h2>
+      <p>10 mandamientos técnicos innegociables para aprobar los ejercicios prácticos y coloquios de la cátedra.</p>
+    </div>
+
+    <div class="decalogo-grid">
+      <div class="rule-card">
+        <div class="rule-num">1</div>
+        <h4>Punteros por Referencia (&amp;)</h4>
+        <p>Si la función puede modificar la variable cabecera externa (ej: <code>inicio = nuevo;</code>), el parámetro <strong>DEBE</strong> llevar <code>&amp;</code>: <code>void Insertar(tnodo* &amp;inicio)</code>. Si lo omitís, se modifica una copia local y la lista en el <code>main</code> queda vacía.</p>
+      </div>
+
+      <div class="rule-card">
+        <div class="rule-num">2</div>
+        <h4>El "delete" Obligatorio</h4>
+        <p>Todo nodo desvinculado con <code>aux = inicio; inicio = inicio-&gt;sig;</code> debe ser destruido con <code>delete aux;</code>. En C++, la pérdida de memoria (memory leak) resta puntos directamente en la corrección.</p>
+      </div>
+
+      <div class="rule-card">
+        <div class="rule-num">3</div>
+        <h4>Evitar el Segmentation Fault</h4>
+        <p>Antes de escribir <code>p-&gt;sig-&gt;elem</code>, es obligatorio validar <code>if (p != NULL &amp;&amp; p-&gt;sig != NULL)</code>. La evaluación perezosa (short-circuit) en C++ evita consultar campos de punteros nulos.</p>
+      </div>
+
+      <div class="rule-card">
+        <div class="rule-num">4</div>
+        <h4>Cierre del Anillo Circular</h4>
+        <p>En listas y colas circulares, el nodo nuevo aislado en lista vacía debe hacer: <code>nuevo-&gt;sig = nuevo;</code>. Jamás asignes <code>NULL</code> en una estructura circular.</p>
+      </div>
+
+      <div class="rule-card">
+        <div class="rule-num">5</div>
+        <h4>Cola Vacía: Sincronizar Final</h4>
+        <p>Cuando la cola queda con 0 elementos al desencolar (<code>frente == NULL</code>), no olvides asignar <code>final = NULL;</code> para evitar que <code>final</code> quede como puntero descolgado (dangling pointer).</p>
+      </div>
+
+      <div class="rule-card">
+        <div class="rule-num">6</div>
+        <h4>Bucle de Lista Circular</h4>
+        <p>Nunca uses <code>while(p != NULL)</code> en una lista circular. El recorrido estándar es <code>do { p = p-&gt;sig; } while(p != inicio);</code> para asegurar que procese todos los nodos y no se quede en bucle eterno.</p>
+      </div>
+
+      <div class="rule-card">
+        <div class="rule-num">7</div>
+        <h4>Respetar la Disciplina del TAD</h4>
+        <p>Si en el examen te piden resolver un problema con una Pila, <strong>no podés recorrerla con un puntero auxiliar</strong>. Tenés que usar exclusivamente <code>Apilar</code>, <code>Desapilar</code> y una pila auxiliar.</p>
+      </div>
+
+      <div class="rule-card">
+        <div class="rule-num">8</div>
+        <h4>Nodo Centinela Fijo</h4>
+        <p>En listas con cabecera (centinela), el puntero <code>CAB</code> nunca avanza ni cambia de dirección en memoria; siempre apunta al nodo ficticio inicial. Los datos arrancan en <code>CAB-&gt;sig</code>.</p>
+      </div>
+
+      <div class="rule-card">
+        <div class="rule-num">9</div>
+        <h4>Reconexión Cuádruple en Dobles</h4>
+        <p>En listas doblemente enlazadas, cada inserción intermedia cambia 4 punteros: <code>nuevo-&gt;sig</code>, <code>nuevo-&gt;ant</code>, <code>ant-&gt;sig</code> y <code>sig-&gt;ant</code>. Conectá siempre primero el nodo nuevo hacia los existentes antes de romper enlaces previos.</p>
+      </div>
+
+      <div class="rule-card">
+        <div class="rule-num">10</div>
+        <h4>Justificar Complejidades</h4>
+        <p>En el coloquio oral te preguntarán: <em>"¿Por qué eliminar antes de X es O(1) en lista doble pero O(n) en simple?"</em> Respondé con precisión: en la doble el predecesor es <code>X-&gt;ant</code>; en la simple hay que recorrer desde el inicio para hallarlo.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <p><strong>Cátedra de Estructura de Datos</strong> &bull; Departamento Académico San Salvador &bull; Universidad Católica de Santiago del Estero</p>
+    <p>Material de estudio y apoyo académico para el Banco de Ejercicios de Examen y TADs Dinámicos.</p>
+  </footer>
+
+  <!-- JAVASCRIPT LOGIC -->
+  <script>
+    // TABS LOGIC FOR CONVERSION HUB
+    const selectorBtns = document.querySelectorAll('.selector-btn');
+    const conversionPanels = document.querySelectorAll('.conversion-panel');
+
+    selectorBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        selectorBtns.forEach(b => b.classList.remove('active'));
+        conversionPanels.forEach(p => p.classList.remove('active'));
+
+        btn.classList.add('active');
+        const targetId = btn.getAttribute('data-target');
+        const targetPanel = document.getElementById(targetId);
+        if (targetPanel) {
+          targetPanel.classList.add('active');
+        }
+      });
+    });
+
+    // SIMULATOR LOGIC
+    let simList = ['A', 'B', 'C'];
+    const simCanvas = document.getElementById('simCanvas');
+    const simLog = document.getElementById('simLog');
+    const simMode = document.getElementById('simMode');
+
+    const btnPushFront = document.getElementById('btnPushFront');
+    const btnPushBack = document.getElementById('btnPushBack');
+    const btnPopFront = document.getElementById('btnPopFront');
+    const btnPopBack = document.getElementById('btnPopBack');
+    const btnReset = document.getElementById('btnReset');
+
+    function updateSimulatorUI() {
+      const mode = simMode.value;
+
+      // Update button states according to TAD discipline
+      if (mode === 'lista') {
+        btnPushFront.disabled = false;
+        btnPushFront.innerText = 'Insertar Principio';
+        btnPushBack.disabled = false;
+        btnPushBack.innerText = 'Insertar Final';
+        btnPopFront.disabled = simList.length === 0;
+        btnPopFront.innerText = 'Eliminar Principio';
+        btnPopBack.disabled = simList.length === 0;
+        btnPopBack.innerText = 'Eliminar Final';
+      } else if (mode === 'pila') {
+        // LIFO: Only Top operations (Principio)
+        btnPushFront.disabled = false;
+        btnPushFront.innerText = 'Apilar (Push)';
+        btnPushBack.disabled = true; // PROHIBITED
+        btnPushBack.innerText = '❌ Insertar Base (Prohibido)';
+        btnPopFront.disabled = simList.length === 0;
+        btnPopFront.innerText = 'Desapilar (Pop)';
+        btnPopBack.disabled = true; // PROHIBITED
+        btnPopBack.innerText = '❌ Eliminar Base (Prohibido)';
+      } else if (mode === 'cola') {
+        // FIFO: Insert at Back, Extract at Front
+        btnPushFront.disabled = true; // PROHIBITED
+        btnPushFront.innerText = '❌ Encolar Frente (Prohibido)';
+        btnPushBack.disabled = false;
+        btnPushBack.innerText = 'Encolar (Push Back)';
+        btnPopFront.disabled = simList.length === 0;
+        btnPopFront.innerText = 'Desencolar (Pop Front)';
+        btnPopBack.disabled = true; // PROHIBITED
+        btnPopBack.innerText = '❌ Desencolar Final (Prohibido)';
+      }
+
+      // Render nodes in canvas
+      simCanvas.innerHTML = '';
+      if (simList.length === 0) {
+        simCanvas.innerHTML = '<div style="color: var(--text-dim); font-size: 0.95rem; font-style: italic;">La estructura se encuentra vacía (NULL / Underflow).</div>';
+        return;
+      }
+
+      simList.forEach((val, idx) => {
+        const nodeContainer = document.createElement('div');
+        nodeContainer.style.display = 'flex';
+        nodeContainer.style.flexDirection = 'column';
+        nodeContainer.style.alignItems = 'center';
+
+        // Tag de puntero
+        if (mode === 'pila' && idx === 0) {
+          const tag = document.createElement('div');
+          tag.className = 'sim-pointer-tag';
+          tag.innerText = 'TOPE';
+          nodeContainer.appendChild(tag);
+        } else if (mode === 'cola') {
+          if (idx === 0) {
+            const tag = document.createElement('div');
+            tag.className = 'sim-pointer-tag';
+            tag.innerText = 'FRENTE';
+            nodeContainer.appendChild(tag);
+          } else if (idx === simList.length - 1) {
+            const tag = document.createElement('div');
+            tag.className = 'sim-pointer-tag';
+            tag.style.background = 'rgba(56, 189, 248, 0.15)';
+            tag.style.borderColor = 'rgba(56, 189, 248, 0.4)';
+            tag.style.color = 'var(--accent-blue)';
+            tag.innerText = 'FINAL';
+            nodeContainer.appendChild(tag);
+          }
+        } else if (mode === 'lista' && idx === 0) {
+          const tag = document.createElement('div');
+          tag.className = 'sim-pointer-tag';
+          tag.style.background = 'rgba(16, 185, 129, 0.15)';
+          tag.style.borderColor = 'rgba(16, 185, 129, 0.4)';
+          tag.style.color = 'var(--accent-green)';
+          tag.innerText = 'INICIO';
+          nodeContainer.appendChild(tag);
+        }
+
+        const node = document.createElement('div');
+        node.className = 'sim-node';
+        node.innerHTML = `
+          <div class="sim-node-val">${val}</div>
+          <div class="sim-node-ptr">&bull;&rarr;</div>
+        `;
+        nodeContainer.appendChild(node);
+        simCanvas.appendChild(nodeContainer);
+
+        // Flecha o enlace al siguiente
+        if (idx < simList.length - 1) {
+          const arrow = document.createElement('div');
+          arrow.className = 'sim-arrow';
+          arrow.innerHTML = '&rarr;';
+          simCanvas.appendChild(arrow);
+        } else {
+          const nullTag = document.createElement('div');
+          nullTag.style.fontFamily = 'Fira Code, monospace';
+          nullTag.style.fontSize = '0.9rem';
+          nullTag.style.color = '#ef4444';
+          nullTag.style.fontWeight = 'bold';
+          nullTag.innerText = 'NULL';
+          simCanvas.appendChild(nullTag);
+        }
+      });
+    }
+
+    // SIMULATOR ACTIONS
+    function getNextLetter() {
+      const letters = 'DEFGHIJKLMNOPQRSTUVWXYZ';
+      return letters[Math.floor(Math.random() * letters.length)];
+    }
+
+    btnPushFront.addEventListener('click', () => {
+      const val = getNextLetter();
+      simList.unshift(val);
+      const actionName = simMode.value === 'pila' ? 'Apiló (Push)' : 'Insertó al principio';
+      simLog.innerText = `[OK] Se ${actionName} el nodo ['${val}']. Nuevo tamaño: ${simList.length}.`;
+      updateSimulatorUI();
+    });
+
+    btnPushBack.addEventListener('click', () => {
+      const val = getNextLetter();
+      simList.push(val);
+      const actionName = simMode.value === 'cola' ? 'Encoló (Push Back)' : 'Insertó al final';
+      simLog.innerText = `[OK] Se ${actionName} el nodo ['${val}'] en O(1). Nuevo tamaño: ${simList.length}.`;
+      updateSimulatorUI();
+    });
+
+    btnPopFront.addEventListener('click', () => {
+      if (simList.length > 0) {
+        const val = simList.shift();
+        const actionName = simMode.value === 'pila' ? 'Desapiló (Pop)' : (simMode.value === 'cola' ? 'Desencoló (Pop Front)' : 'Eliminó al principio');
+        simLog.innerText = `[OK] Se ${actionName} el elemento ['${val}']. Memoria liberada con delete.`;
+        updateSimulatorUI();
+      }
+    });
+
+    btnPopBack.addEventListener('click', () => {
+      if (simList.length > 0) {
+        const val = simList.pop();
+        simLog.innerText = `[OK] Se eliminó al final el elemento ['${val}'].`;
+        updateSimulatorUI();
+      }
+    });
+
+    btnReset.addEventListener('click', () => {
+      simList = ['A', 'B', 'C'];
+      simLog.innerText = `[RESET] Estructura reestablecida con valores iniciales ['A', 'B', 'C'].`;
+      updateSimulatorUI();
+    });
+
+    simMode.addEventListener('change', () => {
+      const mode = simMode.value;
+      if (mode === 'pila') {
+        simLog.innerText = `[MODO PILA] Restricción activa: Solo se permite interactuar con el extremo TOPE (LIFO).`;
+      } else if (mode === 'cola') {
+        simLog.innerText = `[MODO COLA] Restricción activa: Entrada por FINAL y extracción por FRENTE (FIFO).`;
+      } else {
+        simLog.innerText = `[MODO LISTA] Acceso abierto y flexible en ambos extremos.`;
+      }
+      updateSimulatorUI();
+    });
+
+    // INITIAL RENDER
+    updateSimulatorUI();
+  </script>
+</body>
+</html>

@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        :root {
+            --sube-blue: #00a1e4;
+            --sube-dark: #003a5d;
+            --success: #4caf50;
+            --error: #f44336;
+            --bg-light: #f4f7f6;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: transparent;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            padding: 15px;
+        }
+
+        .card-widget {
+            background: white;
+            width: 100%;
+            max-width: 400px;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            border: 1px solid #e1e1e1;
+        }
+
+        .sube-header {
+            background-color: var(--sube-blue);
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .sube-header h2 { margin: 0; font-size: 1.2rem; text-transform: uppercase; letter-spacing: 1px; }
+        .sube-header p { margin: 5px 0 0; font-size: 0.85rem; opacity: 0.9; }
+
+        .content {
+            padding: 20px;
+            text-align: center;
+        }
+
+        .price-tag {
+            background: var(--bg-light);
+            display: inline-block;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            color: var(--sube-dark);
+            margin-bottom: 20px;
+            border: 1px dashed var(--sube-blue);
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        label {
+            display: block;
+            font-size: 0.9rem;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: 600;
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        .input-wrapper span {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #888;
+        }
+
+        input[type="number"] {
+            width: 100%;
+            padding: 12px 12px 12px 30px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            box-sizing: border-box;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        input[type="number"]:focus {
+            border-color: var(--sube-blue);
+        }
+
+        .result-area {
+            margin-top: 10px;
+            padding: 15px;
+            border-radius: 10px;
+            display: none;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .boolean-label {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .boolean-value {
+            font-size: 1.5rem;
+            font-weight: 800;
+        }
+
+        .code-box {
+            background: #2d2d2d;
+            color: #76d9ff;
+            font-family: monospace;
+            padding: 10px;
+            margin-top: 15px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            text-align: left;
+        }
+
+        .status-ok { background-color: #e8f5e9; color: var(--success); border: 1px solid var(--success); }
+        .status-low { background-color: #ffebee; color: var(--error); border: 1px solid var(--error); }
+    </style>
+</head>
+<body>
+
+<div class="card-widget">
+    <div class="sube-header">
+        <h2>Terminal SUBE</h2>
+        <p>SS de Jujuy — Palpalá</p>
+    </div>
+
+    <div class="content">
+        <div class="price-tag">Costo del Pasaje: $<span id="costoDisplay">0.00</span></div>
+
+        <div class="input-group">
+            <label for="saldoInput">Ingresá tu saldo actual:</label>
+            <div class="input-wrapper">
+                <span>$</span>
+                <input type="number" id="saldoInput" placeholder="0.00" step="0.01" oninput="validarSaldo()">
+            </div>
+        </div>
+
+        <div id="panelResultado" class="result-area">
+            <span class="boolean-label">¿Saldo Suficiente? (Variable Lógica)</span>
+            <div id="valorLogico" class="boolean-value">---</div>
+            
+            <div class="code-box">
+                saldo >= costo_pasaje <br>
+                <span style="color: #ccc;">// Resultado: </span><span id="expresionResultado"></span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Configuración inicial del costo del pasaje
+    const COSTO_PASAJE = 950.00; // Valor ejemplo actualizable
+    document.getElementById('costoDisplay').innerText = COSTO_PASAJE.toFixed(2);
+
+    function validarSaldo() {
+        const input = document.getElementById('saldoInput');
+        const panel = document.getElementById('panelResultado');
+        const valorLogico = document.getElementById('valorLogico');
+        const expresion = document.getElementById('expresionResultado');
+
+        const saldoActual = parseFloat(input.value);
+
+        if (isNaN(saldoActual)) {
+            panel.style.display = 'none';
+            return;
+        }
+
+        // --- LÓGICA DEL ALGORITMO ---
+        // Definición de la variable de tipo Lógico (Boolean)
+        const puedeViajar = (saldoActual >= COSTO_PASAJE);
+
+        // Feedback Visual
+        panel.style.display = 'block';
+        if (puedeViajar) {
+            valorLogico.innerText = "VERDADERO";
+            panel.className = "result-area status-ok";
+            expresion.innerText = "true";
+        } else {
+            valorLogico.innerText = "FALSO";
+            panel.className = "result-area status-low";
+            expresion.innerText = "false";
+        }
+    }
+</script>
+
+</body>
+</html>

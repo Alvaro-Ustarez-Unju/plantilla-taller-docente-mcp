@@ -1,0 +1,25 @@
+=== REPORTE DOCENTE: AUDITORÍA DE BITS ESPECIALES SUID Y SGID ===
+
+--- 1. Inspección de Ejecutables Privilegiados Clásicos ---
+4755 | -rwsr-xr-x | Propietario: root(0) | /usr/bin/passwd
+4755 | -rwsr-xr-x | Propietario: root(0) | /usr/bin/su
+4755 | -rwsr-xr-x | Propietario: root(0) | /usr/bin/sudo
+
+--- 2. Justificación Técnica del Bit SETUID (Slide 53) ---
+El comando '/usr/bin/passwd' requiere escribir en '/etc/shadow', el cual
+pertenece a 'root:shadow' con permisos estrictos (640 / 000). Al ejecutarse,
+el bit SETUID (4000) hace que el proceso adopte el UID Efectivo de root (0)
+temporalmente, permitiendo que usuarios sin privilegios modifiquen su clave de forma controlada.
+Diferencia de Identificadores:
+- UID Real: Usuario que lanzó la ejecución del proceso en su shell.
+- UID Efectivo: Credencial utilizada por el kernel para evaluar permisos de acceso.
+
+--- 3. Muestra de Ejecutables con SETUID / SETGID en /usr/bin ---
+/usr/bin/chage
+/usr/bin/ssh-agent
+/usr/bin/mount
+/usr/bin/chfn
+/usr/bin/sudo
+/usr/bin/passwd
+/usr/bin/gpasswd
+/usr/bin/expiry

@@ -1,0 +1,2038 @@
+<!DOCTYPE html>
+<html lang="es" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Algoritmo de Dijkstra | Cátedra Estructura de Datos</title>
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#ecfeff',
+              100: '#cffafe',
+              500: '#06b6d4',
+              600: '#0891b2',
+              700: '#0e7490',
+            },
+            board: {
+              bg: '#0f172a',
+              card: '#1e293b',
+              border: '#334155',
+              chalk: '#f8fafc',
+              emerald: '#10b981',
+              amber: '#f59e0b',
+              indigo: '#6366f1',
+              rose: '#f43f5e'
+            }
+          },
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+            mono: ['JetBrains Mono', 'Fira Code', 'monospace'],
+            heading: ['Outfit', 'Inter', 'sans-serif']
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- KaTeX for math formulas and auto-render extension -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js" onload="if(window.renderMath) window.renderMath();"></script>
+
+  <!-- Tippy.js & Popper for rich popovers -->
+  <script src="https://unpkg.com/@popperjs/core@2"></script>
+  <script src="https://unpkg.com/tippy.js@6"></script>
+  <link rel="stylesheet" href="https://unpkg.com/tippy.js@6/animations/scale.css"/>
+  <link rel="stylesheet" href="https://unpkg.com/tippy.js@6/themes/light-border.css"/>
+
+  <style>
+    /* Estilos personalizados y utilidades de pizarra */
+    .strikethrough-chalk {
+      position: relative;
+    }
+    .strikethrough-chalk::after {
+      content: '';
+      position: absolute;
+      left: -4px;
+      right: -4px;
+      top: 50%;
+      height: 2.5px;
+      background: #f43f5e;
+      transform: rotate(-12deg);
+      border-radius: 9999px;
+      box-shadow: 0 0 6px rgba(244, 63, 94, 0.6);
+    }
+    
+    /* Popover themes */
+    .tippy-box[data-theme~='dijkstra'] {
+      background-color: #0f172a;
+      color: #f1f5f9;
+      border: 1px solid #38bdf8;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5), 0 0 15px rgba(56, 189, 248, 0.2);
+      border-radius: 0.75rem;
+      padding: 0.25rem;
+      font-size: 0.875rem;
+    }
+    .tippy-box[data-theme~='dijkstra'] .tippy-arrow {
+      color: #38bdf8;
+    }
+
+    /* Animaciones suaves */
+    @keyframes pulse-ring {
+      0% { transform: scale(0.95); opacity: 0.8; }
+      50% { transform: scale(1.25); opacity: 0.3; }
+      100% { transform: scale(0.95); opacity: 0.8; }
+    }
+    .animate-pulse-ring {
+      animation: pulse-ring 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    }
+
+    /* Scrollbar personalizada */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #0f172a;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #334155;
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #475569;
+    }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 font-sans min-h-screen flex flex-col antialiased selection:bg-cyan-500/30 selection:text-cyan-200">
+
+  <!-- ================= TOP NAVBAR ================= -->
+  <header class="sticky top-0 z-40 bg-slate-900/90 backdrop-blur-md border-b border-slate-800 shadow-lg">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
+      
+      <!-- Brand & Title -->
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-cyan-600 to-emerald-500 flex items-center justify-center shadow-md shadow-cyan-500/20 text-white font-black text-xl">
+          D
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <h1 class="font-heading font-bold text-lg text-white leading-tight">Algoritmo de Dijkstra</h1>
+            <span class="text-xs px-2 py-0.5 rounded-full bg-cyan-500/20 border border-cyan-500/30 text-cyan-300 font-medium">Cátedra Cátedra UCSE</span>
+          </div>
+          <p class="text-xs text-slate-400">Guía interactiva con cuadro de iteraciones y vector de costos</p>
+        </div>
+      </div>
+
+      <!-- Presets & Origin Selector -->
+      <div class="flex items-center gap-3">
+        <div class="hidden lg:flex items-center bg-slate-800/80 p-1 rounded-xl border border-slate-700/60 text-xs gap-1">
+          <button id="btnPresetLarge" onclick="loadPreset('large')" class="px-2.5 py-1.5 rounded-lg font-medium transition-all bg-cyan-600 text-white shadow">
+            Extendido (6 Nodos)
+          </button>
+          <button id="btnPresetBoard" onclick="loadPreset('board')" class="px-2.5 py-1.5 rounded-lg font-medium text-slate-400 hover:text-slate-200 transition-all">
+            Pizarra Cátedra (4 Nodos)
+          </button>
+          <button id="btnPresetExam" onclick="loadPreset('exam')" class="px-2.5 py-1.5 rounded-lg font-medium text-slate-400 hover:text-slate-200 transition-all">
+            Examen UCSE (5 Nodos Dirigido)
+          </button>
+        </div>
+
+        <div class="flex lg:hidden items-center bg-slate-800/80 px-2 py-1 rounded-xl border border-slate-700/60 text-xs">
+          <select id="selectPresetMobile" onchange="loadPreset(this.value)" class="bg-slate-900 text-cyan-300 font-bold px-2 py-0.5 rounded border border-slate-700 focus:outline-none">
+            <option value="large">Extendido (6 N)</option>
+            <option value="board">Pizarra (4 N)</option>
+            <option value="exam">Examen (5 N Dir)</option>
+          </select>
+        </div>
+
+        <div class="flex items-center gap-2 bg-slate-800/80 px-3 py-1.5 rounded-xl border border-slate-700/60 text-xs">
+          <span class="text-slate-400 font-medium">Origen:</span>
+          <select id="selectOrigin" onchange="changeOrigin(Number(this.value))" class="bg-slate-900 text-cyan-400 font-bold px-2 py-0.5 rounded border border-slate-700 focus:outline-none focus:border-cyan-500">
+            <option value="1">Nodo 1</option>
+            <option value="2">Nodo 2</option>
+            <option value="3">Nodo 3</option>
+            <option value="4">Nodo 4</option>
+            <option value="5">Nodo 5</option>
+            <option value="6">Nodo 6</option>
+          </select>
+        </div>
+
+        <!-- Help Modal Button -->
+        <button onclick="toggleHelpModal(true)" class="p-2 rounded-xl bg-slate-800 border border-slate-700 text-slate-300 hover:text-white hover:bg-slate-700 transition" title="¿Cómo funciona el cuadro?">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+          </svg>
+        </button>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- ================= TOOLBAR CONTROLS ================= -->
+  <div class="bg-slate-900/60 border-b border-slate-800/80 px-4 py-3">
+    <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-3">
+      
+      <!-- Stepper Controls -->
+      <div class="flex items-center gap-2">
+        <button id="btnReset" onclick="resetAlgorithm()" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 font-medium text-xs flex items-center gap-1.5 transition">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+          Reiniciar
+        </button>
+
+        <button id="btnPrev" onclick="stepBackward()" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 font-medium text-xs flex items-center gap-1.5 transition">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+          Anterior
+        </button>
+
+        <button id="btnPlay" onclick="togglePlay()" class="px-4 py-1.5 rounded-lg bg-cyan-600 hover:bg-cyan-500 text-white font-bold text-xs flex items-center gap-1.5 shadow-md shadow-cyan-600/30 transition">
+          <span id="playIcon">
+            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd"/></svg>
+          </span>
+          <span id="playText">Reproducir</span>
+        </button>
+
+        <button id="btnNext" onclick="stepForward()" class="px-4 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs flex items-center gap-1.5 shadow-md shadow-emerald-600/30 transition">
+          Siguiente
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+        </button>
+      </div>
+
+      <!-- Step Counter & Speed -->
+      <div class="flex items-center gap-4 text-xs">
+        <div class="flex items-center gap-2">
+          <span class="text-slate-400">Progreso:</span>
+          <span id="badgeStepCount" class="px-2.5 py-0.5 rounded-full bg-slate-800 text-cyan-400 font-mono font-bold border border-slate-700">
+            Paso 0 / 0
+          </span>
+        </div>
+
+        <div class="flex items-center gap-1.5">
+          <span class="text-slate-400">Velocidad:</span>
+          <select id="speedSelect" onchange="setPlaySpeed(Number(this.value))" class="bg-slate-800 text-slate-200 rounded px-2 py-0.5 border border-slate-700 focus:outline-none">
+            <option value="1800">0.5x (Lento)</option>
+            <option value="1000" selected>1.0x (Normal)</option>
+            <option value="500">2.0x (Rápido)</option>
+          </select>
+        </div>
+
+        <!-- Formula Callout -->
+        <div class="hidden xl:flex items-center gap-2 bg-slate-800/60 px-3 py-1 rounded-lg border border-slate-700/50">
+          <span class="text-xs text-amber-400 font-semibold">Fórmula de la Cátedra:</span>
+          <div id="headerFormula" class="font-mono text-cyan-300 text-xs"></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ================= MAIN WORKSPACE ================= -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex-1 w-full space-y-6">
+
+    <!-- Pedagogical Status / Context Alert -->
+    <div id="statusBar" class="p-4 rounded-2xl bg-gradient-to-r from-slate-900 via-slate-850 to-slate-900 border border-slate-700/80 shadow-lg flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div class="flex items-start sm:items-center gap-3">
+        <div id="statusIconBox" class="w-9 h-9 rounded-xl bg-cyan-500/20 text-cyan-400 flex items-center justify-center flex-shrink-0 border border-cyan-500/30">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <span id="statusBadge" class="text-xs font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-cyan-500/20 text-cyan-300 border border-cyan-500/30">Inicialización</span>
+            <span id="statusSubhead" class="text-xs text-slate-400">Punto de partida del algoritmo</span>
+          </div>
+          <p id="statusDescription" class="text-sm text-slate-200 mt-0.5">
+            Cargando estado inicial...
+          </p>
+        </div>
+      </div>
+
+      <!-- Quick Metrics -->
+      <div class="flex items-center gap-2 self-end md:self-center">
+        <div class="px-3 py-1.5 rounded-xl bg-slate-800/80 border border-slate-700/60 text-xs flex items-center gap-2">
+          <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 inline-block"></span>
+          <span class="text-slate-400">Definitivos S:</span>
+          <span id="countS" class="font-mono font-bold text-emerald-400">0</span>
+        </div>
+        <div class="px-3 py-1.5 rounded-xl bg-slate-800/80 border border-slate-700/60 text-xs flex items-center gap-2">
+          <span class="w-2.5 h-2.5 rounded-full bg-slate-500 inline-block"></span>
+          <span class="text-slate-400">Pendientes (V - S):</span>
+          <span id="countVminusS" class="font-mono font-bold text-slate-300">0</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Grid Layout: Left (Graph + Inspector) | Right (Table + Vectors + Matrix) -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+
+      <!-- LEFT COLUMN: Graph & Shortest Path (5 cols) -->
+      <div class="lg:col-span-5 space-y-6">
+
+        <!-- Graph Card -->
+        <div class="bg-slate-900 rounded-2xl border border-slate-800 p-4 shadow-xl flex flex-col relative overflow-hidden">
+          <div class="flex items-center justify-between pb-3 border-b border-slate-800">
+            <div class="flex items-center gap-2">
+              <span class="w-2.5 h-2.5 rounded-full bg-cyan-400 shadow shadow-cyan-400/50"></span>
+              <h2 class="font-heading font-semibold text-white text-sm">Grafo Ponderado G = (V, A)</h2>
+              <span id="badgeGraphType" class="text-[10px] px-1.5 py-0.5 rounded bg-cyan-500/20 text-cyan-300 font-medium border border-cyan-500/30">No Dirigido</span>
+            </div>
+            <div class="flex items-center gap-2 text-xs text-slate-400">
+              <span class="inline-flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-emerald-500"></span> S (Definitivo)</span>
+              <span class="inline-flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-amber-500"></span> w (Pivote)</span>
+              <span class="inline-flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-cyan-400"></span> k (Candidato)</span>
+            </div>
+          </div>
+
+          <!-- SVG Graph Container -->
+          <div class="relative w-full aspect-[4/3] max-h-[380px] my-2 flex items-center justify-center bg-slate-950/60 rounded-xl border border-slate-800/80 overflow-hidden">
+            <svg id="graphSvg" class="w-full h-full select-none" viewBox="0 0 500 360">
+              <!-- Defs for arrows, glows, markers -->
+              <defs>
+                <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+                  <feGaussianBlur stdDeviation="3" result="blur" />
+                  <feComposite in="SourceGraphic" in2="blur" operator="over" />
+                </filter>
+                <marker id="arrowhead" markerWidth="9" markerHeight="7" refX="28" refY="3.5" orient="auto">
+                  <polygon points="0 0, 9 3.5, 0 7" fill="#64748b" />
+                </marker>
+                <marker id="arrowhead-active" markerWidth="9" markerHeight="7" refX="28" refY="3.5" orient="auto">
+                  <polygon points="0 0, 9 3.5, 0 7" fill="#06b6d4" />
+                </marker>
+                <marker id="arrowhead-tree" markerWidth="9" markerHeight="7" refX="28" refY="3.5" orient="auto">
+                  <polygon points="0 0, 9 3.5, 0 7" fill="#10b981" />
+                </marker>
+              </defs>
+              <g id="edgesLayer"></g>
+              <g id="nodesLayer"></g>
+            </svg>
+
+            <!-- Hint overlay -->
+            <div class="absolute bottom-2 left-2 text-[10px] text-slate-500 bg-slate-900/80 px-2 py-0.5 rounded border border-slate-800 pointer-events-none">
+              💡 Arrastra los nodos para reacomodar el grafo
+            </div>
+          </div>
+
+          <!-- Path Query Widget -->
+          <div class="mt-2 pt-3 border-t border-slate-800/80">
+            <div class="flex items-center justify-between text-xs mb-2">
+              <span class="font-semibold text-slate-300">Reconstrucción de Camino Mínimo:</span>
+              <span class="text-slate-400 text-[11px]">Haz clic en cualquier nodo para consultar</span>
+            </div>
+            <div id="pathResultBox" class="p-2.5 rounded-xl bg-slate-950/80 border border-slate-800 font-mono text-xs text-slate-300 flex items-center justify-between">
+              <span class="text-slate-400">Selecciona un nodo destino...</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Matriz de Costos de la Cátedra -->
+        <div class="bg-slate-900 rounded-2xl border border-slate-800 p-4 shadow-xl">
+          <div class="flex items-center justify-between pb-3 border-b border-slate-800">
+            <div class="flex items-center gap-2">
+              <span class="w-2 h-2 rounded-full bg-amber-400"></span>
+              <h2 class="font-heading font-semibold text-white text-sm">Matriz de Costos (C)</h2>
+            </div>
+            <span class="text-[11px] text-slate-400">C[w, k] durante la relajación</span>
+          </div>
+
+          <div class="mt-3 overflow-x-auto">
+            <table id="matrixTable" class="w-full text-center font-mono text-xs border-collapse">
+              <!-- Matriz generada dinámicamente con resaltado en vivo de fila w y col k -->
+            </table>
+          </div>
+          <p class="text-[11px] text-slate-400 mt-2 italic text-center">
+            * Diagonal = ∞ (sin lazos). Células con valor numérico indican costo de arista directa.
+          </p>
+        </div>
+
+      </div>
+
+      <!-- RIGHT COLUMN: Vectors + Blackboard Iteration Table (7 cols) -->
+      <div class="lg:col-span-7 space-y-6">
+
+        <!-- Vectors D & P (Estilo Pizarra de la Profe) -->
+        <div class="bg-slate-900 rounded-2xl border border-slate-800 p-4 shadow-xl">
+          <div class="flex items-center justify-between pb-3 border-b border-slate-800">
+            <div class="flex items-center gap-2">
+              <span class="w-2.5 h-2.5 rounded-full bg-emerald-400"></span>
+              <h2 class="font-heading font-semibold text-white text-sm">Vectores de Estado (D y P)</h2>
+            </div>
+            <div class="flex items-center gap-3 text-xs">
+              <span class="text-slate-400 flex items-center gap-1">
+                <span class="line-through text-rose-400 decoration-rose-500 font-bold">12</span> Valor anterior
+              </span>
+              <span class="text-slate-400 flex items-center gap-1">
+                <span class="text-emerald-400 font-bold">8</span> Valor definitivo / mejorado
+              </span>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-3">
+            
+            <!-- Vector D -->
+            <div class="bg-slate-950/70 p-3 rounded-xl border border-slate-800">
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-xs font-bold text-cyan-300 font-mono">Vector D: Costos Mínimos Acumulados</span>
+                <span class="text-[10px] text-slate-400">D[v]</span>
+              </div>
+              <div id="vectorDContainer" class="grid grid-flow-col auto-cols-fr gap-1 text-center font-mono text-xs">
+                <!-- Se genera dinámicamente -->
+              </div>
+            </div>
+
+            <!-- Vector P -->
+            <div class="bg-slate-950/70 p-3 rounded-xl border border-slate-800">
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-xs font-bold text-amber-300 font-mono">Vector P: Predecesores (Padre)</span>
+                <span class="text-[10px] text-slate-400">P[v]</span>
+              </div>
+              <div id="vectorPContainer" class="grid grid-flow-col auto-cols-fr gap-1 text-center font-mono text-xs">
+                <!-- Se genera dinámicamente -->
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- TABLA DE ITERACIONES DE LA CÁTEDRA (El Cuadro de la Foto) -->
+        <div class="bg-slate-900 rounded-2xl border border-slate-800 p-4 shadow-xl">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b border-slate-800">
+            <div>
+              <div class="flex items-center gap-2">
+                <span class="w-2.5 h-2.5 rounded-full bg-indigo-500"></span>
+                <h2 class="font-heading font-semibold text-white text-sm">Cuadro de Iteraciones de la Cátedra</h2>
+              </div>
+              <p class="text-xs text-slate-400">Pasa el mouse sobre los encabezados para ver el popover explicativo</p>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="text-xs px-2.5 py-1 rounded-lg bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 font-mono">
+                $\min( D[k]\ ;\ D[w] + C[w,k] )$
+              </span>
+            </div>
+          </div>
+
+          <!-- Table Container -->
+          <div class="mt-4 overflow-x-auto">
+            <table id="iterationTable" class="w-full text-left font-mono text-xs border-collapse">
+              <thead>
+                <tr class="border-b-2 border-slate-700 text-slate-300">
+                  
+                  <!-- Column 1: V - S -->
+                  <th class="py-2.5 px-3 bg-slate-800/60 rounded-tl-lg cursor-help transition hover:bg-slate-800" data-tippy-header="colVminusS">
+                    <div class="flex items-center gap-1.5">
+                      <span>$V - S$</span>
+                      <svg class="w-3.5 h-3.5 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                    </div>
+                  </th>
+
+                  <!-- Column 2: w -->
+                  <th class="py-2.5 px-3 bg-slate-800/60 cursor-help transition hover:bg-slate-800" data-tippy-header="colW">
+                    <div class="flex items-center gap-1.5 text-amber-300">
+                      <span>$w$</span>
+                      <svg class="w-3.5 h-3.5 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                    </div>
+                  </th>
+
+                  <!-- Column 3: S -->
+                  <th class="py-2.5 px-3 bg-slate-800/60 cursor-help transition hover:bg-slate-800" data-tippy-header="colS">
+                    <div class="flex items-center gap-1.5 text-emerald-300">
+                      <span>$S$</span>
+                      <svg class="w-3.5 h-3.5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                    </div>
+                  </th>
+
+                  <!-- Column 4: V - S post -->
+                  <th class="py-2.5 px-3 bg-slate-800/60 cursor-help transition hover:bg-slate-800" data-tippy-header="colVminusS_post">
+                    <div class="flex items-center gap-1.5">
+                      <span>$V - S$</span>
+                      <svg class="w-3.5 h-3.5 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                    </div>
+                  </th>
+
+                  <!-- Column 5: k -->
+                  <th class="py-2.5 px-3 bg-slate-800/60 cursor-help transition hover:bg-slate-800" data-tippy-header="colK">
+                    <div class="flex items-center gap-1.5 text-cyan-300">
+                      <span>$k$</span>
+                      <svg class="w-3.5 h-3.5 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                    </div>
+                  </th>
+
+                  <!-- Column 6: min evaluation -->
+                  <th class="py-2.5 px-3 bg-slate-800/60 rounded-tr-lg cursor-help transition hover:bg-slate-800 min-w-[200px]" data-tippy-header="colMin">
+                    <div class="flex items-center gap-1.5 text-pink-300">
+                      <span>$\\min ( D[k]\\ ;\\ D[w] + C[w,k] )$</span>
+                      <svg class="w-3.5 h-3.5 text-pink-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                    </div>
+                  </th>
+
+                </tr>
+              </thead>
+              <tbody id="tableBody" class="divide-y divide-slate-800 text-slate-300">
+                <!-- Se llena con las iteraciones ejecutadas -->
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Active Micro-step Callout inside Table -->
+          <div id="microStepCallout" class="mt-4 p-3 rounded-xl bg-slate-950 border border-cyan-500/30 text-xs text-slate-300 flex items-start gap-2">
+            <span class="text-cyan-400 font-bold flex-shrink-0">📌 Análisis del paso:</span>
+            <span id="microStepText">Presiona "Siguiente" o "Reproducir" para iniciar la resolución.</span>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- ================= BOTTOM PEDAGOGICAL TABS ================= -->
+    <div class="bg-slate-900 rounded-2xl border border-slate-800 overflow-hidden shadow-xl mt-8">
+      <div class="flex border-b border-slate-800 bg-slate-950/50">
+        <button onclick="switchTab('tabGuide')" id="btnTabGuide" class="px-5 py-3 text-xs font-semibold text-cyan-400 border-b-2 border-cyan-400 flex items-center gap-2">
+          📖 Metodología de Examen (Cómo hacer el cuadro en hoja)
+        </button>
+        <button onclick="switchTab('tabCode')" id="btnTabCode" class="px-5 py-3 text-xs font-semibold text-slate-400 hover:text-slate-200 border-b-2 border-transparent flex items-center gap-2">
+          💻 Código C++ Cátedra (Sin STL / Sin Classes)
+        </button>
+        <button onclick="switchTab('tabTheory')" id="btnTabTheory" class="px-5 py-3 text-xs font-semibold text-slate-400 hover:text-slate-200 border-b-2 border-transparent flex items-center gap-2">
+          ❓ Preguntas Frecuentes & Teórico Oral
+        </button>
+      </div>
+
+      <div class="p-6">
+        
+        <!-- TAB 1: Guía para resolver a mano -->
+        <div id="tabGuide" class="space-y-4 text-sm text-slate-300">
+          <h3 class="font-heading font-bold text-white text-base text-cyan-300">Instrucciones para confeccionar el cuadro en el parcial / examen final:</h3>
+          <ol class="list-decimal list-inside space-y-2.5 leading-relaxed text-slate-300">
+            <li>
+              <strong class="text-white">Paso 0 - Inicialización:</strong> Dibujar la Matriz de Costos $C[u,v]$ del grafo con $\infty$ en la diagonal y en pares sin arista. Crear los vectores $D$ y $P$. Para el vértice origen $v_0$, marcar $D[v_0] = 0$ y $P[v_0] = v_0$. Para todos los demás $v$, cargar $D[v] = C[v_0, v]$ y $P[v] = v_0$. Colocar $S = \{v_0\}$.
+            </li>
+            <li>
+              <strong class="text-white">Columna 1 ($V - S$ inicial):</strong> Listar los vértices no resueltos aún.
+            </li>
+            <li>
+              <strong class="text-white">Columna 2 ($w$ elegido):</strong> Mirar el vector $D$ únicamente en las posiciones de los nodos en $V-S$. Seleccionar el vértice con el valor $D$ más chico. Ese es $w$ (en caso de empate, desempatar por el de menor índice).
+            </li>
+            <li>
+              <strong class="text-white">Columna 3 ($S$ actualizado):</strong> Agregar $w$ a $S$. Ahora $S = S \cup \{w\}$. El nodo $w$ ya tiene su camino mínimo garantizado para siempre (se tacha en el vector $D$ para recordar que ya no compite).
+            </li>
+            <li>
+              <strong class="text-white">Columna 4 ($V - S$ restante):</strong> Escribir los vértices que quedan pendientes sin $w$.
+            </li>
+            <li>
+              <strong class="text-white">Columnas 5 y 6 ($k$ y $\min$):</strong> Por cada vértice $k$ del nuevo $V-S$, escribir la cuenta explícita:
+              <div class="my-2 p-2 rounded bg-slate-950 border border-slate-800 font-mono text-cyan-300 text-xs">
+                min( D[k] , D[w] + C[w,k] )
+              </div>
+              Si el camino pasando por $w$ ($D[w] + C[w,k]$) resulta ser estrictamente menor que la distancia que ya teníamos anotada ($D[k]$), <strong>se tacha el valor viejo en $D[k]$</strong>, se escribe el nuevo número, y en el vector $P[k]$ se anota $w$ como nuevo predecesor.
+            </li>
+            <li>
+              <strong class="text-white">Finalización:</strong> El proceso termina cuando $V - S = \emptyset$. Para reconstruir el camino hacia cualquier nodo, se arranca en el destino y se viaja hacia atrás consultando $P$.
+            </li>
+          </ol>
+        </div>
+
+        <!-- TAB 2: C++ Code according to rules.md -->
+        <div id="tabCode" class="hidden space-y-4">
+          <div class="flex items-center justify-between">
+            <span class="text-xs text-amber-400 font-mono">Respetando directivas de cátedra: struct, arreglos estáticos, sin &lt;vector&gt;, sin &lt;stack&gt;, sin class.</span>
+            <span class="text-xs text-slate-400">Lenguaje C++</span>
+          </div>
+          <pre class="p-4 rounded-xl bg-slate-950 border border-slate-850 font-mono text-xs text-emerald-400 overflow-x-auto leading-relaxed">
+#define MAX_NODOS 10
+#define INFINITO 99999
+
+struct Grafo {
+    int n; // Cantidad de vertices
+    int C[MAX_NODOS][MAX_NODOS]; // Matriz de Costos
+};
+
+// Algoritmo de Dijkstra paso a paso
+void Dijkstra(const Grafo&amp; g, int origen, int D[], int P[]) {
+    bool S[MAX_NODOS]; // true si el nodo ya pertenece a S
+    int i, step, w, k, min_dist;
+
+    // 1. Inicializacion
+    for (i = 1; i &lt;= g.n; i++) {
+        S[i] = false;
+        D[i] = g.C[origen][i];
+        P[i] = origen;
+    }
+
+    D[origen] = 0;
+    S[origen] = true; // S = {origen}
+
+    // 2. Iteraciones principales (hasta procesar todos los vertices)
+    for (step = 1; step &lt; g.n; step++) {
+        // Seleccionar w en V - S con menor D[w]
+        min_dist = INFINITO;
+        w = -1;
+        for (i = 1; i &lt;= g.n; i++) {
+            if (!S[i] &amp;&amp; D[i] &lt; min_dist) {
+                min_dist = D[i];
+                w = i;
+            }
+        }
+
+        if (w == -1 || min_dist == INFINITO) break; // Nodos inalcanzables
+
+        // Agregar w a S
+        S[w] = true;
+
+        // Relajar para cada k en V - S
+        for (k = 1; k &lt;= g.n; k++) {
+            if (!S[k] &amp;&amp; g.C[w][k] &lt; INFINITO) {
+                if (D[w] + g.C[w][k] &lt; D[k]) {
+                    D[k] = D[w] + g.C[w][k];
+                    P[k] = w; // Actualizar predecesor
+                }
+            }
+        }
+    }
+}
+          </pre>
+        </div>
+
+        <!-- TAB 3: Preguntas teóricas de examen -->
+        <div id="tabTheory" class="hidden space-y-4 text-sm text-slate-300">
+          <div class="space-y-3">
+            <div class="p-3.5 rounded-xl bg-slate-950/70 border border-slate-800">
+              <h4 class="font-bold text-white text-cyan-300">¿Por qué Dijkstra falla si existen aristas con pesos negativos?</h4>
+              <p class="mt-1 text-slate-300 text-xs leading-relaxed">
+                Dijkstra es un algoritmo <em>voraz (greedy)</em>. Da por seguro que una vez que un nodo $w$ es incorporado al conjunto $S$, su distancia $D[w]$ es la mínima definitiva y jamás podrá ser reducida. Si hubiera aristas negativas, un camino posterior más largo en cantidad de aristas pero con suma negativa podría batir ese costo, violando la premisa. Ante aristas negativas se debe emplear el algoritmo de <strong>Bellman-Ford</strong> o <strong>Floyd-Warshall</strong>.
+              </p>
+            </div>
+
+            <div class="p-3.5 rounded-xl bg-slate-950/70 border border-slate-800">
+              <h4 class="font-bold text-white text-cyan-300">¿Cuál es la complejidad temporal del algoritmo?</h4>
+              <p class="mt-1 text-slate-300 text-xs leading-relaxed">
+                Con matrices de adyacencia y búsqueda lineal del mínimo (versión clásica de pizarra de la cátedra): <strong>$O(|V|^2)$</strong>. Con listas de adyacencia y cola de prioridad (min-heap): <strong>$O((|V| + |E|) \log |V|)$</strong>.
+              </p>
+            </div>
+
+            <div class="p-3.5 rounded-xl bg-slate-950/70 border border-slate-800">
+              <h4 class="font-bold text-white text-cyan-300">¿Qué papel cumple el vector P en la práctica?</h4>
+              <p class="mt-1 text-slate-300 text-xs leading-relaxed">
+                El vector $P$ almacena el árbol de caminos mínimos enraizado en el origen. Para saber la ruta completa hasta un destino $d$, se hace un recorrido hacia atrás: $d \leftarrow P[d] \leftarrow P[P[d]] \dots$ hasta llegar al nodo origen.
+              </p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </main>
+
+  <!-- ================= HELP MODAL ================= -->
+  <div id="helpModal" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 hidden">
+    <div class="bg-slate-900 border border-slate-700 max-w-2xl w-full rounded-2xl p-6 shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <h3 class="font-heading font-bold text-lg text-white flex items-center gap-2">
+          💡 Guía de las Columnas del Cuadro
+        </h3>
+        <button onclick="toggleHelpModal(false)" class="text-slate-400 hover:text-white text-xl p-1 font-mono">✕</button>
+      </div>
+
+      <div class="space-y-3 text-xs text-slate-300 leading-relaxed">
+        <div class="p-3 rounded-lg bg-slate-950 border border-slate-800">
+          <strong class="text-cyan-400">1. Columna V - S (Previa):</strong>
+          <p>Muestra el conjunto de vértices que todavía no tienen su costo cerrado ni están en S. De aquí saldrá el próximo nodo a congelar.</p>
+        </div>
+        <div class="p-3 rounded-lg bg-slate-950 border border-slate-800">
+          <strong class="text-amber-400">2. Columna w:</strong>
+          <p>Es el vértice elegido dentro de (V - S) que presenta el valor más bajo en el vector D. Se declara como camino mínimo definitivo.</p>
+        </div>
+        <div class="p-3 rounded-lg bg-slate-950 border border-slate-800">
+          <strong class="text-emerald-400">3. Columna S:</strong>
+          <p>Es el conjunto solución acumulado. Se actualiza sumando el nuevo w: S ← S ∪ {w}.</p>
+        </div>
+        <div class="p-3 rounded-lg bg-slate-950 border border-slate-800">
+          <strong class="text-cyan-400">4. Columna V - S (Posterior):</strong>
+          <p>Conjunto de nodos que quedan pendientes tras remover a w. Estos vértices serán los candidatos 'k' a ser evaluados.</p>
+        </div>
+        <div class="p-3 rounded-lg bg-slate-950 border border-slate-800">
+          <strong class="text-cyan-400">5. Columna k:</strong>
+          <p>Cada vértice individual perteneciente al nuevo V - S.</p>
+        </div>
+        <div class="p-3 rounded-lg bg-slate-950 border border-slate-800">
+          <strong class="text-pink-400">6. Columna min (D[k] ; D[w] + C[w,k]):</strong>
+          <p>Compara si la distancia que ya tenía 'k' es mejor que ir hasta 'w' y luego recorrer la arista (w,k). Si la nueva opción es menor, se actualiza el vector D y se anota w en P[k].</p>
+        </div>
+      </div>
+
+      <div class="pt-3 border-t border-slate-800 flex justify-end">
+        <button onclick="toggleHelpModal(false)" class="px-4 py-1.5 bg-cyan-600 hover:bg-cyan-500 text-white rounded-lg font-semibold text-xs">
+          Entendido
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= JAVASCRIPT LOGIC ================= -->
+  <script>
+    // --- DEFINICIÓN DE GRAFOS ---
+    const PRESETS = {
+      // 1. Grafo Extendido (6 Nodos) - Rico en relajaciones y cambios de camino
+      large: {
+        id: 'large',
+        name: 'Ejemplo Extendido (6 Vértices)',
+        nodes: [
+          { id: 1, label: '1', x: 70,  y: 180 },
+          { id: 2, label: '2', x: 210, y: 70  },
+          { id: 3, label: '3', x: 210, y: 290 },
+          { id: 4, label: '4', x: 350, y: 70  },
+          { id: 5, label: '5', x: 350, y: 290 },
+          { id: 6, label: '6', x: 440, y: 180 }
+        ],
+        // Aristas no dirigidas ponderadas (simétricas)
+        edges: [
+          { u: 1, v: 2, weight: 4 },
+          { u: 1, v: 3, weight: 2 },
+          { u: 2, v: 3, weight: 1 },
+          { u: 2, v: 4, weight: 5 },
+          { u: 3, v: 4, weight: 8 },
+          { u: 3, v: 5, weight: 10 },
+          { u: 4, v: 5, weight: 2 },
+          { u: 4, v: 6, weight: 6 },
+          { u: 5, v: 6, weight: 3 }
+        ]
+      },
+      // 2. Grafo de la Pizarra de la Profesora (4 Nodos)
+      board: {
+        id: 'board',
+        name: 'Ejemplo de Pizarra (4 Vértices)',
+        directed: false,
+        nodes: [
+          { id: 1, label: '1', x: 100, y: 100 },
+          { id: 2, label: '2', x: 380, y: 100 },
+          { id: 3, label: '3', x: 180, y: 270 },
+          { id: 4, label: '4', x: 380, y: 270 }
+        ],
+        edges: [
+          { u: 1, v: 2, weight: 3 },
+          { u: 1, v: 3, weight: 2 },
+          { u: 2, v: 3, weight: 2 },
+          { u: 3, v: 4, weight: 1 }
+        ]
+      },
+      // 3. Grafo de Examen Parcial / Final UCSE (5 Vértices - Dirigido)
+      exam: {
+        id: 'exam',
+        name: 'Ejemplo de Examen UCSE (5 Vértices Dirigido)',
+        directed: true,
+        nodes: [
+          { id: 1, label: '1 (A)', x: 60,  y: 180 },
+          { id: 2, label: '2 (B)', x: 190, y: 90  },
+          { id: 3, label: '3 (C)', x: 190, y: 270 },
+          { id: 4, label: '4 (D)', x: 330, y: 100 },
+          { id: 5, label: '5 (E)', x: 430, y: 220 }
+        ],
+        // Arcos dirigidos: (A,B,2), (A,C,5), (B,C,2), (B,D,4), (C,D,1), (C,E,6), (D,E,3)
+        edges: [
+          { u: 1, v: 2, weight: 2 },
+          { u: 1, v: 3, weight: 5 },
+          { u: 2, v: 3, weight: 2 },
+          { u: 2, v: 4, weight: 4 },
+          { u: 3, v: 4, weight: 1 },
+          { u: 3, v: 5, weight: 6 },
+          { u: 4, v: 5, weight: 3 }
+        ]
+      }
+    };
+
+    const INF = 99999; // Representación de infinito
+
+    // --- ESTADO GLOBAL ---
+    let currentPreset = PRESETS.large;
+    let originNode = 1;
+    let costMatrix = [];
+    let steps = []; // Lista de todos los micro-pasos generados
+    let currentStepIndex = 0;
+    let isPlaying = false;
+    let playTimer = null;
+    let playSpeed = 1000;
+    let selectedDest = null;
+
+    // --- RENDERIZADO GLOBAL DE MATEMÁTICAS (KATEX) ---
+    function renderMath(target) {
+      const el = target || document.body;
+      if (typeof renderMathInElement === 'function' && el) {
+        try {
+          renderMathInElement(el, {
+            delimiters: [
+              { left: '$$', right: '$$', display: true },
+              { left: '$', right: '$', display: false },
+              { left: '\\(', right: '\\)', display: false },
+              { left: '\\[', right: '\\]', display: true }
+            ],
+            ignoredTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            throwOnError: false
+          });
+        } catch (err) {
+          console.warn('KaTeX render error:', err);
+        }
+      }
+    }
+    window.renderMath = renderMath;
+
+    // --- DESCRIPCIONES PARA POPOVERS DE ENCABEZADOS ---
+    const HEADER_POPOVERS = {
+      colVminusS: `
+        <div class="space-y-1.5 p-1">
+          <div class="font-bold text-cyan-300 text-xs">Conjunto $V - S$ (Previo a Selección)</div>
+          <p class="text-[11px] text-slate-300 leading-relaxed">
+            Representa los vértices del grafo que <strong>aún no son definitivos</strong>. 
+            El algoritmo examinará este subconjunto para encontrar el vértice con la distancia mínima acumulada actual.
+          </p>
+          <div class="text-[11px] text-slate-300 font-mono bg-slate-950/80 p-1 rounded border border-slate-800 text-center">
+            $V - S = \\{ v \\in V \\mid v \\notin S \\}$
+          </div>
+        </div>
+      `,
+      colW: `
+        <div class="space-y-1.5 p-1">
+          <div class="font-bold text-amber-300 text-xs">Vértice Elegido ($w$)</div>
+          <p class="text-[11px] text-slate-300 leading-relaxed">
+            Es el vértice de <em>$V - S$</em> que posee el <strong>mínimo $D[w]$</strong>. Al seleccionarlo, se garantiza que no existe camino más corto para él y su distancia queda <strong>congelada</strong>.
+          </p>
+          <div class="text-[11px] text-amber-300 font-mono bg-slate-950/80 p-1 rounded border border-slate-800 text-center">
+            $w = \\arg\\min_{v \\in V - S} D[v]$
+          </div>
+        </div>
+      `,
+      colS: `
+        <div class="space-y-1.5 p-1">
+          <div class="font-bold text-emerald-300 text-xs">Conjunto Solución $S$ (Actualizado)</div>
+          <p class="text-[11px] text-slate-300 leading-relaxed">
+            Conjunto de vértices para los cuales la distancia mínima desde el origen ya fue calculada y cerrada con éxito. 
+            Se actualiza incorporando a <em>$w$</em>:
+          </p>
+          <div class="text-[11px] text-emerald-300 font-mono bg-slate-950/80 p-1 rounded border border-slate-800 text-center">
+            $S \\leftarrow S \\cup \\{w\\}$
+          </div>
+        </div>
+      `,
+      colVminusS_post: `
+        <div class="space-y-1.5 p-1">
+          <div class="font-bold text-cyan-300 text-xs">Conjunto $V - S$ (Restante)</div>
+          <p class="text-[11px] text-slate-300 leading-relaxed">
+            Muestra los vértices que quedan pendientes por resolver tras extraer a <em>$w$</em>: $(V - S) \\setminus \\{w\\}$. 
+            Cada uno de estos será evaluado como candidato <em>$k$</em>.
+          </p>
+        </div>
+      `,
+      colK: `
+        <div class="space-y-1.5 p-1">
+          <div class="font-bold text-cyan-300 text-xs">Vértice Evaluado ($k$)</div>
+          <p class="text-[11px] text-slate-300 leading-relaxed">
+            Representa cada vértice pendiente en <em>$V - S$</em> ($k \\in V - S$). Se evalúa individualmente si llegar a <em>$k$</em> pasando a través de <em>$w$</em> mejora su costo conocido actual.
+          </p>
+        </div>
+      `,
+      colMin: `
+        <div class="space-y-1.5 p-1">
+          <div class="font-bold text-pink-300 text-xs">Operación de Relajación: $\\min(\\dots)$</div>
+          <p class="text-[11px] text-slate-300 leading-relaxed">
+            Compara la distancia conocida hasta ahora para <em>$k$</em> con la alternativa de ir primero a <em>$w$</em> y luego tomar la arista directa $(w, k)$:
+          </p>
+          <div class="text-[11px] text-pink-300 font-mono bg-slate-950/80 p-1 rounded border border-slate-800 text-center">
+            $\\min( D[k]\\ ;\\ D[w] + C[w, k] )$
+          </div>
+          <p class="text-[10px] text-slate-400">
+            Si la suma es estrictamente menor: $D[k] \\leftarrow D[w] + C[w, k]$ y $P[k] \\leftarrow w$.
+          </p>
+        </div>
+      `
+    };
+
+    // --- INICIALIZADOR PRINCIPAL ---
+    window.addEventListener('DOMContentLoaded', () => {
+      // Renderizar fórmula del header en KaTeX
+      try {
+        katex.render("\\min( D[k]\\ ;\\ D[w] + C[w, k] )", document.getElementById('headerFormula'), {
+          throwOnError: false
+        });
+      } catch (e) {
+        document.getElementById('headerFormula').innerText = "min( D[k] ; D[w] + C[w,k] )";
+      }
+
+      // Renderizar expresiones matemáticas iniciales del documento
+      renderMath(document.body);
+
+      // Inicializar Popovers en los encabezados
+      initHeaderPopovers();
+
+      // Cargar preset inicial
+      loadPreset('large');
+    });
+
+    function initHeaderPopovers() {
+      document.querySelectorAll('[data-tippy-header]').forEach(el => {
+        const key = el.getAttribute('data-tippy-header');
+        if (HEADER_POPOVERS[key]) {
+          tippy(el, {
+            content: HEADER_POPOVERS[key],
+            allowHTML: true,
+            theme: 'dijkstra',
+            placement: 'bottom',
+            animation: 'scale',
+            interactive: true,
+            onShow(instance) {
+              setTimeout(() => {
+                renderMath(instance.popper);
+              }, 0);
+            }
+          });
+        }
+      });
+    }
+
+    // --- CARGA DE PRESETS ---
+    function loadPreset(presetKey) {
+      if (isPlaying) togglePlay();
+      currentPreset = PRESETS[presetKey] || PRESETS.large;
+
+      // Actualizar botones de preset
+      const presetKeys = ['large', 'board', 'exam'];
+      presetKeys.forEach(k => {
+        const btn = document.getElementById('btnPreset' + k.charAt(0).toUpperCase() + k.slice(1));
+        if (btn) {
+          if (k === presetKey) {
+            btn.className = "px-2.5 py-1.5 rounded-lg font-medium transition-all bg-cyan-600 text-white shadow";
+          } else {
+            btn.className = "px-2.5 py-1.5 rounded-lg font-medium text-slate-400 hover:text-slate-200 transition-all";
+          }
+        }
+      });
+
+      const mobileSelect = document.getElementById('selectPresetMobile');
+      if (mobileSelect) mobileSelect.value = presetKey;
+
+      // Actualizar badge de tipo de grafo
+      const badgeGraphType = document.getElementById('badgeGraphType');
+      if (badgeGraphType) {
+        badgeGraphType.textContent = currentPreset.directed ? 'Grafo Dirigido' : 'No Dirigido';
+        badgeGraphType.className = currentPreset.directed
+          ? "text-[10px] px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300 font-medium border border-amber-500/30"
+          : "text-[10px] px-1.5 py-0.5 rounded bg-cyan-500/20 text-cyan-300 font-medium border border-cyan-500/30";
+      }
+
+      // Actualizar selector de origen
+      const select = document.getElementById('selectOrigin');
+      select.innerHTML = '';
+      currentPreset.nodes.forEach(n => {
+        const opt = document.createElement('option');
+        opt.value = n.id;
+        opt.textContent = `Nodo ${n.label}`;
+        select.appendChild(opt);
+      });
+      select.value = "1";
+      originNode = 1;
+
+      // Construir Matriz de Costos
+      buildCostMatrix();
+
+      // Renderizar matriz visual en HTML
+      renderMatrixTable();
+
+      // Renderizar Grafo SVG
+      renderGraph();
+
+      // Precalcular todos los pasos de Dijkstra
+      generateAlgorithmSteps();
+
+      // Posicionarse en el paso 0
+      currentStepIndex = 0;
+      selectedDest = null;
+      applyStep(currentStepIndex);
+    }
+
+    function changeOrigin(newOrigin) {
+      if (isPlaying) togglePlay();
+      originNode = newOrigin;
+      generateAlgorithmSteps();
+      currentStepIndex = 0;
+      selectedDest = null;
+      applyStep(currentStepIndex);
+    }
+
+    // --- CONSTRUCCIÓN DE MATRIZ DE COSTOS ---
+    function buildCostMatrix() {
+      const n = currentPreset.nodes.length;
+      costMatrix = Array.from({ length: n + 1 }, () => Array(n + 1).fill(INF));
+
+      // Llenar con las aristas
+      currentPreset.edges.forEach(e => {
+        costMatrix[e.u][e.v] = e.weight;
+        if (!currentPreset.directed) {
+          costMatrix[e.v][e.u] = e.weight; // Solo simétrico si es no dirigido
+        }
+      });
+    }
+
+    function renderMatrixTable() {
+      const table = document.getElementById('matrixTable');
+      const n = currentPreset.nodes.length;
+      let html = '<thead><tr class="text-slate-400 border-b border-slate-800"><th class="p-1.5 text-cyan-400">C</th>';
+      for (let j = 1; j <= n; j++) {
+        html += `<th class="p-1.5 text-slate-300" id="matHeadCol_${j}">${j}</th>`;
+      }
+      html += '</tr></thead><tbody>';
+
+      for (let i = 1; i <= n; i++) {
+        html += `<tr class="border-b border-slate-800/60" id="matRow_${i}">`;
+        html += `<td class="p-1.5 font-bold text-slate-300 bg-slate-950/40" id="matHeadRow_${i}">${i}</td>`;
+        for (let j = 1; j <= n; j++) {
+          const val = costMatrix[i][j];
+          const displayVal = val === INF ? '∞' : val;
+          const isDiag = i === j;
+          html += `<td class="p-1.5 text-slate-400 ${isDiag ? 'text-slate-600' : ''}" id="matCell_${i}_${j}">${displayVal}</td>`;
+        }
+        html += '</tr>';
+      }
+      html += '</tbody>';
+      table.innerHTML = html;
+    }
+
+    // --- PRECALCULAR TODOS LOS PASOS DE DIJKSTRA ---
+    // Cada paso contiene un snapshot completo del estado + metadata didáctica
+    function generateAlgorithmSteps() {
+      steps = [];
+      const n = currentPreset.nodes.length;
+
+      // Estado inicial
+      let D = {};
+      let P = {};
+      let historyD = {};
+      let historyP = {};
+      let S = [originNode];
+      let VminusS = [];
+
+      for (let i = 1; i <= n; i++) {
+        VminusS.push(i);
+        D[i] = (i === originNode) ? 0 : costMatrix[originNode][i];
+        P[i] = originNode;
+        historyD[i] = [{ val: D[i], settled: (i === originNode) }];
+        historyP[i] = [{ val: P[i], settled: (i === originNode) }];
+      }
+      VminusS = VminusS.filter(x => x !== originNode);
+
+      // PASO 0: Inicialización
+      steps.push({
+        type: 'INIT',
+        iteration: 0,
+        substep: 'init',
+        S: [...S],
+        VminusS: [...VminusS],
+        w: null,
+        k: null,
+        minCalc: null,
+        D: { ...D },
+        P: { ...P },
+        historyD: JSON.parse(JSON.stringify(historyD)),
+        historyP: JSON.parse(JSON.stringify(historyP)),
+        tableRows: [],
+        description: `Inicialización: Nodo origen ${originNode}. Se asigna D[${originNode}] = 0 (definitivo en S). Para el resto de nodos, D[v] toma el valor directo de la arista en la Matriz C[${originNode}, v] y P[v] = ${originNode}.`,
+        title: 'Inicialización de Vectores'
+      });
+
+      let iterationCount = 0;
+      let tableRows = [];
+
+      // Bucle de Dijkstra
+      while (VminusS.length > 0) {
+        iterationCount++;
+        const currentVminusS_pre = [...VminusS];
+
+        // 1. Encontrar w con menor D[w] en V - S
+        let minVal = INF;
+        let w = -1;
+        for (const cand of VminusS) {
+          if (D[cand] < minVal) {
+            minVal = D[cand];
+            w = cand;
+          }
+        }
+
+        if (w === -1 || minVal === INF) {
+          // Nodos inalcanzables restantes
+          steps.push({
+            type: 'UNREACHABLE',
+            iteration: iterationCount,
+            substep: 'unreachable',
+            S: [...S],
+            VminusS: [...VminusS],
+            w: null,
+            k: null,
+            minCalc: null,
+            D: { ...D },
+            P: { ...P },
+            historyD: JSON.parse(JSON.stringify(historyD)),
+            historyP: JSON.parse(JSON.stringify(historyP)),
+            tableRows: JSON.parse(JSON.stringify(tableRows)),
+            description: `Los nodos pendientes {${VminusS.join(', ')}} no tienen conexión con el origen (distancia ∞). Se concluye el algoritmo.`,
+            title: 'Nodos Inalcanzables'
+          });
+          break;
+        }
+
+        // Subpaso: Selección de w
+        steps.push({
+          type: 'SELECT_W',
+          iteration: iterationCount,
+          substep: 'select_w',
+          S: [...S],
+          VminusS: [...currentVminusS_pre],
+          w: w,
+          k: null,
+          minCalc: null,
+          D: { ...D },
+          P: { ...P },
+          historyD: JSON.parse(JSON.stringify(historyD)),
+          historyP: JSON.parse(JSON.stringify(historyP)),
+          tableRows: JSON.parse(JSON.stringify(tableRows)),
+          description: `Iteración ${iterationCount}: De los candidatos pendientes V - S = {${currentVminusS_pre.join(', ')}}, el vértice con menor costo acumulado es w = ${w} con D[${w}] = ${D[w]}.`,
+          title: `Selección de w = ${w}`
+        });
+
+        // Actualizar S y V - S
+        S.push(w);
+        VminusS = VminusS.filter(x => x !== w);
+        const currentVminusS_post = [...VminusS];
+
+        // Marcar w como settled en el historial
+        historyD[w][historyD[w].length - 1].settled = true;
+        historyP[w][historyP[w].length - 1].settled = true;
+
+        // Subpaso: Incorporación a S
+        steps.push({
+          type: 'ADD_TO_S',
+          iteration: iterationCount,
+          substep: 'add_to_s',
+          S: [...S],
+          VminusS: [...currentVminusS_post],
+          VminusS_pre: [...currentVminusS_pre],
+          w: w,
+          k: null,
+          minCalc: null,
+          D: { ...D },
+          P: { ...P },
+          historyD: JSON.parse(JSON.stringify(historyD)),
+          historyP: JSON.parse(JSON.stringify(historyP)),
+          tableRows: JSON.parse(JSON.stringify(tableRows)),
+          description: `Se incorpora w = ${w} a S. El nuevo conjunto definitivo es S = {${S.join(', ')}}. Los pendientes restantes son V - S = {${currentVminusS_post.length ? currentVminusS_post.join(', ') : '∅'}}`,
+          title: `Incorporación de ${w} a S`
+        });
+
+        if (currentVminusS_post.length === 0) {
+          // Último nodo incorporado
+          tableRows.push({
+            iter: iterationCount,
+            vMinusS_pre: currentVminusS_pre,
+            w: w,
+            S: [...S],
+            vMinusS_post: [],
+            kEvals: [{ k: '-', minStr: '-', improved: false, explanation: 'Todos los vértices alcanzaron solución definitiva.' }]
+          });
+          break;
+        }
+
+        // Evaluar cada k en V - S restante
+        let currentIterEvals = [];
+
+        for (const k of currentVminusS_post) {
+          const oldD = D[k];
+          const costWK = costMatrix[w][k];
+          const altCost = (costWK === INF) ? INF : D[w] + costWK;
+          let improved = false;
+          let newD = oldD;
+
+          if (altCost < oldD) {
+            improved = true;
+            newD = altCost;
+            D[k] = newD;
+            P[k] = w;
+
+            // Registrar nuevo valor tachando el anterior
+            historyD[k].push({ val: newD, settled: false });
+            historyP[k].push({ val: w, settled: false });
+          }
+
+          const minStr = `min(${oldD === INF ? '∞' : oldD} , ${D[w]} + ${costWK === INF ? '∞' : costWK}) = ${newD === INF ? '∞' : newD}`;
+
+          const evalObj = {
+            k: k,
+            oldD: oldD,
+            costWK: costWK,
+            dw: D[w],
+            altCost: altCost,
+            resultD: newD,
+            improved: improved,
+            minStr: minStr,
+            explanation: improved
+              ? `¡Mejora encontrada! El camino pasando por ${w} (${D[w]} + ${costWK} = ${newD}) es menor que ${oldD === INF ? '∞' : oldD}. Se actualiza D[${k}] = ${newD} y P[${k}] = ${w}.`
+              : `Se mantiene: El camino pasando por ${w} (${costWK === INF ? 'sin arista directa' : D[w] + ' + ' + costWK + ' = ' + altCost}) no supera el costo conocido previo (${oldD}).`
+          };
+
+          currentIterEvals.push(evalObj);
+
+          // Subpaso para este k individual
+          steps.push({
+            type: 'EVAL_K',
+            iteration: iterationCount,
+            substep: 'eval_k',
+            S: [...S],
+            VminusS: [...currentVminusS_post],
+            VminusS_pre: [...currentVminusS_pre],
+            w: w,
+            k: k,
+            minCalc: evalObj,
+            D: { ...D },
+            P: { ...P },
+            historyD: JSON.parse(JSON.stringify(historyD)),
+            historyP: JSON.parse(JSON.stringify(historyP)),
+            tableRows: [
+              ...JSON.parse(JSON.stringify(tableRows)),
+              {
+                iter: iterationCount,
+                vMinusS_pre: currentVminusS_pre,
+                w: w,
+                S: [...S],
+                vMinusS_post: currentVminusS_post,
+                kEvals: [...currentIterEvals]
+              }
+            ],
+            description: `Evaluando k = ${k}: min( D[${k}] ; D[${w}] + C[${w},${k}] ) ➔ ${evalObj.explanation}`,
+            title: `Relajación k = ${k}`
+          });
+        }
+
+        // Agregar fila terminada de la iteración
+        tableRows.push({
+          iter: iterationCount,
+          vMinusS_pre: currentVminusS_pre,
+          w: w,
+          S: [...S],
+          vMinusS_post: currentVminusS_post,
+          kEvals: currentIterEvals
+        });
+      }
+
+      // PASO FINAL: Completado
+      steps.push({
+        type: 'FINISHED',
+        iteration: iterationCount,
+        substep: 'finished',
+        S: [...S],
+        VminusS: [],
+        w: null,
+        k: null,
+        minCalc: null,
+        D: { ...D },
+        P: { ...P },
+        historyD: JSON.parse(JSON.stringify(historyD)),
+        historyP: JSON.parse(JSON.stringify(historyP)),
+        tableRows: JSON.parse(JSON.stringify(tableRows)),
+        description: `¡Algoritmo finalizado con éxito! Todos los vértices pertenecen a S. Los vectores D y P contienen los costos mínimos y el árbol de predecesores desde el origen ${originNode}.`,
+        title: 'Algoritmo Completado'
+      });
+    }
+
+    // --- APLICAR UN PASO AL ESTADO VISUAL ---
+    function applyStep(index) {
+      if (index < 0 || index >= steps.length) return;
+      currentStepIndex = index;
+      const step = steps[index];
+
+      // Actualizar contador y badges
+      document.getElementById('badgeStepCount').textContent = `Paso ${index + 1} / ${steps.length}`;
+      document.getElementById('statusBadge').textContent = step.title;
+      document.getElementById('statusDescription').textContent = step.description;
+
+      document.getElementById('countS').textContent = step.S.length;
+      document.getElementById('countVminusS').textContent = step.VminusS.length;
+
+      // Color de status badge
+      const statusBadge = document.getElementById('statusBadge');
+      if (step.type === 'SELECT_W') {
+        statusBadge.className = "text-xs font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/30";
+      } else if (step.type === 'EVAL_K') {
+        statusBadge.className = step.minCalc && step.minCalc.improved
+          ? "text-xs font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30"
+          : "text-xs font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-cyan-500/20 text-cyan-300 border border-cyan-500/30";
+      } else if (step.type === 'FINISHED') {
+        statusBadge.className = "text-xs font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-emerald-500/30 text-emerald-200 border border-emerald-500/50";
+      } else {
+        statusBadge.className = "text-xs font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-slate-500/20 text-slate-300 border border-slate-500/30";
+      }
+
+      // Microstep text
+      document.getElementById('microStepText').textContent = step.description;
+
+      // Actualizar Botones Prev / Next
+      document.getElementById('btnPrev').disabled = (index === 0);
+      document.getElementById('btnPrev').classList.toggle('opacity-40', index === 0);
+      document.getElementById('btnNext').disabled = (index === steps.length - 1);
+      document.getElementById('btnNext').classList.toggle('opacity-40', index === steps.length - 1);
+
+      // Renderizar Componentes
+      renderVectors(step);
+      highlightCostMatrix(step);
+      renderIterationTable(step);
+      updateGraphVisuals(step);
+
+      // Renderizar expresiones matemáticas dinámicas
+      renderMath(document.getElementById('statusBar'));
+      renderMath(document.getElementById('microStepCallout'));
+
+      // Si hay un nodo seleccionado en el consultor de caminos, refrescarlo
+      if (selectedDest !== null) {
+        showPathTo(selectedDest);
+      }
+    }
+
+    // --- RENDERIZAR VECTORES D Y P ESTILO PIZARRA ---
+    function renderVectors(step) {
+      const dContainer = document.getElementById('vectorDContainer');
+      const pContainer = document.getElementById('vectorPContainer');
+      const nodes = currentPreset.nodes;
+
+      let dHtml = '';
+      let pHtml = '';
+
+      nodes.forEach(node => {
+        const id = node.id;
+        const dHistory = step.historyD[id] || [{ val: INF, settled: false }];
+        const pHistory = step.historyP[id] || [{ val: originNode, settled: false }];
+        const isSettled = step.S.includes(id);
+        const isW = (step.w === id);
+        const isK = (step.k === id);
+
+        // Vector D celda
+        let dInner = '';
+        dHistory.forEach((item, idx) => {
+          const isLast = (idx === dHistory.length - 1);
+          const display = (item.val === INF) ? '∞' : item.val;
+          if (!isLast) {
+            dInner += `<span class="line-through text-rose-400 opacity-70 mr-1 text-[11px]">${display}</span>`;
+          } else {
+            dInner += `<span class="font-bold text-sm ${isSettled ? 'text-emerald-400' : 'text-slate-100'}">${display}</span>`;
+          }
+        });
+
+        // Vector P celda
+        let pInner = '';
+        pHistory.forEach((item, idx) => {
+          const isLast = (idx === pHistory.length - 1);
+          if (!isLast) {
+            pInner += `<span class="line-through text-rose-400 opacity-70 mr-1 text-[11px]">${item.val}</span>`;
+          } else {
+            pInner += `<span class="font-bold text-sm ${isSettled ? 'text-emerald-400' : 'text-slate-100'}">${item.val}</span>`;
+          }
+        });
+
+        // Estilos de borde de la celda
+        let cellClass = "p-2 rounded-lg border flex flex-col items-center justify-between transition-all ";
+        if (isW) {
+          cellClass += "bg-amber-950/40 border-amber-500 shadow-lg shadow-amber-500/20 ring-1 ring-amber-400";
+        } else if (isK) {
+          cellClass += "bg-cyan-950/40 border-cyan-400 shadow-md shadow-cyan-400/20";
+        } else if (isSettled) {
+          cellClass += "bg-emerald-950/30 border-emerald-600/50";
+        } else {
+          cellClass += "bg-slate-900 border-slate-800";
+        }
+
+        dHtml += `
+          <div class="${cellClass}" title="Costo acumulado hacia ${id}">
+            <span class="text-[10px] text-slate-400 font-bold mb-1">[${id}]</span>
+            <div class="flex items-center justify-center flex-wrap min-h-[22px]">${dInner}</div>
+          </div>
+        `;
+
+        pHtml += `
+          <div class="${cellClass}" title="Predecesor directo de ${id}">
+            <span class="text-[10px] text-slate-400 font-bold mb-1">[${id}]</span>
+            <div class="flex items-center justify-center flex-wrap min-h-[22px]">${pInner}</div>
+          </div>
+        `;
+      });
+
+      dContainer.innerHTML = dHtml;
+      pContainer.innerHTML = pHtml;
+    }
+
+    // --- RESALTADO DE LA MATRIZ DE COSTOS ---
+    function highlightCostMatrix(step) {
+      const n = currentPreset.nodes.length;
+      for (let i = 1; i <= n; i++) {
+        // Reset headers
+        const rowH = document.getElementById(`matHeadRow_${i}`);
+        const colH = document.getElementById(`matHeadCol_${i}`);
+        if (rowH) rowH.className = "p-1.5 font-bold text-slate-300 bg-slate-950/40";
+        if (colH) colH.className = "p-1.5 text-slate-300";
+
+        for (let j = 1; j <= n; j++) {
+          const cell = document.getElementById(`matCell_${i}_${j}`);
+          if (cell) {
+            cell.className = `p-1.5 text-slate-400 ${i === j ? 'text-slate-600' : ''}`;
+          }
+        }
+      }
+
+      // Si hay un w activo, resaltar fila w
+      if (step.w) {
+        const rowH = document.getElementById(`matHeadRow_${step.w}`);
+        if (rowH) rowH.className = "p-1.5 font-bold text-amber-300 bg-amber-950/60 ring-1 ring-amber-500 rounded";
+
+        for (let j = 1; j <= n; j++) {
+          const cell = document.getElementById(`matCell_${step.w}_${j}`);
+          if (cell) cell.classList.add('bg-amber-950/20', 'text-amber-200');
+        }
+      }
+
+      // Si hay un k activo, resaltar columna k y celda C[w, k]
+      if (step.k) {
+        const colH = document.getElementById(`matHeadCol_${step.k}`);
+        if (colH) colH.className = "p-1.5 font-bold text-cyan-300 bg-cyan-950/60 ring-1 ring-cyan-500 rounded";
+
+        if (step.w) {
+          const activeCell = document.getElementById(`matCell_${step.w}_${step.k}`);
+          if (activeCell) {
+            activeCell.className = "p-1.5 font-bold text-white bg-cyan-600/60 ring-2 ring-cyan-400 rounded scale-110 shadow-lg shadow-cyan-500/30";
+          }
+        }
+      }
+    }
+
+    // --- RENDERIZAR CUADRO DE ITERACIONES DE LA CÁTEDRA ---
+    function renderIterationTable(step) {
+      const tbody = document.getElementById('tableBody');
+      const tableRows = step.tableRows;
+
+      if (!tableRows || tableRows.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="6" class="text-center py-6 text-slate-500 italic">
+              El cuadro se irá completando a medida que avances paso a paso...
+            </td>
+          </tr>
+        `;
+        return;
+      }
+
+      let html = '';
+
+      tableRows.forEach((row, rIdx) => {
+        const isCurrentRow = (rIdx === tableRows.length - 1);
+        const kCount = row.kEvals.length || 1;
+
+        // V - S pre
+        const vMinusSPreStr = `{ ${row.vMinusS_pre.join(', ')} }`;
+        // S
+        const sStr = `{ ${row.S.join(', ')} }`;
+        // V - S post
+        const vMinusSPostStr = row.vMinusS_post.length ? `{ ${row.vMinusS_post.join(', ')} }` : '∅';
+
+        row.kEvals.forEach((evalObj, kIdx) => {
+          const isFirstK = (kIdx === 0);
+          const isCurrentEvaluation = isCurrentRow && (kIdx === row.kEvals.length - 1) && (step.type === 'EVAL_K');
+
+          let trClass = "border-b border-slate-800 transition-colors ";
+          if (isCurrentEvaluation) {
+            trClass += "bg-cyan-950/30 ";
+          } else if (isCurrentRow) {
+            trClass += "bg-slate-850/50 ";
+          }
+
+          html += `<tr class="${trClass}">`;
+
+          // Celdas combinadas para w, S, V-S en la primera fila de k
+          if (isFirstK) {
+            html += `
+              <td class="py-2 px-3 align-top font-bold text-slate-300 border-r border-slate-800/80" rowspan="${kCount}">
+                ${vMinusSPreStr}
+              </td>
+              <td class="py-2 px-3 align-top font-bold text-amber-400 border-r border-slate-800/80 underline decoration-amber-500 decoration-2 underline-offset-4" rowspan="${kCount}">
+                ${row.w}
+              </td>
+              <td class="py-2 px-3 align-top font-bold text-emerald-400 border-r border-slate-800/80" rowspan="${kCount}">
+                ${sStr}
+              </td>
+              <td class="py-2 px-3 align-top font-bold text-slate-400 border-r border-slate-800/80" rowspan="${kCount}">
+                ${vMinusSPostStr}
+              </td>
+            `;
+          }
+
+          // Celda k
+          const kDisplay = evalObj.k === '-' ? '-' : evalObj.k;
+          html += `
+            <td class="py-2 px-3 align-middle font-bold text-cyan-300 border-r border-slate-800/80">
+              ${kDisplay}
+            </td>
+          `;
+
+          // Celda min
+          let minCellContent = '';
+          if (evalObj.minStr === '-') {
+            minCellContent = `<span class="text-slate-500">-</span>`;
+          } else {
+            const improvedBadge = evalObj.improved 
+              ? `<span class="ml-2 text-[10px] px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 font-sans">✓ Mejora</span>`
+              : `<span class="ml-2 text-[10px] px-1.5 py-0.5 rounded bg-slate-800 text-slate-400 font-sans">Se mantiene</span>`;
+
+            minCellContent = `
+              <div class="flex items-center justify-between gap-2">
+                <span class="${evalObj.improved ? 'text-emerald-300 font-semibold' : 'text-slate-300'}">
+                  ${evalObj.minStr}
+                </span>
+                ${improvedBadge}
+              </div>
+            `;
+          }
+
+          html += `
+            <td class="py-2 px-3 align-middle cursor-help" data-tippy-content="${evalObj.explanation || ''}">
+              ${minCellContent}
+            </td>
+          `;
+
+          html += `</tr>`;
+        });
+      });
+
+      tbody.innerHTML = html;
+      renderMath(tbody);
+
+      // Inicializar tooltips de las explicaciones de cada celda con renderizado KaTeX
+      tippy(tbody.querySelectorAll('[data-tippy-content]'), {
+        theme: 'dijkstra',
+        animation: 'scale',
+        placement: 'top',
+        onShow(instance) {
+          setTimeout(() => {
+            renderMath(instance.popper);
+          }, 0);
+        }
+      });
+    }
+
+    // --- RENDERIZADO DEL GRAFO EN SVG ---
+    function renderGraph() {
+      const nodes = currentPreset.nodes;
+      const edges = currentPreset.edges;
+      const edgesLayer = document.getElementById('edgesLayer');
+      const nodesLayer = document.getElementById('nodesLayer');
+
+      edgesLayer.innerHTML = '';
+      nodesLayer.innerHTML = '';
+
+      // Dibujar aristas
+      edges.forEach((edge, idx) => {
+        const uNode = nodes.find(n => n.id === edge.u);
+        const vNode = nodes.find(n => n.id === edge.v);
+        if (!uNode || !vNode) return;
+
+        const g = document.createElementNS("http://www.w3.org/2000/svg", "g");
+        g.id = `edgeGroup_${edge.u}_${edge.v}`;
+
+        // Línea de la arista
+        const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+        line.setAttribute("x1", uNode.x);
+        line.setAttribute("y1", uNode.y);
+        line.setAttribute("x2", vNode.x);
+        line.setAttribute("y2", vNode.y);
+        line.setAttribute("stroke", "#334155");
+        line.setAttribute("stroke-width", "3");
+        line.setAttribute("stroke-linecap", "round");
+        if (currentPreset.directed) {
+          line.setAttribute("marker-end", "url(#arrowhead)");
+        }
+        line.id = `edgeLine_${edge.u}_${edge.v}`;
+        g.appendChild(line);
+
+        // Pastilla del peso
+        const midX = (uNode.x + vNode.x) / 2;
+        const midY = (uNode.y + vNode.y) / 2;
+
+        const rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+        rect.setAttribute("x", midX - 14);
+        rect.setAttribute("y", midY - 11);
+        rect.setAttribute("width", "28");
+        rect.setAttribute("height", "22");
+        rect.setAttribute("rx", "6");
+        rect.setAttribute("fill", "#0f172a");
+        rect.setAttribute("stroke", "#475569");
+        rect.setAttribute("stroke-width", "1.5");
+        rect.id = `weightBox_${edge.u}_${edge.v}`;
+        g.appendChild(rect);
+
+        const text = document.createElementNS("http://www.w3.org/2000/svg", "text");
+        text.setAttribute("x", midX);
+        text.setAttribute("y", midY + 4);
+        text.setAttribute("text-anchor", "middle");
+        text.setAttribute("fill", "#94a3b8");
+        text.setAttribute("font-size", "11");
+        text.setAttribute("font-weight", "bold");
+        text.setAttribute("font-family", "monospace");
+        text.textContent = edge.weight;
+        text.id = `weightText_${edge.u}_${edge.v}`;
+        g.appendChild(text);
+
+        edgesLayer.appendChild(g);
+      });
+
+      // Dibujar nodos
+      nodes.forEach(node => {
+        const g = document.createElementNS("http://www.w3.org/2000/svg", "g");
+        g.id = `nodeGroup_${node.id}`;
+        g.setAttribute("transform", `translate(${node.x}, ${node.y})`);
+        g.setAttribute("class", "cursor-pointer group");
+
+        // Anillo de pulso (animación para w)
+        const pulseRing = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+        pulseRing.setAttribute("r", "26");
+        pulseRing.setAttribute("fill", "none");
+        pulseRing.setAttribute("stroke", "#f59e0b");
+        pulseRing.setAttribute("stroke-width", "2");
+        pulseRing.setAttribute("class", "hidden animate-pulse-ring");
+        pulseRing.id = `nodePulse_${node.id}`;
+        g.appendChild(pulseRing);
+
+        // Círculo principal del nodo
+        const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+        circle.setAttribute("r", "20");
+        circle.setAttribute("fill", "#1e293b");
+        circle.setAttribute("stroke", "#64748b");
+        circle.setAttribute("stroke-width", "2.5");
+        circle.id = `nodeCircle_${node.id}`;
+        g.appendChild(circle);
+
+        // Texto del número del nodo
+        const text = document.createElementNS("http://www.w3.org/2000/svg", "text");
+        text.setAttribute("y", "5");
+        text.setAttribute("text-anchor", "middle");
+        text.setAttribute("fill", "#f8fafc");
+        text.setAttribute("font-size", "13");
+        text.setAttribute("font-weight", "bold");
+        text.setAttribute("font-family", "monospace");
+        text.textContent = node.label;
+        text.id = `nodeText_${node.id}`;
+        g.appendChild(text);
+
+        // Badge con costo acumulado D[v]
+        const badgeG = document.createElementNS("http://www.w3.org/2000/svg", "g");
+        badgeG.setAttribute("transform", "translate(15, -15)");
+        badgeG.id = `nodeBadgeGroup_${node.id}`;
+
+        const badgeRect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+        badgeRect.setAttribute("x", "-12");
+        badgeRect.setAttribute("y", "-8");
+        badgeRect.setAttribute("width", "24");
+        badgeRect.setAttribute("height", "16");
+        badgeRect.setAttribute("rx", "4");
+        badgeRect.setAttribute("fill", "#0f172a");
+        badgeRect.setAttribute("stroke", "#0284c7");
+        badgeRect.setAttribute("stroke-width", "1");
+        badgeG.appendChild(badgeRect);
+
+        const badgeText = document.createElementNS("http://www.w3.org/2000/svg", "text");
+        badgeText.setAttribute("text-anchor", "middle");
+        badgeText.setAttribute("y", "4");
+        badgeText.setAttribute("font-size", "10");
+        badgeText.setAttribute("font-weight", "bold");
+        badgeText.setAttribute("fill", "#38bdf8");
+        badgeText.textContent = "∞";
+        badgeText.id = `nodeBadgeText_${node.id}`;
+        badgeG.appendChild(badgeText);
+
+        g.appendChild(badgeG);
+
+        // Evento click: consultar camino
+        g.addEventListener('click', () => {
+          showPathTo(node.id);
+        });
+
+        // Eventos Drag & Drop
+        attachDragBehavior(g, node);
+
+        nodesLayer.appendChild(g);
+      });
+    }
+
+    // Helper para buscar elementos de arista según direccionabilidad
+    function getEdgeElements(u, v) {
+      let line = document.getElementById(`edgeLine_${u}_${v}`);
+      let box = document.getElementById(`weightBox_${u}_${v}`);
+      let text = document.getElementById(`weightText_${u}_${v}`);
+      if (!line && !currentPreset.directed) {
+        line = document.getElementById(`edgeLine_${v}_${u}`);
+        box = document.getElementById(`weightBox_${v}_${u}`);
+        text = document.getElementById(`weightText_${v}_${u}`);
+      }
+      return { line, box, text };
+    }
+
+    // --- ACTUALIZACIÓN DINÁMICA DE ELEMENTOS DEL GRAFO ---
+    function updateGraphVisuals(step) {
+      const nodes = currentPreset.nodes;
+      const edges = currentPreset.edges;
+
+      // 1. Reset de aristas
+      edges.forEach(e => {
+        const line = document.getElementById(`edgeLine_${e.u}_${e.v}`);
+        const box = document.getElementById(`weightBox_${e.u}_${e.v}`);
+        const text = document.getElementById(`weightText_${e.u}_${e.v}`);
+        if (line) {
+          line.setAttribute("stroke", "#334155");
+          line.setAttribute("stroke-width", "3");
+          line.removeAttribute("stroke-dasharray");
+          if (currentPreset.directed) {
+            line.setAttribute("marker-end", "url(#arrowhead)");
+          } else {
+            line.removeAttribute("marker-end");
+          }
+        }
+        if (box) {
+          box.setAttribute("fill", "#0f172a");
+          box.setAttribute("stroke", "#475569");
+        }
+        if (text) {
+          text.setAttribute("fill", "#94a3b8");
+        }
+      });
+
+      // 2. Destacar árbol de caminos mínimos (según vector P de los nodos ya en S)
+      nodes.forEach(node => {
+        if (step.S.includes(node.id) && node.id !== originNode) {
+          const parent = step.P[node.id];
+          if (parent && parent !== node.id) {
+            const { line, box, text } = getEdgeElements(parent, node.id);
+            if (line) {
+              line.setAttribute("stroke", "#10b981");
+              line.setAttribute("stroke-width", "4");
+              if (currentPreset.directed) {
+                line.setAttribute("marker-end", "url(#arrowhead-tree)");
+              }
+            }
+            if (box) {
+              box.setAttribute("stroke", "#10b981");
+              box.setAttribute("fill", "#064e3b");
+            }
+            if (text) {
+              text.setAttribute("fill", "#a7f3d0");
+            }
+          }
+        }
+      });
+
+      // 3. Destacar arista (w, k) evaluada en el micro-paso actual
+      if (step.w && step.k) {
+        const { line, box, text } = getEdgeElements(step.w, step.k);
+
+        if (line) {
+          line.setAttribute("stroke", "#06b6d4");
+          line.setAttribute("stroke-width", "5");
+          line.setAttribute("stroke-dasharray", "6 4");
+          if (currentPreset.directed) {
+            line.setAttribute("marker-end", "url(#arrowhead-active)");
+          }
+        }
+        if (box) {
+          box.setAttribute("stroke", "#06b6d4");
+          box.setAttribute("fill", "#164e63");
+        }
+        if (text) {
+          text.setAttribute("fill", "#67e8f9");
+        }
+      }
+
+      // 4. Actualizar colores y badges de nodos
+      nodes.forEach(node => {
+        const id = node.id;
+        const circle = document.getElementById(`nodeCircle_${id}`);
+        const pulse = document.getElementById(`nodePulse_${id}`);
+        const badgeText = document.getElementById(`nodeBadgeText_${id}`);
+        const badgeBox = document.querySelector(`#nodeBadgeGroup_${id} rect`);
+
+        const isSettled = step.S.includes(id);
+        const isW = (step.w === id);
+        const isK = (step.k === id);
+        const distVal = step.D[id];
+        const distDisplay = (distVal === INF) ? '∞' : distVal;
+
+        if (badgeText) badgeText.textContent = distDisplay;
+
+        // Ocultar pulso por defecto
+        if (pulse) pulse.classList.add('hidden');
+
+        if (isW) {
+          // Nodo pivote w
+          circle.setAttribute("fill", "#78350f");
+          circle.setAttribute("stroke", "#f59e0b");
+          circle.setAttribute("stroke-width", "3.5");
+          if (pulse) pulse.classList.remove('hidden');
+          if (badgeBox) badgeBox.setAttribute("stroke", "#f59e0b");
+          if (badgeText) badgeText.setAttribute("fill", "#fcd34d");
+        } else if (isK) {
+          // Nodo evaluado k
+          circle.setAttribute("fill", "#164e63");
+          circle.setAttribute("stroke", "#06b6d4");
+          circle.setAttribute("stroke-width", "3.5");
+          if (badgeBox) badgeBox.setAttribute("stroke", "#06b6d4");
+          if (badgeText) badgeText.setAttribute("fill", "#67e8f9");
+        } else if (isSettled) {
+          // Nodo cerrado en S
+          circle.setAttribute("fill", "#064e3b");
+          circle.setAttribute("stroke", "#10b981");
+          circle.setAttribute("stroke-width", "3");
+          if (badgeBox) badgeBox.setAttribute("stroke", "#10b981");
+          if (badgeText) badgeText.setAttribute("fill", "#6ee7b7");
+        } else {
+          // Nodo pendiente en V - S
+          circle.setAttribute("fill", "#1e293b");
+          circle.setAttribute("stroke", "#64748b");
+          circle.setAttribute("stroke-width", "2.5");
+          if (badgeBox) badgeBox.setAttribute("stroke", "#475569");
+          if (badgeText) badgeText.setAttribute("fill", "#94a3b8");
+        }
+      });
+    }
+
+    // --- RECONSTRUCTOR DE CAMINOS MÍNIMOS (CLICK EN NODO) ---
+    function showPathTo(destNodeId) {
+      selectedDest = destNodeId;
+      const step = steps[currentStepIndex];
+      const box = document.getElementById('pathResultBox');
+
+      if (destNodeId === originNode) {
+        box.innerHTML = `
+          <div class="flex items-center gap-2">
+            <span class="px-2 py-0.5 rounded bg-cyan-500/20 text-cyan-300 font-bold">Origen</span>
+            <span>El nodo ${originNode} es el punto de partida (Costo = 0).</span>
+          </div>
+        `;
+        return;
+      }
+
+      const totalCost = step.D[destNodeId];
+      if (totalCost === INF) {
+        box.innerHTML = `
+          <div class="flex items-center gap-2 text-rose-400">
+            <span>Inalcanzable aún desde el nodo ${originNode} (Costo = ∞).</span>
+          </div>
+        `;
+        return;
+      }
+
+      // Reconstruir camino hacia atrás usando el vector P
+      let path = [destNodeId];
+      let curr = destNodeId;
+      let visited = new Set();
+
+      while (curr !== originNode && !visited.has(curr)) {
+        visited.add(curr);
+        const parent = step.P[curr];
+        if (!parent || parent === curr) break;
+        path.unshift(parent);
+        curr = parent;
+      }
+
+      const pathStr = path.join(' ➔ ');
+      const isDefinitive = step.S.includes(destNodeId);
+
+      box.innerHTML = `
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 w-full">
+          <div>
+            <span class="text-slate-400 text-[11px] block">Camino hacia [${destNodeId}]:</span>
+            <span class="font-bold text-cyan-300 text-sm">${pathStr}</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="text-slate-400">Costo D[${destNodeId}]:</span>
+            <span class="px-2 py-0.5 rounded font-bold ${isDefinitive ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30' : 'bg-slate-800 text-slate-300'}">
+              ${totalCost} ${isDefinitive ? '(Definitivo)' : '(Tentativo)'}
+            </span>
+          </div>
+        </div>
+      `;
+    }
+
+    // --- ARRASTRAR NODOS (DRAG & DROP SVG) ---
+    function attachDragBehavior(nodeGroup, nodeData) {
+      let isDragging = false;
+      let startX, startY;
+
+      nodeGroup.addEventListener('mousedown', (e) => {
+        isDragging = true;
+        startX = e.clientX - nodeData.x;
+        startY = e.clientY - nodeData.y;
+        e.stopPropagation();
+      });
+
+      window.addEventListener('mousemove', (e) => {
+        if (!isDragging) return;
+        const svg = document.getElementById('graphSvg');
+        const rect = svg.getBoundingClientRect();
+        
+        // Conversión a coordenadas de viewBox 500x360
+        const scaleX = 500 / rect.width;
+        const scaleY = 360 / rect.height;
+
+        let newX = (e.clientX - rect.left) * scaleX;
+        let newY = (e.clientY - rect.top) * scaleY;
+
+        // Limitar bordes
+        newX = Math.max(30, Math.min(470, newX));
+        newY = Math.max(30, Math.min(330, newY));
+
+        nodeData.x = newX;
+        nodeData.y = newY;
+        nodeGroup.setAttribute("transform", `translate(${newX}, ${newY})`);
+
+        // Actualizar aristas conectadas
+        updateConnectedEdges(nodeData.id, newX, newY);
+      });
+
+      window.addEventListener('mouseup', () => {
+        isDragging = false;
+      });
+    }
+
+    function updateConnectedEdges(nodeId, newX, newY) {
+      currentPreset.edges.forEach(e => {
+        if (e.u === nodeId || e.v === nodeId) {
+          const uNode = currentPreset.nodes.find(n => n.id === e.u);
+          const vNode = currentPreset.nodes.find(n => n.id === e.v);
+          if (!uNode || !vNode) return;
+
+          const line = document.getElementById(`edgeLine_${e.u}_${e.v}`);
+          const box = document.getElementById(`weightBox_${e.u}_${e.v}`);
+          const text = document.getElementById(`weightText_${e.u}_${e.v}`);
+
+          if (line) {
+            line.setAttribute("x1", uNode.x);
+            line.setAttribute("y1", uNode.y);
+            line.setAttribute("x2", vNode.x);
+            line.setAttribute("y2", vNode.y);
+          }
+
+          const midX = (uNode.x + vNode.x) / 2;
+          const midY = (uNode.y + vNode.y) / 2;
+
+          if (box) {
+            box.setAttribute("x", midX - 14);
+            box.setAttribute("y", midY - 11);
+          }
+          if (text) {
+            text.setAttribute("x", midX);
+            text.setAttribute("y", midY + 4);
+          }
+        }
+      });
+    }
+
+    // --- CONTROLES DE REPRODUCCIÓN Y STEPPER ---
+    function stepForward() {
+      if (currentStepIndex < steps.length - 1) {
+        applyStep(currentStepIndex + 1);
+      } else if (isPlaying) {
+        togglePlay();
+      }
+    }
+
+    function stepBackward() {
+      if (currentStepIndex > 0) {
+        applyStep(currentStepIndex - 1);
+      }
+    }
+
+    function resetAlgorithm() {
+      if (isPlaying) togglePlay();
+      currentStepIndex = 0;
+      selectedDest = null;
+      applyStep(0);
+    }
+
+    function togglePlay() {
+      isPlaying = !isPlaying;
+      const playIcon = document.getElementById('playIcon');
+      const playText = document.getElementById('playText');
+      const btnPlay = document.getElementById('btnPlay');
+
+      if (isPlaying) {
+        playText.textContent = "Pausar";
+        playIcon.innerHTML = `<svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zM7 8a1 1 0 012 0v4a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v4a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd"/></svg>`;
+        btnPlay.className = "px-4 py-1.5 rounded-lg bg-amber-600 hover:bg-amber-500 text-white font-bold text-xs flex items-center gap-1.5 shadow-md shadow-amber-600/30 transition";
+        
+        playTimer = setInterval(() => {
+          if (currentStepIndex < steps.length - 1) {
+            stepForward();
+          } else {
+            togglePlay();
+          }
+        }, playSpeed);
+      } else {
+        playText.textContent = "Reproducir";
+        playIcon.innerHTML = `<svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd"/></svg>`;
+        btnPlay.className = "px-4 py-1.5 rounded-lg bg-cyan-600 hover:bg-cyan-500 text-white font-bold text-xs flex items-center gap-1.5 shadow-md shadow-cyan-600/30 transition";
+        clearInterval(playTimer);
+        playTimer = null;
+      }
+    }
+
+    function setPlaySpeed(newSpeed) {
+      playSpeed = newSpeed;
+      if (isPlaying) {
+        clearInterval(playTimer);
+        playTimer = setInterval(() => {
+          if (currentStepIndex < steps.length - 1) {
+            stepForward();
+          } else {
+            togglePlay();
+          }
+        }, playSpeed);
+      }
+    }
+
+    // --- GESTIÓN DE TABS Y MODAL ---
+    function switchTab(tabId) {
+      ['tabGuide', 'tabCode', 'tabTheory'].forEach(id => {
+        document.getElementById(id).classList.add('hidden');
+      });
+      ['btnTabGuide', 'btnTabCode', 'btnTabTheory'].forEach(btnId => {
+        const btn = document.getElementById(btnId);
+        btn.className = "px-5 py-3 text-xs font-semibold text-slate-400 hover:text-slate-200 border-b-2 border-transparent flex items-center gap-2";
+      });
+
+      const activeContent = document.getElementById(tabId);
+      activeContent.classList.remove('hidden');
+      const activeBtn = document.getElementById('btn' + tabId.charAt(0).toUpperCase() + tabId.slice(1));
+      if (activeBtn) {
+        activeBtn.className = "px-5 py-3 text-xs font-semibold text-cyan-400 border-b-2 border-cyan-400 flex items-center gap-2";
+      }
+      renderMath(activeContent);
+    }
+
+    function toggleHelpModal(show) {
+      const modal = document.getElementById('helpModal');
+      modal.classList.toggle('hidden', !show);
+      if (show) {
+        renderMath(modal);
+      }
+    }
+  </script>
+</body>
+</html>

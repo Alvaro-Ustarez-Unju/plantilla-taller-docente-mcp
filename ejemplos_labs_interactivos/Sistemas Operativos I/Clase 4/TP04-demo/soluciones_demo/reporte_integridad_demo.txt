@@ -1,0 +1,18 @@
+=== REPORTE DOCENTE: AUDITORÍA DE INTEGRIDAD CRIPTOGRÁFICA ===
+--- 1. Hashes del Documento Auténtico ---
+SHA-256: 01c2a3bf18d63dbc6f434c9aa9844bf18798c0917a796f6c1571b5e1745f6815  soluciones_demo/documento_demo.txt
+MD5:     56ff96d937268818980a36b789ec9f70  soluciones_demo/documento_demo.txt
+
+--- 2. Verificación Automatizada con sha256sum -c ---
+soluciones_demo/documento_demo.txt: OK
+
+--- 3. Detección de Modificación No Autorizada (Intrusión) ---
+Hash Original:   01c2a3bf18d63dbc6f434c9aa9844bf18798c0917a796f6c1571b5e1745f6815
+Hash Adulterado: 5c678ebcfc3d31454e6a77fc07aa424f0a192371ec3cdab41f253c9fbe9c06e3
+ESTADO: [ALERTA DE SEGURIDAD] Modificación detectada por efecto avalancha del hash.
+
+--- 4. Fundamento Teórico: Funciones Hash y Almacenamiento Shadow ---
+- Una función hash criptográfica es unidireccional (One-Way): es trivial computar h=H(M),
+  pero computacionalmente imposible invertirla para obtener M a partir de h (Preimage Resistance).
+- En /etc/shadow, las contraseñas se almacenan procesadas con hashes reforzados (ej. SHA-512 o yescrypt)
+  y combinadas con un valor aleatorio único ('salt'), evitando ataques basados en tablas precalculadas (Rainbow Tables).

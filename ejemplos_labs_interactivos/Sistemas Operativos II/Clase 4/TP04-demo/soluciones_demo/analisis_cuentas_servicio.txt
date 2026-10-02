@@ -1,0 +1,24 @@
+=== REPORTE DOCENTE: IDENTIDADES Y ESTRUCTURA DE /etc/passwd ===
+Fecha de ejecución: Thu Sep 24 20:20:51 UTC 2026
+
+--- 1. Cuentas Críticas del Sistema ---
+root:x:0:0:root:/root:/bin/bash
+daemon:x:1:1:daemon:/usr/sbin:/usr/sbin/nologin
+nobody:x:65534:65534:nobody:/nonexistent:/usr/sbin/nologin
+syslog:x:102:102::/nonexistent:/usr/sbin/nologin
+
+--- 2. Identidad del Operador Docente ---
+USUARIO_ACTUAL: fabi0x | UID: 1000 | GID: 1000 | GRUPO: fabi0x
+
+--- 3. Conteo de Shells Interactivas vs Deshabilitadas ---
+CUENTAS_CON_SHELL: 2
+CUENTAS_SIN_SHELL: 25
+
+--- 4. Anatomía de los 7 Campos de /etc/passwd ---
+Campo 1: Nombre de usuario (login)
+Campo 2: Contraseña cifrada o 'x' (apunta a /etc/shadow)
+Campo 3: UID numérico (User ID, root=0)
+Campo 4: GID numérico principal (Group ID)
+Campo 5: GECOS / Nombre descriptivo del usuario
+Campo 6: Ruta absoluta al directorio Home
+Campo 7: Shell asignada por defecto (/bin/bash, /bin/false, etc.)

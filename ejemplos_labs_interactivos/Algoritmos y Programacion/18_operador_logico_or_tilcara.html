@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        :root {
+            --tilcara-sun: #ffb300;
+            --tilcara-earth: #8d6e63;
+            --success: #388e3c;
+            --danger: #d32f2f;
+            --bg-color: #fdf6e3;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            background-color: transparent;
+            display: flex;
+            justify-content: center;
+            padding: 10px;
+        }
+
+        .widget-card {
+            background: white;
+            width: 100%;
+            max-width: 450px;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            border: 2px solid var(--tilcara-earth);
+            overflow: hidden;
+        }
+
+        .header {
+            background: var(--tilcara-sun);
+            color: #5d4037;
+            padding: 15px;
+            text-align: center;
+        }
+
+        .header h2 { margin: 0; font-size: 1.2rem; }
+
+        .content { padding: 20px; }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .input-group { display: flex; flex-direction: column; }
+
+        label {
+            font-size: 0.8rem;
+            font-weight: bold;
+            color: var(--tilcara-earth);
+            margin-bottom: 5px;
+        }
+
+        input, select {
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            outline: none;
+        }
+
+        input:focus { border-color: var(--tilcara-sun); }
+
+        .full-width { grid-column: 1 / span 2; }
+
+        .result-panel {
+            background: #eee;
+            padding: 15px;
+            border-radius: 12px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .total-cost {
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+            color: #555;
+        }
+
+        .verdict {
+            font-size: 1.5rem;
+            font-weight: 900;
+            margin: 5px 0;
+        }
+
+        .logic-debug {
+            background: #2d2d2d;
+            color: #a6e22e;
+            font-family: monospace;
+            font-size: 0.75rem;
+            padding: 8px;
+            border-radius: 5px;
+            margin-top: 10px;
+            text-align: left;
+        }
+
+        /* Estados dinámicos */
+        .posible { background-color: #e8f5e9; border: 2px solid var(--success); color: var(--success); }
+        .no-posible { background-color: #ffebee; border: 2px solid var(--danger); color: var(--danger); }
+    </style>
+</head>
+<body>
+
+<div class="widget-card">
+    <div class="header">
+        <h2>🌵 Planificador Enero Tilcareño</h2>
+    </div>
+
+    <div class="content">
+        <div class="form-grid">
+            <div class="input-group">
+                <label>N° Amigos:</label>
+                <input type="number" id="amigos" value="1" min="1" oninput="calcularViaje()">
+            </div>
+            <div class="input-group">
+                <label>Pasaje (c/u):</label>
+                <input type="number" id="pasaje" value="0" min="0" oninput="calcularViaje()">
+            </div>
+            <div class="input-group">
+                <label>Alojamiento (c/u):</label>
+                <input type="number" id="alojamiento" value="0" min="0" oninput="calcularViaje()">
+            </div>
+            <div class="input-group">
+                <label>Presupuesto Grupal:</label>
+                <input type="number" id="presupuesto" value="0" min="0" oninput="calcularViaje()">
+            </div>
+            <div class="input-group full-width">
+                <label>¿Tienen tarjeta de emergencia?</label>
+                <select id="tarjeta" onchange="calcularViaje()">
+                    <option value="false">Falso (No tienen)</option>
+                    <option value="true">Verdadero (Sí tienen)</option>
+                </select>
+            </div>
+        </div>
+
+        <div id="panel" class="result-panel">
+            <div class="total-cost">Costo Total: $<span id="costoDisplay">0</span></div>
+            <div style="font-size: 0.7rem; text-transform: uppercase;">¿Es posible el viaje?</div>
+            <div id="verdicto" class="verdict">---</div>
+            
+            <div class="logic-debug">
+                (costo <= presupuesto) <span style="color:#f92672">||</span> tarjeta
+                <br>
+                <span style="color:#66d9ef">// Veredicto: </span><span id="rawRes">?</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function calcularViaje() {
+        const amigos = parseInt(document.getElementById('amigos').value) || 0;
+        const pasaje = parseFloat(document.getElementById('pasaje').value) || 0;
+        const alojamiento = parseFloat(document.getElementById('alojamiento').value) || 0;
+        const presupuesto = parseFloat(document.getElementById('presupuesto').value) || 0;
+        const tieneTarjeta = document.getElementById('tarjeta').value === "true";
+
+        const costoTotal = (pasaje + alojamiento) * amigos;
+        document.getElementById('costoDisplay').innerText = costoTotal.toLocaleString();
+
+        // --- LÓGICA DEL DESAFÍO ---
+        // El viaje es posible si hay plata O si hay tarjeta de emergencia
+        const esPosible = (costoTotal <= presupuesto) || (tieneTarjeta === true);
+
+        const panel = document.getElementById('panel');
+        const verdicto = document.getElementById('verdicto');
+        const rawRes = document.getElementById('rawRes');
+
+        if (esPosible) {
+            panel.className = "result-panel posible";
+            verdicto.innerText = "VERDADERO";
+            rawRes.innerText = "true";
+        } else {
+            panel.className = "result-panel no-posible";
+            verdicto.innerText = "FALSO";
+            rawRes.innerText = "false";
+        }
+    }
+    window.onload = calcularViaje;
+</script>
+
+</body>
+</html>

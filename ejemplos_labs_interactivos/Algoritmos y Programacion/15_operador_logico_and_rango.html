@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        :root {
+            --hosp-blue: #00796b;
+            --safe-green: #2e7d32;
+            --danger-red: #c62828;
+            --warning-amber: #ffa000;
+            --white: #ffffff;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: transparent;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            padding: 15px;
+        }
+
+        .incubadora-container {
+            background-color: var(--white);
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 420px;
+            padding: 25px;
+            border-top: 8px solid var(--hosp-blue);
+            box-sizing: border-box;
+            text-align: center;
+        }
+
+        .header h2 {
+            color: var(--hosp-blue);
+            margin: 0;
+            font-size: 1.4rem;
+        }
+
+        .header p {
+            color: #555;
+            font-size: 0.85rem;
+            margin: 10px 0 20px 0;
+        }
+
+        .sensor-box {
+            background-color: #f1f8f7;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: var(--hosp-blue);
+        }
+
+        input[type="number"] {
+            width: 80%;
+            padding: 15px;
+            font-size: 2rem;
+            border: 3px solid #b2dfdb;
+            border-radius: 10px;
+            text-align: center;
+            color: #333;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        input:focus {
+            border-color: var(--hosp-blue);
+        }
+
+        .status-display {
+            padding: 20px;
+            border-radius: 12px;
+            margin-top: 10px;
+            transition: all 0.4s ease;
+            background-color: #f5f5f5;
+        }
+
+        .status-title {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #777;
+        }
+
+        .status-value {
+            font-size: 1.8rem;
+            font-weight: 900;
+            margin: 5px 0;
+        }
+
+        /* Estados de validación */
+        .safe { background-color: #e8f5e9; border: 2px solid var(--safe-green); color: var(--safe-green); }
+        .danger { background-color: #ffebee; border: 2px solid var(--danger-red); color: var(--danger-red); }
+
+        .logic-card {
+            background: #263238;
+            color: #eceff1;
+            font-family: 'Courier New', monospace;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            text-align: left;
+            margin-top: 15px;
+        }
+
+        .logic-card b { color: #81d4fa; }
+        .logic-card .op { color: #ffb74d; }
+
+        .range-info {
+            font-size: 0.75rem;
+            color: #999;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="incubadora-container">
+    <div class="header">
+        <h2>🏥 Monitor de Incubadora</h2>
+        <p>Hospital Materno Infantil - Control de Rango</p>
+    </div>
+
+    <div class="sensor-box">
+        <label for="tempInput">Temperatura del Sensor (°C):</label>
+        <input type="number" id="tempInput" step="0.1" placeholder="36.5" oninput="validarRango()">
+    </div>
+
+    <div id="statusPanel" class="status-display">
+        <div class="status-title">¿Temperatura Segura?</div>
+        <div id="boolText" class="status-value">---</div>
+        
+        <div class="logic-card">
+            (temp >= 36.0) <span class="op">&&</span> (temp <= 37.5)
+            <br>
+            <span style="color: #90a4ae;">// Resultado: </span><span id="rawBool">null</span>
+        </div>
+    </div>
+
+    <div class="range-info">
+        Rango establecido: [36.0°C - 37.5°C]
+    </div>
+</div>
+
+<script>
+    function validarRango() {
+        const input = document.getElementById('tempInput');
+        const panel = document.getElementById('statusPanel');
+        const boolText = document.getElementById('boolText');
+        const rawText = document.getElementById('rawBool');
+
+        const temp = parseFloat(input.value);
+
+        if (isNaN(temp)) {
+            panel.className = "status-display";
+            boolText.innerText = "---";
+            rawText.innerText = "null";
+            return;
+        }
+
+        // --- LÓGICA DE NIVEL INGENIERÍA ---
+        // Se deben cumplir AMBAS condiciones para que sea Seguro (Verdadero)
+        const esSegura = (temp >= 36.0) && (temp <= 37.5);
+
+        if (esSegura) {
+            panel.className = "status-display safe";
+            boolText.innerText = "VERDADERO";
+            rawText.innerText = "true";
+        } else {
+            panel.className = "status-display danger";
+            boolText.innerText = "FALSO";
+            rawText.innerText = "false";
+        }
+    }
+</script>
+
+</body>
+</html>

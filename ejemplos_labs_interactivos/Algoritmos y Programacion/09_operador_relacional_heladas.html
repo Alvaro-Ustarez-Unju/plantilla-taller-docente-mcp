@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        :root {
+            --cold-blue: #0277bd;
+            --danger-red: #d32f2f;
+            --logic-bg: #263238;
+            --white: #ffffff;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            background-color: transparent;
+        }
+
+        .alerta-container {
+            background-color: var(--white);
+            border-radius: 16px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+            width: 100%;
+            max-width: 400px;
+            padding: 25px;
+            border: 1px solid #e0e0e0;
+            text-align: center;
+            box-sizing: border-box;
+        }
+
+        .header h2 {
+            color: var(--cold-blue);
+            margin: 0 0 10px 0;
+            font-size: 1.3rem;
+        }
+
+        .header p {
+            color: #555;
+            font-size: 0.9rem;
+            margin-bottom: 20px;
+        }
+
+        .input-box {
+            margin-bottom: 20px;
+        }
+
+        input[type="number"] {
+            width: 80%;
+            padding: 15px;
+            font-size: 1.5rem;
+            border: 2px solid #ddd;
+            border-radius: 12px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        input[type="number"]:focus {
+            outline: none;
+            border-color: var(--cold-blue);
+            box-shadow: 0 0 8px rgba(2, 119, 189, 0.2);
+        }
+
+        .status-display {
+            margin-top: 20px;
+            padding: 20px;
+            border-radius: 12px;
+            min-height: 80px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.4s ease;
+            background-color: #f5f5f5;
+        }
+
+        .boolean-val {
+            font-size: 1.8rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            margin: 5px 0;
+        }
+
+        .expresion {
+            font-family: 'Courier New', Courier, monospace;
+            background: var(--logic-bg);
+            color: #81d4fa;
+            padding: 4px 10px;
+            border-radius: 5px;
+            font-size: 0.9rem;
+        }
+
+        /* Estados Dinámicos */
+        .es-helada {
+            background-color: #e1f5fe;
+            border: 2px solid var(--cold-blue);
+        }
+        .es-helada .boolean-val { color: var(--cold-blue); }
+
+        .no-helada {
+            background-color: #fff3e0;
+            border: 2px solid #ff9800;
+        }
+        .no-helada .boolean-val { color: #e65100; }
+
+        .info-tag {
+            font-size: 0.75rem;
+            margin-top: 15px;
+            color: #999;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+
+<div class="alerta-container">
+    <div class="header">
+        <h2>❄️ Alerta de Heladas</h2>
+        <p>Estación Meteorológica La Quiaca</p>
+    </div>
+
+    <div class="input-box">
+        <label style="display:block; margin-bottom:10px; font-weight:bold;">Temperatura Actual (°C):</label>
+        <input type="number" id="tempInput" placeholder="0" oninput="evaluarHelada()">
+    </div>
+
+    <div id="display" class="status-display">
+        <span style="font-size: 0.9rem; color: #666;">¿Punto de congelación?</span>
+        <div id="resultadoBooleano" class="boolean-val">---</div>
+        <div class="expresion">temp <= 0</div>
+    </div>
+
+    <p class="info-tag">Ingresa la temperatura para evaluar la expresión lógica.</p>
+</div>
+
+<script>
+    function evaluarHelada() {
+        const input = document.getElementById('tempInput');
+        const display = document.getElementById('display');
+        const resultado = document.getElementById('resultadoBooleano');
+        
+        const temp = parseFloat(input.value);
+
+        if (isNaN(temp)) {
+            resultado.innerText = "---";
+            display.className = "status-display";
+            return;
+        }
+
+        // Evaluación de la expresión relacional
+        const esCongelacion = (temp <= 0);
+
+        if (esCongelacion) {
+            resultado.innerText = "VERDADERO";
+            display.className = "status-display es-helada";
+        } else {
+            resultado.innerText = "FALSO";
+            display.className = "status-display no-helada";
+        }
+    }
+</script>
+
+</body>
+</html>

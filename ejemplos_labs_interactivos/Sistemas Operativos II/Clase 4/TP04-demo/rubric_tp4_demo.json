@@ -1,0 +1,79 @@
+{
+  "tp_metadata": {
+    "tp_id": "SOII-2026-TP4-DEMO",
+    "title": "TP N° 4 DEMO: Demostración Docente de Seguridad y Protección",
+    "catedra": "Sistemas Operativos II - UNJu Facultad de Ingeniería",
+    "version": "2.0.0"
+  },
+  "security": {
+    "algorithm": "SHA-256 + Salted HMAC",
+    "protected": true
+  },
+  "max_score": 100,
+  "exercises": {
+    "seccion1_conceptos": {
+      "title": "Sección 1: Conceptos Fundamentales de Protección y Seguridad",
+      "weight": 20,
+      "feedback": "Consultar Diapositivas Unidad 4 (Slides 3-27, 40-43), Silberschatz Cap. 14-15 y Stallings Cap. 15 sobre Protección y Seguridad.",
+      "hashes": {
+        "q1_proteccion_vs_seguridad": "1786133908760ef0d21f30336d343bef539f095ee001303d28f60e03a34477a1",
+        "q2_metas_amenazas": "7a71d7d432d8e1cdfa1fa37cb91dd52508c61cbb426af805634e7cd1cf1e4efd",
+        "q3_modelo_virus_das": "64a4e4994dae2554d727b483936c627c9fb4d56b3269fb87bfc7ffd35ffa33d3",
+        "q4_factores_autenticacion": "88f9eaa4f0e260abab02685070b86b478638d295a9dd38d7d15fdf5e21bbe09a",
+        "q5_politicas_firewall": "be3fedfe62a5b150755f8f794dda2d584275cef27936a870b9038b1081267701"
+      }
+    },
+    "seccion2_switches": {
+      "title": "Sección 2: Matriz de Clasificación con Switches Segmentados",
+      "weight": 20,
+      "feedback": "Consultar Diapositivas Unidad 4 (Slides 7, 23, 33-35, 43, 49) sobre tipos de ataques, criptografía y políticas de cortafuegos.",
+      "hashes": {
+        "sw1_control_acceso_posix": "2f7a4aa5a553d53c9e6eb252b36cb92915b9d03b5600a4680427c70779b8f949",
+        "sw2_ataque_escucha": "bf5fc7daafb7abb0602bb090750ad2ee2da12b1d23cc624df1be290c641f7aea",
+        "sw3_algoritmo_aes": "5b14a41aa3ab5557e6e62f5a22b11c2648de4ae009c7e2c9eb61726c666385a6",
+        "sw4_algoritmo_rsa": "412d3ddf0071f0fb8919eb3d1f6906c45bc2dabde90d1e10a6a257dfe1d6588b",
+        "sw5_tarjeta_chip": "e265bfbc7c72bee5e90638f08e8ad5109634f9d10994f9296cee8ac0957cc70d",
+        "sw6_firewall_default_deny": "c7b66957bb872b2de5a3d2b5df2e266fefeee6c079177d6455490e5d73fd567b"
+      }
+    },
+    "seccion3_laboratorio_rsa": {
+      "title": "Sección 3: Laboratorio Interactivo Criptográfico RSA (Caso Diapositiva 36)",
+      "weight": 25,
+      "feedback": "Consultar Diapositiva 36 de Unidad 4: p=7, q=13 -> N=91, phi(N)=72, e=5, d=29, M=69 -> C=62.",
+      "hashes": {
+        "sim_modulo_n": "b4a484083d311f4acb7128782a3f592f217235a893c18a4a9fc58a8e1f3e8022",
+        "sim_euler_phi": "e553096cdceb7cf08a87fb1a41b37fca9691b7f4ff0816eb40051da134020e0c",
+        "sim_clave_privada_d": "25a680d64b583a2be6b115b9e6537ed6ebdde021e3abb3313f31a8af11b6ea54",
+        "sim_criptograma_m69": "55ba8923178fc860b853a5bd933fef1e52ce4aa2683a52f5c0e8ae5ade66aa05"
+      }
+    },
+    "seccion4_login_linux": {
+      "title": "Sección 4: Flujo Secuencial de Inicio de Sesión Seguro en Linux",
+      "weight": 20,
+      "feedback": "Consultar Diapositiva 56 de la Unidad 4: Entrada de credenciales -> Hash criptográfico -> Verificación con /etc/shadow -> Obtención de UID/GID -> Ejecución de shell -> Herencia en procesos hijos.",
+      "type": "ordered_list",
+      "list_key": "orden_login_linux",
+      "hashes": {
+        "items": [
+          "e81206d3dc7866b662778cb0723919beda4c793cdf1e253c39b63157dcae365f",
+          "b329ba9beb96918cffe8c851fb615fbf9d58c73231ba480f309b93194c205226",
+          "966053aa3926fc8170ab7455811715e0365efda7cd8093aa40502c6f82184ee2",
+          "6bfb3cb513bcac46a77462d005211eb2b6492e292a78de7fde945ddceb6bbe67",
+          "ad9a87b643e9ba674467a44a6de9c7b01574d607362a845ade77e5e471847450",
+          "18399ea2d5626998f9025de3e7bf299a1380ae47750bd0281faa711befbb6255"
+        ]
+      }
+    },
+    "seccion5_permisos_suid": {
+      "title": "Sección 5: Matriz de Permisos POSIX y Bit Especial SETUID",
+      "weight": 15,
+      "feedback": "Consultar Diapositivas Unidad 4 (Slides 49-55) sobre permisos 9-bits, superusuario root (UID=0) y el bit SETUID (4000).",
+      "hashes": {
+        "permisos_etc_passwd": "e5f4ca41c07d3cec3e59a8878e62c0f442da205e61099de4377bc98eea9d8649",
+        "permisos_etc_shadow": "d5b7bc4157df1ff7d3b000b00bf784d1f57ecb3b52385a06d7b132fcda542a46",
+        "permisos_bin_passwd": "07510d752c07de9fd96e13abb0059f20bf5134432f2a96fc36cc148ad777ef90",
+        "proposito_setuid": "8462e6cb09eef15c285e98cafc4ff1611e9e982d43844a825721f362c727b6b4"
+      }
+    }
+  }
+}

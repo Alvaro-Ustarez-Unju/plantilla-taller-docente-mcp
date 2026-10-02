@@ -1,0 +1,21 @@
+# Claves maestras docentes (confidencial)
+*_master.json
+
+# Caches y bytecode de Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Entornos virtuales
+.venv/
+env/
+venv/
+
+# Temporales del sistema
+.DS_Store
+Thumbs.db
+
+# Temporales de edición
+*~
+*.swp
+*.swo

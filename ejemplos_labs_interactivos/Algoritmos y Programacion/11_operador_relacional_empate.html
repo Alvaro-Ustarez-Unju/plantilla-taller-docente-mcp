@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        :root {
+            /* Colores de los equipos */
+            --gimnasia-blue: #00a8e8;
+            --talleres-blue: #003366;
+            --text-dark: #2c3e50;
+            --true-green: #4caf50;
+            --false-red: #f44336;
+        }
+
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            background-color: transparent;
+        }
+
+        .match-card {
+            background: #ffffff;
+            width: 100%;
+            max-width: 450px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            overflow: hidden;
+            border: 1px solid #eee;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--gimnasia-blue), var(--talleres-blue));
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .header h2 { margin: 0; font-size: 1.3rem; }
+        .header p { margin: 5px 0 0; font-size: 0.85rem; opacity: 0.9; }
+
+        .scoreboard {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 25px;
+            background: #fdfdfd;
+        }
+
+        .team {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 40%;
+        }
+
+        .team-name {
+            font-weight: bold;
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+            text-align: center;
+            color: var(--text-dark);
+            height: 40px;
+            display: flex;
+            align-items: center;
+        }
+
+        input[type="number"] {
+            width: 70px;
+            height: 70px;
+            font-size: 2rem;
+            text-align: center;
+            border: 3px solid #ddd;
+            border-radius: 10px;
+            color: var(--text-dark);
+            transition: border-color 0.3s;
+        }
+
+        input[type="number"]:focus {
+            outline: none;
+            border-color: var(--gimnasia-blue);
+        }
+
+        .vs {
+            font-weight: 900;
+            font-size: 1.2rem;
+            color: #999;
+            margin-top: 30px;
+        }
+
+        .result-panel {
+            padding: 20px;
+            text-align: center;
+            border-top: 1px solid #eee;
+            background-color: #fafafa;
+        }
+
+        .boolean-box {
+            display: inline-block;
+            padding: 15px 30px;
+            border-radius: 50px;
+            font-size: 1.4rem;
+            font-weight: 800;
+            margin: 10px 0;
+            transition: all 0.4s ease;
+            background: #eee;
+            color: #777;
+        }
+
+        .is-true { background-color: var(--true-green); color: white; transform: scale(1.05); }
+        .is-false { background-color: var(--false-red); color: white; }
+
+        .code-snippet {
+            font-family: 'Courier New', monospace;
+            font-size: 0.8rem;
+            color: #666;
+            margin-top: 10px;
+        }
+
+        .code-snippet b { color: #333; }
+    </style>
+</head>
+<body>
+
+<div class="match-card">
+    <div class="header">
+        <h2>Clásico Jujeño</h2>
+        <p>Sistema de Verificación de Resultados</p>
+    </div>
+
+    <div class="scoreboard">
+        <div class="team">
+            <div class="team-name">Gimnasia (L)</div>
+            <input type="number" id="golesLocal" value="0" min="0" oninput="verificarEmpate()">
+        </div>
+
+        <div class="vs">VS</div>
+
+        <div class="team">
+            <div class="team-name">Talleres (V)</div>
+            <input type="number" id="golesVisitante" value="0" min="0" oninput="verificarEmpate()">
+        </div>
+    </div>
+
+    <div class="result-panel">
+        <div style="font-size: 0.9rem; color: #555;">¿Hubo Empate?</div>
+        <div id="resultadoLógico" class="boolean-box">VERDADERO</div>
+        
+        <div class="code-snippet">
+            <b>Lógica:</b> goles_local <span style="color: #007bff;">==</span> goles_visitante <br>
+            <b>Resultado:</b> <span id="logicoRaw">true</span>
+        </div>
+    </div>
+</div>
+
+<script>
+    function verificarEmpate() {
+        const local = document.getElementById('golesLocal');
+        const visitante = document.getElementById('golesVisitante');
+        const display = document.getElementById('resultadoLógico');
+        const raw = document.getElementById('logicoRaw');
+
+        const valLocal = parseInt(local.value);
+        const valVisitante = parseInt(visitante.value);
+
+        if (isNaN(valLocal) || isNaN(valVisitante)) {
+            display.innerText = "---";
+            display.className = "boolean-box";
+            raw.innerText = "undefined";
+            return;
+        }
+
+        // Operador de igualdad (== en JS, = en Pseudocódigo)
+        const esEmpate = (valLocal === valVisitante);
+
+        if (esEmpate) {
+            display.innerText = "VERDADERO";
+            display.className = "boolean-box is-true";
+            raw.innerText = "true";
+        } else {
+            display.innerText = "FALSO";
+            display.className = "boolean-box is-false";
+            raw.innerText = "false";
+        }
+    }
+
+    // Ejecución inicial
+    window.onload = verificarEmpate;
+</script>
+
+</body>
+</html>

@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        :root {
+            --unju-blue: #0d47a1;
+            --success: #2e7d32;
+            --error: #c62828;
+            --neutral: #607d8b;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: transparent;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            padding: 15px;
+        }
+
+        .beca-card {
+            background: #ffffff;
+            width: 100%;
+            max-width: 450px;
+            border-radius: 12px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+            border-top: 6px solid var(--unju-blue);
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .title {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .title h2 { color: var(--unju-blue); margin: 0; font-size: 1.4rem; }
+        .title p { color: #666; font-size: 0.9rem; margin: 5px 0; }
+
+        .input-row {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .input-field {
+            flex: 1;
+        }
+
+        label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #444;
+        }
+
+        input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            font-size: 1rem;
+            box-sizing: border-box;
+            outline: none;
+        }
+
+        input:focus { border-color: var(--unju-blue); }
+
+        .logic-panel {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+        }
+
+        .boolean-display {
+            font-size: 1.8rem;
+            font-weight: 900;
+            margin: 10px 0;
+            transition: all 0.3s ease;
+            color: var(--neutral);
+        }
+
+        .code-logic {
+            font-family: 'Courier New', monospace;
+            font-size: 0.8rem;
+            background: #263238;
+            color: #fff;
+            padding: 10px;
+            border-radius: 6px;
+            text-align: left;
+            line-height: 1.4;
+        }
+
+        .status-true { color: var(--success) !important; }
+        .status-false { color: var(--error) !important; }
+        .highlight { color: #81d4fa; }
+    </style>
+</head>
+<body>
+
+<div class="beca-card">
+    <div class="title">
+        <h2>🎓 Evaluación de Beca</h2>
+        <p>Bienestar Estudiantil - Requisitos Dobles</p>
+    </div>
+
+    <div class="input-row">
+        <div class="input-field">
+            <label>Promedio (≥ 8.0):</label>
+            <input type="number" id="promedio" placeholder="Ej: 8.5" step="0.1" min="0" max="10" oninput="evaluarBeca()">
+        </div>
+        <div class="input-field">
+            <label>Distancia (> 30 km):</label>
+            <input type="number" id="distancia" placeholder="Ej: 35" min="0" oninput="evaluarBeca()">
+        </div>
+    </div>
+
+    <div class="logic-panel">
+        <div style="font-size: 0.9rem;">¿Aplica a la beca?</div>
+        <div id="resBooleano" class="boolean-display">---</div>
+        
+        <div class="code-logic">
+            <div><span class="highlight">condicion1:</span> promedio >= 8.0</div>
+            <div><span class="highlight">condicion2:</span> distancia > 30</div>
+            <div style="margin-top:5px; border-top: 1px solid #444; padding-top: 5px;">
+                <b>Resultado:</b> c1 <span style="color: #ffb74d;">&&</span> c2 = <span id="resRaw">?</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function evaluarBeca() {
+        const promInput = document.getElementById('promedio');
+        const distInput = document.getElementById('distancia');
+        const resText = document.getElementById('resBooleano');
+        const resRaw = document.getElementById('resRaw');
+
+        const promedio = parseFloat(promInput.value);
+        const distancia = parseFloat(distInput.value);
+
+        if (isNaN(promedio) || isNaN(distancia)) {
+            resText.innerText = "---";
+            resText.className = "boolean-display";
+            resRaw.innerText = "?";
+            return;
+        }
+
+        // --- LÓGICA DE PROGRAMACIÓN (Operador AND) ---
+        const aplica = (promedio >= 8.0) && (distancia > 30);
+
+        if (aplica) {
+            resText.innerText = "VERDADERO";
+            resText.className = "boolean-display status-true";
+            resRaw.innerText = "true";
+        } else {
+            resText.innerText = "FALSO";
+            resText.className = "boolean-display status-false";
+            resRaw.innerText = "false";
+        }
+    }
+</script>
+
+</body>
+</html>
