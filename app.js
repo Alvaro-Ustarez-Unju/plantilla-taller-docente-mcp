@@ -46,23 +46,69 @@ const questions = [
             {
                 label: "Rol",
                 cols: [
-                    "Interfaz pasiva.",
-                    "Sistema autónomo.",
-                    "Estándar de conexión abierto."
+                    {
+                        type: "select",
+                        stateKey: "q4_rol_chatbot",
+                        options: {
+                            "": "-- Seleccionar Rol --",
+                            "A": "Interfaz pasiva.",
+                            "B": "Sistema autónomo.",
+                            "C": "Estándar de conexión abierto."
+                        }
+                    },
+                    {
+                        type: "select",
+                        stateKey: "q4_rol_agente",
+                        options: {
+                            "": "-- Seleccionar Rol --",
+                            "A": "Interfaz pasiva.",
+                            "B": "Sistema autónomo.",
+                            "C": "Estándar de conexión abierto."
+                        }
+                    },
+                    {
+                        type: "select",
+                        stateKey: "q4_rol_mcp",
+                        options: {
+                            "": "-- Seleccionar Rol --",
+                            "A": "Interfaz pasiva.",
+                            "B": "Sistema autónomo.",
+                            "C": "Estándar de conexión abierto."
+                        }
+                    }
                 ]
             },
             {
                 label: "Funcionamiento",
                 cols: [
-                    "Responde únicamente a inputs y archivos cargados manualmente.",
-                    "Planifica, encadena acciones y usa herramientas iterativamente para tareas complejas.",
                     {
                         type: "select",
+                        stateKey: "q4_func_chatbot",
                         options: {
                             "": "-- Seleccionar Funcionamiento --",
-                            "A": "Lenguaje de programación compilado que define cómo razona la IA.",
-                            "B": "No define cómo razona la IA; estandariza cómo se conecta con herramientas y carpetas locales.",
-                            "C": "Sistema de cifrado asimétrico que protege los prompts del usuario."
+                            "A": "Responde únicamente a inputs y archivos cargados manualmente.",
+                            "B": "Planifica, encadena acciones y usa herramientas iterativamente para tareas complejas.",
+                            "C": "No define cómo razona la IA; estandariza cómo se conecta con herramientas y carpetas locales."
+                        }
+                    },
+                    {
+                        type: "select",
+                        stateKey: "q4_func_agente",
+                        options: {
+                            "": "-- Seleccionar Funcionamiento --",
+                            "A": "Responde únicamente a inputs y archivos cargados manualmente.",
+                            "B": "Planifica, encadena acciones y usa herramientas iterativamente para tareas complejas.",
+                            "C": "No define cómo razona la IA; estandariza cómo se conecta con herramientas y carpetas locales."
+                        }
+                    },
+                    {
+                        type: "select",
+                        stateKey: "q4_func_mcp",
+                        options: {
+                            "": "-- Seleccionar Funcionamiento --",
+                            "A": "Responde únicamente a inputs y archivos cargados manualmente.",
+                            "B": "Planifica, encadena acciones y usa herramientas iterativamente para tareas complejas.",
+                            "C": "No define cómo razona la IA; estandariza cómo se conecta con herramientas y carpetas locales."
                         }
                     }
                 ]
@@ -74,10 +120,23 @@ const questions = [
 ];
 
 const state = {};
+const requiredKeys = [];
 
 function init() {
     const container = document.getElementById('quiz-container');
     questions.forEach((q, index) => {
+        if (q.type === 'radio' || q.type === 'select' || q.type === 'dragdrop') {
+            requiredKeys.push(q.id);
+        } else if (q.type === 'table') {
+            q.rows.forEach(r => {
+                r.cols.forEach(c => {
+                    if (c.type === 'select') {
+                        requiredKeys.push(c.stateKey || q.id);
+                    }
+                });
+            });
+        }
+        
         const card = document.createElement('div');
         card.className = 'question-card';
         
@@ -213,9 +272,9 @@ function init() {
                         });
                         select.onchange = (e) => {
                             if(e.target.value) {
-                                state[q.id] = e.target.value;
+                                state[colData.stateKey || q.id] = e.target.value;
                             } else {
-                                delete state[q.id];
+                                delete state[colData.stateKey || q.id];
                             }
                             checkCompletion();
                         };
@@ -242,7 +301,7 @@ function init() {
 }
 
 function checkCompletion() {
-    const isComplete = questions.every(q => state[q.id] !== undefined && state[q.id] !== "");
+    const isComplete = requiredKeys.every(k => state[k] !== undefined && state[k] !== "");
     document.getElementById('btn-export').disabled = !isComplete;
 }
 
