@@ -126,3 +126,147 @@ header a {
 .ref-link a:hover {
     text-decoration: underline;
 }
+
+/* Radio Bonitos */
+.radio-label {
+    display: flex;
+    align-items: center;
+    background: var(--card-bg);
+    padding: 15px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 1px solid var(--glass-border);
+}
+
+.radio-label:hover {
+    background: var(--card-hover);
+}
+
+.radio-label input[type="radio"] {
+    display: none;
+}
+
+.custom-radio {
+    width: 20px;
+    height: 20px;
+    border: 2px solid var(--glass-border);
+    border-radius: 50%;
+    margin-right: 15px;
+    position: relative;
+    display: inline-block;
+    flex-shrink: 0;
+    transition: all 0.2s ease;
+}
+
+.radio-label input[type="radio"]:checked + .custom-radio {
+    border-color: var(--primary);
+}
+
+.radio-label input[type="radio"]:checked + .custom-radio::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 10px;
+    height: 10px;
+    background: var(--primary);
+    border-radius: 50%;
+}
+
+/* Modern Select */
+.select-container {
+    margin-top: 15px;
+}
+
+.modern-select {
+    width: 100%;
+    padding: 12px 15px;
+    background: var(--card-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: 8px;
+    color: var(--text-color);
+    font-size: 1rem;
+    font-family: inherit;
+    cursor: pointer;
+}
+
+.modern-select option {
+    background: var(--bg-color);
+    color: var(--text-color);
+}
+
+/* Drag & Drop */
+.drag-container {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 20px;
+}
+
+.draggable-item {
+    background: var(--card-bg);
+    border: 1px dashed rgba(255, 255, 255, 0.4);
+    padding: 10px 15px;
+    border-radius: 8px;
+    cursor: grab;
+    color: var(--text-color);
+}
+
+.draggable-item:active {
+    cursor: grabbing;
+}
+
+.dropzone {
+    min-height: 60px;
+    border: 2px dashed rgba(255, 255, 255, 0.3);
+    border-radius: 8px;
+    margin-top: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgba(255, 255, 255, 0.5);
+    transition: all 0.3s ease;
+    padding: 10px;
+}
+
+.dropzone.drag-over {
+    background: var(--selected);
+    border-color: var(--primary);
+}
+
+.dropzone .draggable-item {
+    width: 100%;
+    margin: 0;
+    border-style: solid;
+    border-color: var(--primary);
+    background: var(--selected);
+}
+
+/* Modern Table */
+.table-container {
+    margin-top: 15px;
+    overflow-x: auto;
+}
+
+.modern-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.modern-table th, .modern-table td {
+    border: 1px solid var(--glass-border);
+    padding: 12px;
+    text-align: left;
+}
+
+.modern-table th {
+    background: rgba(255, 255, 255, 0.05);
+    font-weight: 600;
+}
+
+.table-select {
+    width: auto;
+    min-width: 200px;
+}

@@ -1,6 +1,7 @@
 const questions = [
     {
         id: "q1",
+        type: "radio",
         text: "¿Cuál es la principal diferencia funcional entre un simple LLM (Chatbot) y un Agente de IA?",
         options: {
             "A": "El Agente puede ejecutar herramientas y modificar el entorno de forma autónoma.",
@@ -13,36 +14,39 @@ const questions = [
     },
     {
         id: "q2",
+        type: "select",
         text: "¿Para qué sirve el archivo AGENTS.md en la arquitectura propuesta?",
         options: {
-            "A": "Para almacenar el código fuente del evaluador automático de los trabajos.",
-            "B": "Para guardar temporalmente las calificaciones de los alumnos en formato CSV.",
-            "C": "Para definir la identidad, reglas y el contexto permanente de la IA.",
-            "D": "Para configurar la conexión a internet del Entorno de Desarrollo (IDE)."
+            "": "-- Selecciona una opción --",
+            "A": "Para almacenar el código fuente del evaluador automático.",
+            "B": "Para definir la identidad, reglas y el contexto permanente de la IA.",
+            "C": "Para configurar la conexión a internet del Entorno de Desarrollo."
         },
         ref: "La Inyección de Contexto como Solución Pedagógica",
         url: "https://sites.google.com/fi.unju.edu.ar/integracion-de-agentes-de-ia/#h.k2gmjsuosiu5"
     },
     {
         id: "q3",
-        text: "¿Qué garantiza el patrón 'Human-in-the-Loop' (HITL) en la evaluación?",
+        type: "dragdrop",
+        text: "Arrastra la definición correcta que garantiza el patrón 'Human-in-the-Loop' (HITL):",
         options: {
-            "A": "Que la Inteligencia Artificial nunca cometa errores al corregir sintaxis.",
-            "B": "Que el docente siempre deba aprobar la acción antes de que la IA modifique archivos o publique notas.",
-            "C": "Que el alumno reciba feedback automatizado en menos de 5 segundos de espera.",
-            "D": "Que el examen sea aprobado automáticamente si el código compila sin arrojar errores."
+            "A": "La Inteligencia Artificial nunca comete errores de sintaxis",
+            "B": "El docente siempre debe aprobar la acción antes de que la IA modifique archivos",
+            "C": "El examen es aprobado automáticamente si el código compila"
         },
         ref: "Paso 3: Human-in-the-Loop en Acción",
         url: "https://sites.google.com/fi.unju.edu.ar/integracion-de-agentes-de-ia/#h.scj2qo5zxtep"
     },
     {
         id: "q4",
-        text: "¿Qué es exactamente el protocolo MCP (Model Context Protocol)?",
+        type: "table",
+        text: "Completa la tabla sobre los componentes principales:",
+        headers: ["Componente", "Descripción"],
         options: {
-            "A": "Un lenguaje de programación compilado, diseñado exclusivamente para Inteligencia Artificial.",
-            "B": "Un protocolo estandarizado que permite a la IA conectarse con herramientas locales como FileSystem o Bash.",
-            "C": "Un robusto sistema de cifrado asimétrico para proteger las respuestas de los exámenes en archivos JSON.",
-            "D": "Una extensión oficial y exclusiva de Google Chrome que permite leer archivos PDF localmente."
+            "": "-- Seleccionar --",
+            "A": "Lenguaje de programación compilado de Google",
+            "B": "Protocolo estandarizado para conectar la IA con herramientas locales",
+            "C": "Sistema de cifrado asimétrico de respuestas de exámenes"
         },
         ref: "Transformando la Evaluación Docente con MCP",
         url: "https://sites.google.com/fi.unju.edu.ar/integracion-de-agentes-de-ia/#h.lp9kenpoij0x"
@@ -61,18 +65,143 @@ function init() {
         title.innerText = `${index + 1}. ${q.text}`;
         card.appendChild(title);
 
-        const optionsGrid = document.createElement('div');
-        optionsGrid.className = 'options-grid';
-        
-        Object.entries(q.options).forEach(([key, value]) => {
-            const btn = document.createElement('button');
-            btn.className = 'option-btn';
-            btn.innerText = value;
-            btn.onclick = () => selectOption(q.id, key, optionsGrid);
-            optionsGrid.appendChild(btn);
-        });
-        
-        card.appendChild(optionsGrid);
+        if (q.type === 'radio') {
+            const optionsGrid = document.createElement('div');
+            optionsGrid.className = 'options-grid';
+            Object.entries(q.options).forEach(([key, value]) => {
+                const label = document.createElement('label');
+                label.className = 'radio-label';
+                
+                const input = document.createElement('input');
+                input.type = 'radio';
+                input.name = q.id;
+                input.value = key;
+                input.onchange = () => {
+                    state[q.id] = key;
+                    checkCompletion();
+                };
+                
+                const customRadio = document.createElement('span');
+                customRadio.className = 'custom-radio';
+                
+                const text = document.createElement('span');
+                text.innerText = value;
+                
+                label.appendChild(input);
+                label.appendChild(customRadio);
+                label.appendChild(text);
+                optionsGrid.appendChild(label);
+            });
+            card.appendChild(optionsGrid);
+        } else if (q.type === 'select') {
+            const selectContainer = document.createElement('div');
+            selectContainer.className = 'select-container';
+            const select = document.createElement('select');
+            select.className = 'modern-select';
+            Object.entries(q.options).forEach(([key, value]) => {
+                const opt = document.createElement('option');
+                opt.value = key;
+                opt.innerText = value;
+                select.appendChild(opt);
+            });
+            select.onchange = (e) => {
+                if(e.target.value) {
+                    state[q.id] = e.target.value;
+                } else {
+                    delete state[q.id];
+                }
+                checkCompletion();
+            };
+            selectContainer.appendChild(select);
+            card.appendChild(selectContainer);
+        } else if (q.type === 'dragdrop') {
+            const dragContainer = document.createElement('div');
+            dragContainer.className = 'drag-container';
+            
+            const dropzone = document.createElement('div');
+            dropzone.className = 'dropzone';
+            dropzone.innerText = "Arrastra la respuesta correcta aquí";
+            
+            dropzone.ondragover = (e) => { e.preventDefault(); dropzone.classList.add('drag-over'); };
+            dropzone.ondragleave = () => dropzone.classList.remove('drag-over');
+            dropzone.ondrop = (e) => {
+                e.preventDefault();
+                dropzone.classList.remove('drag-over');
+                const dragId = e.dataTransfer.getData('text/plain');
+                if(!dragId) return;
+                const draggedElement = document.getElementById(dragId);
+                if (dropzone.children.length > 0) {
+                    dragContainer.appendChild(dropzone.children[0]);
+                }
+                dropzone.innerText = "";
+                dropzone.appendChild(draggedElement);
+                state[q.id] = draggedElement.dataset.key;
+                checkCompletion();
+            };
+            
+            Object.entries(q.options).forEach(([key, value]) => {
+                const draggable = document.createElement('div');
+                draggable.className = 'draggable-item';
+                draggable.id = `drag-${q.id}-${key}`;
+                draggable.draggable = true;
+                draggable.innerText = value;
+                draggable.dataset.key = key;
+                draggable.ondragstart = (e) => {
+                    e.dataTransfer.setData('text/plain', draggable.id);
+                };
+                dragContainer.appendChild(draggable);
+            });
+            
+            card.appendChild(dropzone);
+            card.appendChild(dragContainer);
+        } else if (q.type === 'table') {
+            const tableContainer = document.createElement('div');
+            tableContainer.className = 'table-container';
+            const table = document.createElement('table');
+            table.className = 'modern-table';
+            
+            const thead = document.createElement('thead');
+            const headerRow = document.createElement('tr');
+            q.headers.forEach(h => {
+                const th = document.createElement('th');
+                th.innerText = h;
+                headerRow.appendChild(th);
+            });
+            thead.appendChild(headerRow);
+            table.appendChild(thead);
+            
+            const tbody = document.createElement('tbody');
+            const row = document.createElement('tr');
+            
+            const td1 = document.createElement('td');
+            td1.innerText = "Model Context Protocol";
+            row.appendChild(td1);
+            
+            const td2 = document.createElement('td');
+            const select = document.createElement('select');
+            select.className = 'modern-select table-select';
+            Object.entries(q.options).forEach(([key, value]) => {
+                const opt = document.createElement('option');
+                opt.value = key;
+                opt.innerText = value;
+                select.appendChild(opt);
+            });
+            select.onchange = (e) => {
+                if(e.target.value) {
+                    state[q.id] = e.target.value;
+                } else {
+                    delete state[q.id];
+                }
+                checkCompletion();
+            };
+            td2.appendChild(select);
+            row.appendChild(td2);
+            
+            tbody.appendChild(row);
+            table.appendChild(tbody);
+            tableContainer.appendChild(table);
+            card.appendChild(tableContainer);
+        }
         
         const refLink = document.createElement('div');
         refLink.className = 'ref-link';
@@ -85,15 +214,8 @@ function init() {
     document.getElementById('btn-export').onclick = exportJSON;
 }
 
-function selectOption(qId, optionKey, grid) {
-    state[qId] = optionKey;
-    Array.from(grid.children).forEach(btn => btn.classList.remove('selected'));
-    event.target.classList.add('selected');
-    checkCompletion();
-}
-
 function checkCompletion() {
-    const isComplete = questions.every(q => state[q.id] !== undefined);
+    const isComplete = questions.every(q => state[q.id] !== undefined && state[q.id] !== "");
     document.getElementById('btn-export').disabled = !isComplete;
 }
 
