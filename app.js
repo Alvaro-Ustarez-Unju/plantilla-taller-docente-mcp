@@ -41,10 +41,10 @@ const questions = [
         id: "q4",
         type: "table",
         text: "Completa la tabla comparativa sobre los tres conceptos clave:",
-        headers: ["Característica", "Chatbot", "Agente", "Protocolo MCP"],
+        headers: ["Concepto", "Rol", "Funcionamiento"],
         rows: [
             {
-                label: "Rol",
+                label: "Chatbot",
                 cols: [
                     {
                         type: "select",
@@ -58,6 +58,21 @@ const questions = [
                     },
                     {
                         type: "select",
+                        stateKey: "q4_func_chatbot",
+                        options: {
+                            "": "-- Seleccionar Funcionamiento --",
+                            "A": "Responde a inputs manuales.",
+                            "B": "Planifica, encadena acciones y usa herramientas.",
+                            "C": "Estandariza conexión con herramientas locales."
+                        }
+                    }
+                ]
+            },
+            {
+                label: "Agente",
+                cols: [
+                    {
+                        type: "select",
                         stateKey: "q4_rol_agente",
                         options: {
                             "": "-- Seleccionar Rol --",
@@ -68,6 +83,21 @@ const questions = [
                     },
                     {
                         type: "select",
+                        stateKey: "q4_func_agente",
+                        options: {
+                            "": "-- Seleccionar Funcionamiento --",
+                            "A": "Responde a inputs manuales.",
+                            "B": "Planifica, encadena acciones y usa herramientas.",
+                            "C": "Estandariza conexión con herramientas locales."
+                        }
+                    }
+                ]
+            },
+            {
+                label: "Protocolo MCP",
+                cols: [
+                    {
+                        type: "select",
                         stateKey: "q4_rol_mcp",
                         options: {
                             "": "-- Seleccionar Rol --",
@@ -75,40 +105,15 @@ const questions = [
                             "B": "Sistema autónomo.",
                             "C": "Estándar de conexión abierto."
                         }
-                    }
-                ]
-            },
-            {
-                label: "Funcionamiento",
-                cols: [
-                    {
-                        type: "select",
-                        stateKey: "q4_func_chatbot",
-                        options: {
-                            "": "-- Seleccionar Funcionamiento --",
-                            "A": "Responde únicamente a inputs y archivos cargados manualmente.",
-                            "B": "Planifica, encadena acciones y usa herramientas iterativamente para tareas complejas.",
-                            "C": "No define cómo razona la IA; estandariza cómo se conecta con herramientas y carpetas locales."
-                        }
-                    },
-                    {
-                        type: "select",
-                        stateKey: "q4_func_agente",
-                        options: {
-                            "": "-- Seleccionar Funcionamiento --",
-                            "A": "Responde únicamente a inputs y archivos cargados manualmente.",
-                            "B": "Planifica, encadena acciones y usa herramientas iterativamente para tareas complejas.",
-                            "C": "No define cómo razona la IA; estandariza cómo se conecta con herramientas y carpetas locales."
-                        }
                     },
                     {
                         type: "select",
                         stateKey: "q4_func_mcp",
                         options: {
                             "": "-- Seleccionar Funcionamiento --",
-                            "A": "Responde únicamente a inputs y archivos cargados manualmente.",
-                            "B": "Planifica, encadena acciones y usa herramientas iterativamente para tareas complejas.",
-                            "C": "No define cómo razona la IA; estandariza cómo se conecta con herramientas y carpetas locales."
+                            "A": "Responde a inputs manuales.",
+                            "B": "Planifica, encadena acciones y usa herramientas.",
+                            "C": "Estandariza conexión con herramientas locales."
                         }
                     }
                 ]
