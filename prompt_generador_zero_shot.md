@@ -1,39 +1,39 @@
-# Prompt Zero-Shot: Generación del Laboratorio Interactivo
+# Ejemplo de Instrucción Inicial (Prompt) para la IA
 
-A continuación, te presentamos un ejemplo de cómo podrías pedirle a un Agente de IA (como Gemini, Claude o Antigravity) que construya toda esta plantilla evaluativa compleja **desde cero** y en **un solo prompt** (técnica conocida como Zero-Shot Prompting).
+A continuación, te mostramos un ejemplo de cómo le pedirías a un asistente de IA (como ChatGPT, Claude o Gemini) que te fabrique **toda esta página web interactiva y su sistema de corrección desde cero**, escribiéndole un único pero detallado mensaje.
 
-Esto demuestra el poder de tener claras tus reglas y la estructura de tu materia (Spec-Driven Development) a la hora de delegar tareas complejas a la IA.
+Tener en claro qué quieres pedirle a la IA (y cómo se estructura tu materia) es el secreto para obtener herramientas educativas de altísimo nivel sin saber programar.
 
 ---
 
-**Copia y pega este prompt en un agente de código:**
+**Copia y pega este prompt en tu IA favorita para ver cómo funciona:**
 
-> Actúa como un Desarrollador Frontend Senior y Arquitecto de Software Educativo. Tu objetivo es crear un repositorio para un taller de capacitación docente que incluya un laboratorio interactivo web autoevaluable y un sistema de corrección continua basado en GitHub Actions.
+> Actúa como un experto en creación de tecnología educativa. Necesito que me ayudes a crear los archivos necesarios para un taller docente. Quiero una pequeña página web interactiva donde los docentes puedan autoevaluarse y un sistema que luego corrija automáticamente sus respuestas.
 > 
-> **Requisitos del proyecto:**
+> **Estos son los requisitos que debes cumplir:**
 > 
-> 1. **Estructura del Proyecto:**
->    Crea la estructura de archivos que incluya un `index.html`, `styles.css`, `app.js`, `autograder.py`, `rubrica.json` y el flujo de trabajo en `.github/workflows/autograding.yml`.
+> 1. **Archivos a crear:**
+>    Necesito que generes el código de la página web (`index.html`), sus estilos visuales (`styles.css`), su lógica interactiva (`app.js`), un archivo con las soluciones correctas (`rubrica.json`), un archivo que haga de "profesor automático" (`corrector.py`) y el archivo de configuración para que GitHub evalúe esto automáticamente en la nube.
 > 
-> 2. **Interfaz de Usuario (Web Lab):**
->    - Usa un diseño moderno con "Glassmorphism", fondo oscuro degradado y colores dinámicos. No uses frameworks como React o dependencias de NPM, debe funcionar con un simple doble clic (Vanilla JS/HTML/CSS).
->    - Crea un encabezado con el título "Laboratorio Interactivo".
->    - Añade una "Tarjeta de Datos del Participante" con campos de texto para Nombre y Materia.
->    - Añade una "Barra de Progreso" dinámica visual que se actualice (en porcentaje y ancho de barra) a medida que se responden las consignas.
->    - El cuestionario debe tener 4 preguntas didácticas sobre IA y Agentes, pero usando diferentes tipos de inputs educativos para demostrar variedad:
->      - Q1: Radio buttons estilizados personalizados (ocultando el input original).
->      - Q2: Un menú desplegable `<select>` moderno.
->      - Q3: Una zona interactiva de "Arrastrar y Soltar" (Drag & Drop) usando la API nativa de Vanilla JS.
->      - Q4: Una tabla comparativa (Chatbot, Agente, Protocolo MCP) con 6 celdas interactivas en donde cada celda tenga su propio menú desplegable.
->    - Al completar todas las preguntas y los datos del estudiante, un botón "Exportar Respuestas (JSON)" debe habilitarse y descargar un archivo de resultados directamente al dispositivo local.
+> 2. **Diseño de la Página Web:**
+>    - Haz que la página sea visualmente hermosa y moderna. Usa un fondo oscuro con cajas semitransparentes (estilo cristal). 
+>    - Lo más importante: esta web debe funcionar simplemente haciéndole doble clic al archivo en cualquier computadora, sin obligar al alumno a instalar programas complejos de programación.
+>    - Coloca un título general y una tarjeta donde el participante deba escribir obligatoriamente su Nombre y su Materia.
+>    - Agrega una "Barra de Progreso" visual que se vaya llenando (de 0% a 100%) a medida que responden las preguntas.
+>    - Incluye 4 preguntas didácticas, pero quiero que tengan formatos diferentes para que el cuestionario no sea aburrido:
+>      - Pregunta 1: Opciones de marcar con botones bonitos.
+>      - Pregunta 2: Un menú desplegable moderno.
+>      - Pregunta 3: Un ejercicio interactivo de "Arrastrar y Soltar" conceptos.
+>      - Pregunta 4: Una tabla comparativa donde el estudiante deba llenar 6 celdas eligiendo opciones de un menú en cada una.
+>    - Cuando todo esté completo, debe encenderse un botón para "Exportar Respuestas", que al pulsarlo le descargue un archivo a la computadora del estudiante.
 > 
-> 3. **Mecanismo de Evaluación (Zero-Knowledge Proof):**
->    - El archivo `rubrica.json` no debe contener las respuestas correctas en texto plano (para evitar trampas). En su lugar, usa un "salt" secreto y almacena los hashes SHA-256 de las respuestas correctas.
->    - Incluye un diccionario de "feedback elocuente" en la rúbrica para cada pregunta, detallando qué concepto pedagógico repasar si el alumno se equivoca.
+> 3. **Seguridad y Mecanismo Antifraude:**
+>    - El archivo `rubrica.json` que contiene las soluciones **no debe** tener las respuestas a simple vista, ya que un estudiante curioso podría abrirlo y copiarse. Por favor encripta las respuestas correctas usando un código secreto.
+>    - Además, en esta misma rúbrica, escribe mensajes de "Retroalimentación (Feedback) Formativa" para cada pregunta. Es decir, un texto que le explique al estudiante qué concepto repasar si llega a equivocarse en esa pregunta específica.
 > 
-> 4. **Autograder en Python:**
->    - Escribe un script en Python que cargue el `.json` exportado por el alumno y lo compare calculando los hashes contra los esperados en `rubrica.json`.
->    - Si la respuesta es incorrecta, el script debe imprimir en consola el feedback elocuente específico de esa pregunta ("Aplica el feedback formativo").
->    - El autograder también debe verificar la existencia en el sistema de archivos estructurales como `AGENTS.md`, `MEMORY.md`, y la rúbrica de un Trabajo Práctico, otorgando puntos de experiencia por su existencia.
+> 4. **Corrección Automática (Evaluador):**
+>    - Escribe un script en Python (el archivo corrector) que tome el archivo que descargó el alumno y lo compare con la rúbrica encriptada.
+>    - Si el estudiante respondió mal, el script no solo debe decir "Respuesta Incorrecta", sino que debe mostrarle el "Feedback Formativo" exacto de esa pregunta para que sepa en qué falló.
+>    - Finalmente, quiero que este script también revise si el estudiante creó ciertos archivos obligatorios en su carpeta (como `planificacion.md` o `AGENTS.md`) y le sume puntos por haberlos creado.
 > 
-> ¡Por favor, genera el código completo para cada archivo cumpliendo estrictamente estas instrucciones!
+> ¡Por favor, genera el código completo y listo para funcionar siguiendo estas reglas paso a paso!
