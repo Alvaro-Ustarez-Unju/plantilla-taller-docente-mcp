@@ -1,9 +1,25 @@
 {
     "hashes": {
-        "q1": "f5a91db8542c9431e77f0a7dcb46014cdcf1cd011ba24683c31ffedfc980db18",
-        "q2": "25f46e3d2cdfa08d98d248b1115de6f6d5257edde1d73a7c642a8a183d3e69f3",
-        "q3": "2df2d9ca6a9a0166292723cf75e3c79c944f77c38cbf8f5bbdddd2e7baec6b2f",
-        "q4": "14f3b1451a3ddcc6c6f112e4f3a74b10b073151eb4274c4cd0a0a5b838cdba11"
+        "q1": "3468be289818b0489c6900e1b0de7c389e479d7949ea6845555474ff59d01178",
+        "q2": "690129105511ae39ead8d9e124ab8d4bd54e66cf653bcc57fa2dd9f4f6d34c74",
+        "q3": "0baa1076307387c2c2ca9c0dc23a7317b4f1c6e7354df99875ca73e8a343e3bb",
+        "q4_rol_chatbot": "b61b3a816f6294df42ac5f32c7ab8fac2658a7e5b78b76c7384d3eec444b3c22",
+        "q4_rol_agente": "06993488c2d8f56aeb07e44cf7496743a732be4a7e270d3185d5a43377b6e01e",
+        "q4_rol_mcp": "dffaac416db9f7372148727ac4d0e0892df41e9135819d3491d32c8f9e199dc3",
+        "q4_func_chatbot": "06b6c5c36bd24be4e5e328bd776a45691eff85dc5f1ee72ef83d321e22d6f41f",
+        "q4_func_agente": "2eb1a91e9e50671e26ce544cdd6f0da3d8bff3413b5f30d22110c7018f2a01e4",
+        "q4_func_mcp": "37cd5e0bca544efeb9ac356ec92d4873d31bec9f8e8b56a0bbc3cb6e0b466336"
+    },
+    "feedback": {
+        "q1": "Un LLM simple solo reacciona a tus prompts. Un Agente de IA tiene 'Agencia': es un sistema autónomo capaz de planificar, encadenar lógicas y usar herramientas. ¡Repasa 'Los Tres Pilares'!",
+        "q2": "AGENTS.md no almacena código ni notas; es la pieza maestra para inyectar 'Identidad' y 'Contexto Permanente' a la IA para evitar que alucine sobre sus reglas pedagógicas.",
+        "q3": "El patrón HITL (Human-in-the-Loop) no previene errores automáticos, sino que delega el control en ti: el docente SIEMPRE debe aprobar cualquier acción destructiva que el agente intente realizar.",
+        "q4_rol_chatbot": "Un Chatbot es únicamente una interfaz pasiva.",
+        "q4_rol_agente": "Un Agente asume el rol de un sistema autónomo.",
+        "q4_rol_mcp": "El protocolo MCP actúa como un estándar de conexión abierto.",
+        "q4_func_chatbot": "El chatbot responde de forma reactiva a inputs manuales.",
+        "q4_func_agente": "El agente planifica, usa herramientas de forma iterativa y encadena lógicas.",
+        "q4_func_mcp": "El protocolo MCP estandariza la conexión con herramientas locales de tu computadora (no define la lógica ni el razonamiento)."
     },
     "metadata": {
         "salt": "TALLER_UNJU_2025"

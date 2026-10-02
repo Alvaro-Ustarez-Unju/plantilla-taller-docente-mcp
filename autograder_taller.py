@@ -43,6 +43,12 @@ def evaluate_theory(resp_path, rubric_path, total_points):
             computed = hashlib.sha256(text.encode()).hexdigest()
             if computed == expected_hash:
                 correct += 1
+            else:
+                fb = rubrica.get("feedback", {}).get(qid, "")
+                if fb:
+                    print(f"❌ [Error en {qid}] 💡 Feedback: {fb}")
+                else:
+                    print(f"❌ [Error en {qid}] Respuesta incorrecta.")
                 
         pts = int((correct / total_q) * total_points)
         print(f"✅ [+{pts} pts] Evaluación Teórica Web: {correct}/{total_q} respuestas correctas.")
