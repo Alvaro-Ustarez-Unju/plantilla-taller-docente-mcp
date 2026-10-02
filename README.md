@@ -20,6 +20,8 @@ En la carpeta `/ejemplos_labs_interactivos` encontrarás un catálogo de 19 ejem
 - Operadores Lógicos (AND, OR, NOT) y Tablas de Verdad.
 - Uso matemático y de extracción del operador Módulo (%).
 
+Además, dentro de esta misma sección, encontrarás la subcarpeta `/examenes_y_simulacros`, la cual incluye paquetes completos de simulacros y exámenes reales programados en C++ (con sus respectivas resoluciones completas). ¡Puedes usarlos como base o inspiración para construir tu propio banco de evaluaciones!
+
 ¡Explóralos haciendo doble clic en cualquiera de los archivos `.html` para verlos en acción en tu navegador!
 
 ---

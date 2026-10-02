@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎸 Examen M3 - Tema 3 (Cosquín Rock - Abonos y Sectores)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Fira+Code&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .console { font-family: 'Fira Code', monospace; }
+        .theme-font { font-family: 'Inter', sans-serif; }
+        
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        
+        .tab-content {
+            transition: all 0.3s ease-in-out;
+            opacity: 0;
+            display: none;
+        }
+        .tab-content.active {
+            opacity: 1;
+            display: block;
+            animation: fadeIn 0.4s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="min-h-screen p-4 md:p-8 flex items-center justify-center bg-stone-950 text-stone-100">
+
+    <div class="max-w-4xl w-full bg-stone-900/90 backdrop-blur-md text-stone-100 rounded-2xl shadow-2xl overflow-hidden border border-orange-500/20">
+        
+        <!-- Header -->
+        <div class="p-6 md:p-8 border-b border-white/10 flex justify-between items-center flex-wrap gap-4">
+            <div>
+                <div class="flex items-center gap-2 mb-2">
+                    <span class="inline-block px-3 py-1 bg-orange-500/20 text-orange-300 rounded-full text-xs font-bold tracking-wide border border-orange-500/30 uppercase">
+                        🎸 Córdoba • Cosquín Rock
+                    </span>
+                    <span class="inline-block px-3 py-1 bg-white/10 rounded-full text-xs font-semibold tracking-wide text-white">
+                        Módulo 3: Arreglos en C++
+                    </span>
+                    <span class="inline-block px-3 py-1 bg-amber-500/20 text-amber-300 rounded-full text-xs font-bold border border-amber-500/30">
+                        ⚡ Sin Código Base
+                    </span>
+                </div>
+                <h1 class="text-3xl md:text-4xl font-extrabold tracking-tight text-orange-200 drop-shadow-md theme-font flex items-center gap-3">
+                    🎸 Tema 3: Abonos Vendidos por Sector en el Predio
+                </h1>
+            </div>
+            <div class="h-16 flex items-center justify-center">
+                <div class="bg-orange-950/80 rounded-xl px-4 py-2 text-2xl font-extrabold text-orange-300 tracking-widest border border-orange-500/30 shadow-inner">
+                    COSQUÍN
+                </div>
+            </div>
+        </div>
+
+        <div class="p-6 md:p-8 space-y-8">
+            
+            <!-- Contexto -->
+            <section>
+                <h2 class="text-2xl font-bold mb-3 border-b-2 border-orange-500/40 inline-block text-orange-300 theme-font tracking-wide">Contexto Narrativo</h2>
+                <div class="leading-relaxed opacity-90 text-lg space-y-2 text-stone-200">
+                    <p>El festival <strong>Cosquín Rock</strong>, que congrega anualmente a más de 100.000 fanáticos en el Aeródromo de Santa María de Punilla (Córdoba), organiza su predio en escenarios temáticos y sectores de acampe o plateas. La producción ejecutiva necesita supervisar la cantidad de abonos y pulseras vendidas en cada uno de los sectores habilitados (hasta un máximo de <strong>15 sectores</strong>).</p>
+                    <p>El sistema debe gestionar estas emisiones en un <strong>arreglo unidimensional estático</strong> con control de capacidad física frente a tamaño lógico. Debe permitir registrar nuevos sectores, listar los sectores identificando aquellos con <em>Aforo Agotado</em>, rectificar abonos por ampliación de vallados de contención, y clausurar sectores inhabilitados por lluvias o razones de seguridad aplicando el algoritmo de <strong>compactación física con *Shift-Left*</strong>.</p>
+                </div>
+            </section>
+
+            <!-- Tu Misión -->
+            <section class="bg-black/30 p-5 rounded-xl border border-white/5 shadow-inner">
+                <h2 class="text-2xl font-bold mb-3 text-orange-300 flex items-center gap-2 theme-font tracking-wide">
+                    Tu Misión (100% C++ en Computadora)
+                </h2>
+                <div class="leading-relaxed opacity-95 text-md space-y-3 text-stone-200">
+                    <p>Desarrollar el programa completo en <strong>C++ estándar</strong> gestionando el vector estático de enteros mediante modularización estricta y manteniendo el invariante: <code>0 &le; tam &le; CAPACIDAD</code> (con <code>CAPACIDAD = 15</code>). Debes codificar desde cero:</p>
+                    <ul class="list-disc pl-5 space-y-2">
+                        <li>
+                            <strong>Menú y Arquitectura Modular:</strong> Implementar <code>MostrarMenu(int &opc)</code> y coordinar en <code>main()</code> un bucle iterativo <code>do-while</code> con <code>switch</code> para las opciones 1 a 5 y 0.
+                            <span class="relative group inline-block ml-2 align-middle">
+                                <span class="cursor-pointer bg-orange-500/20 text-orange-300 text-xs font-bold px-2 py-1 rounded border border-orange-500/30">10%</span>
+                                <div class="absolute opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-10 bottom-full left-1/2 -translate-x-1/2 mb-2 w-64 bg-gray-900 text-white text-sm rounded-lg shadow-xl border border-gray-700 p-3 pointer-events-none">
+                                    <div class="font-bold text-orange-400 mb-1">Menú y Modularidad</div>
+                                    <p class="text-xs text-gray-300">Menú interactivo modular con prototipos, switch en main y pasaje correcto de parámetros.</p>
+                                    <div class="absolute -bottom-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-gray-900 border-b border-r border-gray-700 transform rotate-45"></div>
+                                </div>
+                            </span>
+                        </li>
+                        <li>
+                            <strong>Módulo de Carga e Inserción:</strong> Procedimiento <code>RegistrarSector</code>. Verificar que haya espacio (<code>tam < capacidad</code>). Solicitar la cantidad de abonos vendidos y validar mediante bucle que el valor se encuentre en el rango <code>[100, 2500]</code>. Insertar en <code>arr[tam]</code> e incrementar <code>tam++</code>.
+                            <span class="relative group inline-block ml-2 align-middle">
+                                <span class="cursor-pointer bg-orange-500/20 text-orange-300 text-xs font-bold px-2 py-1 rounded border border-orange-500/30">20%</span>
+                                <div class="absolute opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-10 bottom-full left-1/2 -translate-x-1/2 mb-2 w-64 bg-gray-900 text-white text-sm rounded-lg shadow-xl border border-gray-700 p-3 pointer-events-none">
+                                    <div class="font-bold text-orange-400 mb-1">Carga y Validación</div>
+                                    <p class="text-xs text-gray-300">Control estricto de memoria llena, validación de rango numérico y actualización del tamaño lógico.</p>
+                                    <div class="absolute -bottom-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-gray-900 border-b border-r border-gray-700 transform rotate-45"></div>
+                                </div>
+                            </span>
+                        </li>
+                        <li>
+                            <strong>Módulo de Consultas y Filtros:</strong> Procedimiento <code>ListarSectores</code>. Recorrer de <code>0</code> a <code>tam-1</code> protegiendo el arreglo con <code>const</code>. Mostrar índice y cantidad de abonos. Contabilizar y reportar cuántos sectores alcanzaron la alerta de <em>Aforo Agotado</em> (<code>> 1500</code> abonos).
+                            <span class="relative group inline-block ml-2 align-middle">
+                                <span class="cursor-pointer bg-orange-500/20 text-orange-300 text-xs font-bold px-2 py-1 rounded border border-orange-500/30">20%</span>
+                                <div class="absolute opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-10 bottom-full left-1/2 -translate-x-1/2 mb-2 w-64 bg-gray-900 text-white text-sm rounded-lg shadow-xl border border-gray-700 p-3 pointer-events-none">
+                                    <div class="font-bold text-orange-400 mb-1">Filtros y Consultas</div>
+                                    <p class="text-xs text-gray-300">Recorrido con const, reporte individual y conteo condicional con filtro relacional.</p>
+                                    <div class="absolute -bottom-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-gray-900 border-b border-r border-gray-700 transform rotate-45"></div>
+                                </div>
+                            </span>
+                        </li>
+                        <li>
+                            <strong>Búsqueda Lineal y Modificación:</strong> Función <code>BuscarSector</code> que retorne el índice encontrado o <code>-1</code>. En <code>ModificarAbonos</code>, solicitar cantidad a buscar; si existe, pedir la nueva cantidad rectificada (validando en <code>[100, 2500]</code>) y sobrescribir la celda.
+                            <span class="relative group inline-block ml-2 align-middle">
+                                <span class="cursor-pointer bg-orange-500/20 text-orange-300 text-xs font-bold px-2 py-1 rounded border border-orange-500/30">25%</span>
+                                <div class="absolute opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-10 bottom-full left-1/2 -translate-x-1/2 mb-2 w-64 bg-gray-900 text-white text-sm rounded-lg shadow-xl border border-gray-700 p-3 pointer-events-none">
+                                    <div class="font-bold text-orange-400 mb-1">Búsqueda y Modificación</div>
+                                    <p class="text-xs text-gray-300">Búsqueda lineal retornando posición o -1, y modificación condicionada a la existencia.</p>
+                                    <div class="absolute -bottom-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-gray-900 border-b border-r border-gray-700 transform rotate-45"></div>
+                                </div>
+                            </span>
+                        </li>
+                        <li>
+                            <strong>Algoritmo Clave: Eliminación Física con Compactación (Shift-Left):</strong> Procedimiento <code>ClausurarSector</code>. Solicitar la cantidad de abonos del sector a clausurar. Invocar a la búsqueda; si existe en <code>pos</code>, desplazar hacia la izquierda todos los elementos posteriores (desde <code>pos</code> hasta <code>tam-2</code>: <code>arr[i] = arr[i+1]</code>) y decrementar el tamaño lógico <code>tam--</code> recibido por referencia.
+                            <span class="relative group inline-block ml-2 align-middle">
+                                <span class="cursor-pointer bg-orange-500/20 text-orange-300 text-xs font-bold px-2 py-1 rounded border border-orange-500/30">25%</span>
+                                <div class="absolute opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-10 bottom-full left-1/2 -translate-x-1/2 mb-2 w-64 bg-gray-900 text-white text-sm rounded-lg shadow-xl border border-gray-700 p-3 pointer-events-none">
+                                    <div class="font-bold text-orange-400 mb-1">Eliminación Shift-Left</div>
+                                    <p class="text-xs text-gray-300">Compactación contigua en memoria sin dejar huecos y actualización obligatoria de tamaño lógico.</p>
+                                    <div class="absolute -bottom-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-gray-900 border-b border-r border-gray-700 transform rotate-45"></div>
+                                </div>
+                            </span>
+                        </li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Casos de Prueba -->
+            <section class="bg-black/30 p-5 md:p-6 rounded-xl border border-white/5 shadow-inner">
+                <h2 class="text-xl font-bold mb-4 text-orange-300 theme-font tracking-wide flex items-center gap-2">
+                    Casos de Prueba (Ejecuciones Esperadas)
+                </h2>
+                
+                <!-- Tab Buttons -->
+                <div class="flex gap-2 border-b border-white/10 pb-3 mb-6 overflow-x-auto no-scrollbar">
+                    <button onclick="switchTab(0)" class="tab-btn px-4 py-2 rounded-lg text-sm font-bold border transition-all bg-orange-500 text-slate-950 border-orange-500 shadow-md">
+                        Caso 1: Carga y Validación
+                    </button>
+                    <button onclick="switchTab(1)" class="tab-btn px-4 py-2 rounded-lg text-sm font-bold border transition-all bg-white/5 text-white/70 border-white/10 hover:bg-white/10">
+                        Caso 2: Búsqueda, Modificación y Estadísticas
+                    </button>
+                    <button onclick="switchTab(2)" class="tab-btn px-4 py-2 rounded-lg text-sm font-bold border transition-all bg-white/5 text-white/70 border-white/10 hover:bg-white/10">
+                        Caso 3: Clausura y Shift-Left
+                    </button>
+                </div>
+
+                <!-- Tab 1 -->
+                <div class="tab-content active space-y-4">
+                    <p class="text-sm text-stone-300">
+                        <strong>Escenario:</strong> Validación interactiva de cantidades fuera de rango ([100, 2500]) y posterior inserción de sectores válidos.
+                    </p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="bg-black/40 rounded-xl p-4 border border-white/5">
+                            <span class="text-xs uppercase tracking-wider text-orange-300 font-bold block mb-2 font-mono">Entrada de Teclado (stdin)</span>
+                            <pre class="console text-xs text-orange-200/90 whitespace-pre-wrap leading-relaxed">1
+50
+3200
+1250
+1
+1800
+2
+0</pre>
+                        </div>
+                        <div class="bg-black/40 rounded-xl p-4 border border-white/5">
+                            <span class="text-xs uppercase tracking-wider text-green-300 font-bold block mb-2 font-mono">Salida Esperada (stdout)</span>
+                            <div class="h-64 overflow-y-auto pr-1">
+                                <pre class="console text-xs text-stone-300 whitespace-pre-wrap leading-relaxed">Ingrese una opcion: <span class="text-orange-400">&gt; </span><span class="text-yellow-400">1</span>
+Ingrese cantidad de abonos vendidos (100 - 2500): <span class="text-orange-400">&gt; </span><span class="text-yellow-400">50</span>
+[Error] La cantidad de abonos debe estar entre 100 y 2500.
+Ingrese cantidad de abonos vendidos (100 - 2500): <span class="text-orange-400">&gt; </span><span class="text-yellow-400">3200</span>
+[Error] La cantidad de abonos debe estar entre 100 y 2500.
+Ingrese cantidad de abonos vendidos (100 - 2500): <span class="text-orange-400">&gt; </span><span class="text-yellow-400">1250</span>
+[Exito] Sector registrado correctamente en la posicion 0.
+
+Ingrese una opcion: <span class="text-orange-400">&gt; </span><span class="text-yellow-400">1</span>
+Ingrese cantidad de abonos vendidos (100 - 2500): <span class="text-orange-400">&gt; </span><span class="text-yellow-400">1800</span>
+[Exito] Sector registrado correctamente en la posicion 1.
+
+Ingrese una opcion: <span class="text-orange-400">&gt; </span><span class="text-yellow-400">2</span>
+--- CONTROL DE SECTORES COSQUIN ROCK ---
+[0] 1250 abonos
+[1] 1800 abonos
+Sectores con Aforo Agotado (> 1500 abonos): 1 de 2 sectores.
+
+Ingrese una opcion: <span class="text-orange-400">&gt; </span><span class="text-yellow-400">0</span>
+Finalizando sistema de aforo de Cosquin Rock.</pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tab 2 -->
+                <div class="tab-content space-y-4">
+                    <p class="text-sm text-stone-300">
+                        <strong>Escenario:</strong> Registro de tres sectores, búsqueda secuencial, rectificación de abonos y cálculo de máxima concentración y promedio.
+                    </p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="bg-black/40 rounded-xl p-4 border border-white/5">
+                            <span class="text-xs uppercase tracking-wider text-orange-300 font-bold block mb-2 font-mono">Entrada de Teclado (stdin)</span>
+                            <pre class="console text-xs text-orange-200/90 whitespace-pre-wrap leading-relaxed">1
+800
+1
+1600
+1
+2100
+3
+1600
+1750
+5
+0</pre>
+                        </div>
+                        <div class="bg-black/40 rounded-xl p-4 border border-white/5">
+                            <span class="text-xs uppercase tracking-wider text-green-300 font-bold block mb-2 font-mono">Salida Esperada (stdout)</span>
+                            <div class="h-64 overflow-y-auto pr-1">
+                                <pre class="console text-xs text-stone-300 whitespace-pre-wrap leading-relaxed">Ingrese una opcion: <span class="text-orange-400">&gt; </span><span class="text-yellow-400">1</span>
+Ingrese cantidad de abonos vendidos (100 - 2500): <span class="text-orange-400">&gt; </span><span class="text-yellow-400">800</span>
+[Exito] Sector registrado correctamente en la posicion 0.
+
+Ingrese una opcion: <span class="text-orange-400">&gt; </span><span class="text-yellow-400">1</span>
+Ingrese cantidad de abonos vendidos (100 - 2500): <span class="text-orange-400">&gt; </span><span class="text-yellow-400">1600</span>
+[Exito] Sector registrado correctamente en la posicion 1.
+
+Ingrese una opcion: <span class="text-orange-400">&gt; </span><span class="text-yellow-400">1</span>
+Ingrese cantidad de abonos vendidos (100 - 2500): <span class="text-orange-400">&gt; </span><span class="text-yellow-400">2100</span>
+[Exito] Sector registrado correctamente en la posicion 2.
+
+Ingrese una opcion: <span class="text-orange-400">&gt; </span><span class="text-yellow-400">3</span>
+Ingrese cantidad de abonos a buscar: <span class="text-orange-400">&gt; </span><span class="text-yellow-400">1600</span>
+Sector encontrado en la posicion 1.
+Ingrese nueva cantidad de abonos rectificada (100 - 2500): <span class="text-orange-400">&gt; </span><span class="text-yellow-400">1750</span>
+[Exito] Sector actualizado correctamente.
+
+Ingrese una opcion: <span class="text-orange-400">&gt; </span><span class="text-yellow-400">5</span>
+--- ESTADISTICAS DEL FESTIVAL ---
+Cantidad de sectores habilitados: 3
+Promedio de abonos por sector: 1550.00 abonos
+Maxima concentracion registrada: 2100 abonos en la posicion 2.
+
+Ingrese una opcion: <span class="text-orange-400">&gt; </span><span class="text-yellow-400">0</span>
+Finalizando sistema de aforo de Cosquin Rock.</pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tab 3 -->
+                <div class="tab-content space-y-4">
+                    <p class="text-sm text-stone-300">
+                        <strong>Escenario:</strong> Clausura de un sector por razones de seguridad y verificación de compactación física a la izquierda (*Shift-Left*).
+                    </p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="bg-black/40 rounded-xl p-4 border border-white/5">
+                            <span class="text-xs uppercase tracking-wider text-orange-300 font-bold block mb-2 font-mono">Entrada de Teclado (stdin)</span>
+                            <pre class="console text-xs text-orange-200/90 whitespace-pre-wrap leading-relaxed">1
+900
+1
+2200
+1
+1400
+4
+2200
+2
+0</pre>
+                        </div>
+                        <div class="bg-black/40 rounded-xl p-4 border border-white/5">
+                            <span class="text-xs uppercase tracking-wider text-green-300 font-bold block mb-2 font-mono">Salida Esperada (stdout)</span>
+                            <div class="h-64 overflow-y-auto pr-1">
+                                <pre class="console text-xs text-stone-300 whitespace-pre-wrap leading-relaxed">Ingrese una opcion: <span class="text-orange-400">&gt; </span><span class="text-yellow-400">1</span>
+Ingrese cantidad de abonos vendidos (100 - 2500): <span class="text-orange-400">&gt; </span><span class="text-yellow-400">900</span>
+[Exito] Sector registrado correctamente en la posicion 0.
+
+Ingrese una opcion: <span class="text-orange-400">&gt; </span><span class="text-yellow-400">1</span>
+Ingrese cantidad de abonos vendidos (100 - 2500): <span class="text-orange-400">&gt; </span><span class="text-yellow-400">2200</span>
+[Exito] Sector registrado correctamente en la posicion 1.
+
+Ingrese una opcion: <span class="text-orange-400">&gt; </span><span class="text-yellow-400">1</span>
+Ingrese cantidad de abonos vendidos (100 - 2500): <span class="text-orange-400">&gt; </span><span class="text-yellow-400">1400</span>
+[Exito] Sector registrado correctamente en la posicion 2.
+
+Ingrese una opcion: <span class="text-orange-400">&gt; </span><span class="text-yellow-400">4</span>
+Ingrese cantidad de abonos del sector a clausurar: <span class="text-orange-400">&gt; </span><span class="text-yellow-400">2200</span>
+[Exito] Sector clausurado y predio compactado correctamente.
+
+Ingrese una opcion: <span class="text-orange-400">&gt; </span><span class="text-yellow-400">2</span>
+--- CONTROL DE SECTORES COSQUIN ROCK ---
+[0] 900 abonos
+[1] 1400 abonos
+Sectores con Aforo Agotado (> 1500 abonos): 0 de 2 sectores.
+
+Ingrese una opcion: <span class="text-orange-400">&gt; </span><span class="text-yellow-400">0</span>
+Finalizando sistema de aforo de Cosquin Rock.</pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </section>
+
+            <!-- Requisitos Técnicos y Desarrollo Desde Cero -->
+            <section class="bg-black/30 p-5 md:p-6 rounded-xl border border-white/5 shadow-inner">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-xl font-bold text-orange-300 theme-font tracking-wide flex items-center gap-2">
+                        Modalidad de Desarrollo: 100% Desde Cero (Sin Código Base)
+                    </h2>
+                </div>
+
+                <!-- Banner Informativo Examen Formal -->
+                <div class="mb-6 bg-orange-950/40 border border-orange-500/40 rounded-xl p-5 flex items-start gap-4 text-orange-200 shadow-lg">
+                    <span class="text-3xl flex-shrink-0">⚠️</span>
+                    <div class="text-sm leading-relaxed space-y-1">
+                        <strong class="font-bold text-orange-300 text-base block">Instrucción Oficial para el Examen:</strong>
+                        <p>A diferencia del simulacro, en esta instancia de <strong>Examen Parcial NO se suministra plantilla de código ni estructura inicial prehecha</strong>.</p>
+                        <p class="text-stone-300">Deberás codificar la solución completa en tu entorno de desarrollo (IDE) desde un archivo en blanco (<code>.cpp</code>), escribiendo las directivas de inclusión, las constantes, los prototipos modulares, la función <code>main()</code> y la lógica de cada subproceso.</p>
+                    </div>
+                </div>
+
+                <!-- Prototipos y Contratos Obligatorios -->
+                <div class="space-y-4">
+                    <h3 class="text-md font-bold text-orange-200 font-mono flex items-center gap-2">
+                        📋 Contratos Modulares y Constantes Obligatorias:
+                    </h3>
+                    <div class="bg-[#1e1e1e] p-5 rounded-xl border border-white/10 overflow-x-auto block">
+                        <pre class="console text-sm text-[#d4d4d4] whitespace-pre-wrap leading-relaxed"><span class="text-emerald-400">// Constante física obligatoria</span>
+<span class="text-blue-400">const int</span> CAPACIDAD = <span class="text-amber-400">15</span>;
+
+<span class="text-emerald-400">// Prototipos de funciones a implementar:</span>
+<span class="text-blue-400">void</span> <span class="text-yellow-300">MostrarMenu</span>(<span class="text-blue-400">int</span> &amp;opc);
+<span class="text-blue-400">void</span> <span class="text-yellow-300">RegistrarSector</span>(<span class="text-blue-400">int</span> arr[], <span class="text-blue-400">int</span> &amp;tam, <span class="text-blue-400">int</span> capacidad);
+<span class="text-blue-400">void</span> <span class="text-yellow-300">ListarSectores</span>(<span class="text-blue-400">const int</span> arr[], <span class="text-blue-400">int</span> tam, <span class="text-blue-400">int</span> umbralAgotado);
+<span class="text-blue-400">int</span>  <span class="text-yellow-300">BuscarSector</span>(<span class="text-blue-400">const int</span> arr[], <span class="text-blue-400">int</span> tam, <span class="text-blue-400">int</span> valorBuscado);
+<span class="text-blue-400">void</span> <span class="text-yellow-300">ModificarAbonos</span>(<span class="text-blue-400">int</span> arr[], <span class="text-blue-400">int</span> tam);
+<span class="text-blue-400">void</span> <span class="text-yellow-300">ClausurarSector</span>(<span class="text-blue-400">int</span> arr[], <span class="text-blue-400">int</span> &amp;tam);
+<span class="text-blue-400">void</span> <span class="text-yellow-300">CalcularEstadisticas</span>(<span class="text-blue-400">const int</span> arr[], <span class="text-blue-400">int</span> tam);</pre>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs text-stone-300 mt-3 font-mono">
+                        <div class="p-3 bg-white/5 rounded-lg border border-white/5">
+                            <span class="font-bold text-orange-300 block mb-1">Rango de Abonos Válidos:</span>
+                            [100, 2500] abonos por sector (validación con bucle).
+                        </div>
+                        <div class="p-3 bg-white/5 rounded-lg border border-white/5">
+                            <span class="font-bold text-orange-300 block mb-1">Umbral de Aforo Agotado:</span>
+                            Mayor a 1500 abonos vendidos (&gt; 1500).
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+        </div>
+    </div>
+
+    <script>
+        function switchTab(tabIndex) {
+            document.querySelectorAll('.tab-btn').forEach((btn, idx) => {
+                if (idx === tabIndex) {
+                    btn.classList.add('bg-orange-500', 'text-slate-950', 'border-orange-500');
+                    btn.classList.remove('bg-white/5', 'text-white/70', 'border-white/10', 'hover:bg-white/10');
+                } else {
+                    btn.classList.remove('bg-orange-500', 'text-slate-950', 'border-orange-500');
+                    btn.classList.add('bg-white/5', 'text-white/70', 'border-white/10', 'hover:bg-white/10');
+                }
+            });
+            document.querySelectorAll('.tab-content').forEach((content, idx) => {
+                if (idx === tabIndex) {
+                    content.classList.add('active');
+                } else {
+                    content.classList.remove('active');
+                }
+            });
+        }
+    </script>
+</body>
+</html>

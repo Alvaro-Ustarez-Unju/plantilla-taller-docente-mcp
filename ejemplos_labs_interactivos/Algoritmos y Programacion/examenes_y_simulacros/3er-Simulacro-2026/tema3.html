@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📺 Examen M3 - Tema 3 (Blender - Retención y Fidelidad)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Fira+Code&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .console { font-family: 'Fira Code', monospace; }
+        .theme-font { font-family: 'Inter', sans-serif; }
+        
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        
+        .tab-content {
+            transition: all 0.3s ease-in-out;
+            opacity: 0;
+            display: none;
+        }
+        .tab-content.active {
+            opacity: 1;
+            display: block;
+            animation: fadeIn 0.4s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="min-h-screen p-4 md:p-8 flex items-center justify-center bg-zinc-950 text-emerald-50">
+
+    <div class="max-w-4xl w-full bg-zinc-900/90 backdrop-blur-md text-emerald-50 rounded-2xl shadow-2xl overflow-hidden border border-emerald-400/20">
+        
+        <!-- Header -->
+        <div class="p-6 md:p-8 border-b border-white/10 flex justify-between items-center flex-wrap gap-4">
+            <div>
+                <div class="flex items-center gap-2 mb-2">
+                    <span class="inline-block px-3 py-1 bg-red-500/20 text-red-300 rounded-full text-xs font-bold tracking-wide border border-red-500/30 uppercase animate-pulse">
+                        🔴 Blender • Hay Algo Ahí
+                    </span>
+                    <span class="inline-block px-3 py-1 bg-white/10 rounded-full text-xs font-semibold tracking-wide text-white">
+                        Módulo 3: Arreglos en C++
+                    </span>
+                </div>
+                <h1 class="text-3xl md:text-4xl font-extrabold tracking-tight text-emerald-200 drop-shadow-md theme-font flex items-center gap-3">
+                    📺 Tema 3: Telemetría de Retención y Fidelidad
+                </h1>
+            </div>
+            <div class="h-16 flex items-center justify-center">
+                <div class="bg-zinc-800/90 rounded-xl px-4 py-2 text-2xl font-extrabold text-emerald-300 tracking-widest border border-emerald-400/30 shadow-inner">
+                    BLENDER
+                </div>
+            </div>
+        </div>
+
+        <div class="p-6 md:p-8 space-y-8">
+            
+            <!-- Contexto -->
+            <section>
+                <h2 class="text-2xl font-bold mb-3 border-b-2 border-white/20 inline-block text-emerald-300 theme-font tracking-wide">Contexto</h2>
+                <div class="leading-relaxed opacity-90 text-lg space-y-2">
+                    <p>El canal <strong>Blender</strong>, con transmisiones de análisis político y cultural como <em>Hay Algo Ahí</em> conducido por Tomás Rebord, estudia métricas profundas de comportamiento de su audiencia digital para optimizar el ritmo editorial de las entrevistas.</p>
+                    <p>El equipo técnico registra el tiempo de retención continua (medido en <strong>minutos de reproducción por sesión</strong>) en un arreglo estático con capacidad para <strong>15 sesiones</strong>. El sistema debe permitir registrar nuevas muestras, filtrar aquellas con el distintivo de <em>Alta Fidelidad</em>, calibrar sesiones mal medidas y depurar conexiones fantasmas o bots mediante el algoritmo de <strong>compactación física por desplazamiento a la izquierda (*Shift-Left*)</strong>.</p>
+                </div>
+            </section>
+
+            <!-- Tu Misión -->
+            <section class="bg-black/20 p-5 rounded-xl border border-white/5 shadow-inner">
+                <h2 class="text-2xl font-bold mb-3 text-emerald-300 flex items-center gap-2 theme-font tracking-wide">
+                    Tu Misión (100% C++ en Computadora)
+                </h2>
+                <div class="leading-relaxed opacity-95 text-md space-y-3">
+                    <p>Implementar el programa completo en <strong>C++</strong> gestionando el arreglo unidimensional estático mediante modularización estricta y control del invariante: <code>0 &le; tamanoLogico &le; CAPACIDAD</code> (con <code>CAPACIDAD = 15</code>). Debes desarrollar:</p>
+                    <ul class="list-disc pl-5 space-y-2">
+                        <li>
+                            <strong>Menú y Estructura Principal:</strong> Diseñar la función <code>MostrarMenu(int &opc)</code> y coordinar en el <code>main</code> un bucle interactivo con <code>switch</code> para las opciones 1 a 5 y 0.
+                            <span class="relative group inline-block ml-2 align-middle">
+                                <span class="cursor-pointer bg-emerald-500/20 text-emerald-300 text-xs font-bold px-2 py-1 rounded border border-emerald-500/30">10%</span>
+                                <div class="absolute opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-10 bottom-full left-1/2 -translate-x-1/2 mb-2 w-64 bg-gray-900 text-white text-sm rounded-lg shadow-xl border border-gray-700 p-3 pointer-events-none">
+                                    <div class="font-bold text-emerald-400 mb-1">Menú y Modularidad</div>
+                                    <p class="text-xs text-gray-300">Implementa menú interactivo modular con prototipos y switch en main.</p>
+                                    <div class="absolute -bottom-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-gray-900 border-b border-r border-gray-700 transform rotate-45"></div>
+                                </div>
+                            </span>
+                        </li>
+                        <li>
+                            <strong>Módulo de Carga e Inserción:</strong> Procedimiento <code>RegistrarRetencion</code>. Verificar que haya espacio (<code>tam < CAPACIDAD</code>). Solicitar los minutos de sesión y validar mediante bucle que el valor se encuentre en el rango <code>[2.0, 90.0]</code>. Insertar en <code>arr[tam]</code> e incrementar <code>tam++</code>.
+                            <span class="relative group inline-block ml-2 align-middle">
+                                <span class="cursor-pointer bg-emerald-500/20 text-emerald-300 text-xs font-bold px-2 py-1 rounded border border-emerald-500/30">20%</span>
+                                <div class="absolute opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-10 bottom-full left-1/2 -translate-x-1/2 mb-2 w-64 bg-gray-900 text-white text-sm rounded-lg shadow-xl border border-gray-700 p-3 pointer-events-none">
+                                    <div class="font-bold text-emerald-400 mb-1">Carga y Validación</div>
+                                    <p class="text-xs text-gray-300">Control estricto de memoria llena, validación de rango y actualización de tamaño lógico.</p>
+                                    <div class="absolute -bottom-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-gray-900 border-b border-r border-gray-700 transform rotate-45"></div>
+                                </div>
+                            </span>
+                        </li>
+                        <li>
+                            <strong>Módulo de Consultas y Filtros:</strong> Procedimiento <code>ListarRetenciones</code>. Recorrer de <code>0</code> a <code>tam-1</code> protegiendo el arreglo con <code>const</code>. Mostrar posición y minutos. Contabilizar y reportar cuántas sesiones lograron Alta Fidelidad (<code>> 40.0</code> minutos).
+                            <span class="relative group inline-block ml-2 align-middle">
+                                <span class="cursor-pointer bg-emerald-500/20 text-emerald-300 text-xs font-bold px-2 py-1 rounded border border-emerald-500/30">20%</span>
+                                <div class="absolute opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-10 bottom-full left-1/2 -translate-x-1/2 mb-2 w-64 bg-gray-900 text-white text-sm rounded-lg shadow-xl border border-gray-700 p-3 pointer-events-none">
+                                    <div class="font-bold text-emerald-400 mb-1">Filtros y Consultas</div>
+                                    <p class="text-xs text-gray-300">Recorrido con const, reporte individual y conteo condicional con filtro relacional.</p>
+                                    <div class="absolute -bottom-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-gray-900 border-b border-r border-gray-700 transform rotate-45"></div>
+                                </div>
+                            </span>
+                        </li>
+                        <li>
+                            <strong>Búsqueda Lineal y Modificación:</strong> Función <code>BuscarRetencion</code> que retorne el índice encontrado o <code>-1</code>. En <code>ModificarRetencion</code>, solicitar tiempo a buscar; si existe, pedir el nuevo tiempo corregido (validando en <code>[2.0, 90.0]</code>) y sobrescribir la celda.
+                            <span class="relative group inline-block ml-2 align-middle">
+                                <span class="cursor-pointer bg-emerald-500/20 text-emerald-300 text-xs font-bold px-2 py-1 rounded border border-emerald-500/30">25%</span>
+                                <div class="absolute opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-10 bottom-full left-1/2 -translate-x-1/2 mb-2 w-64 bg-gray-900 text-white text-sm rounded-lg shadow-xl border border-gray-700 p-3 pointer-events-none">
+                                    <div class="font-bold text-emerald-400 mb-1">Búsqueda y Modificación</div>
+                                    <p class="text-xs text-gray-300">Búsqueda lineal retornando posición o -1, y modificación condicionada a la existencia.</p>
+                                    <div class="absolute -bottom-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-gray-900 border-b border-r border-gray-700 transform rotate-45"></div>
+                                </div>
+                            </span>
+                        </li>
+                        <li>
+                            <strong>Algoritmo Clave: Depuración Física con Compactación (Shift-Left):</strong> Procedimiento <code>EliminarSesion</code>. Solicitar el tiempo de la sesión a descartar. Invocar a la búsqueda; si existe en <code>pos</code>, desplazar hacia la izquierda todos los elementos posteriores (desde <code>pos</code> hasta <code>tam-2</code>: <code>arr[i] = arr[i+1]</code>) y decrementar el tamaño lógico <code>tam--</code> recibido por referencia.
+                            <span class="relative group inline-block ml-2 align-middle">
+                                <span class="cursor-pointer bg-emerald-500/20 text-emerald-300 text-xs font-bold px-2 py-1 rounded border border-emerald-500/30">25%</span>
+                                <div class="absolute opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-10 bottom-full left-1/2 -translate-x-1/2 mb-2 w-64 bg-gray-900 text-white text-sm rounded-lg shadow-xl border border-gray-700 p-3 pointer-events-none">
+                                    <div class="font-bold text-emerald-400 mb-1">Eliminación Shift-Left</div>
+                                    <p class="text-xs text-gray-300">Compactación contigua en memoria sin dejar huecos y actualización de tamaño lógico.</p>
+                                    <div class="absolute -bottom-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-gray-900 border-b border-r border-gray-700 transform rotate-45"></div>
+                                </div>
+                            </span>
+                        </li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Casos de Prueba -->
+            <section class="bg-black/20 p-5 md:p-6 rounded-xl border border-white/5 shadow-inner">
+                <h2 class="text-xl font-bold mb-4 text-emerald-300 theme-font tracking-wide flex items-center gap-2">
+                    Casos de Prueba (Ejecuciones Esperadas)
+                </h2>
+                
+                <div class="flex overflow-x-auto no-scrollbar gap-2 mb-6 pb-2 border-b border-white/10" id="tabs-container">
+                    <button onclick="switchTab(0)" class="tab-btn px-4 py-2 rounded-lg font-semibold text-sm transition-all border whitespace-nowrap bg-emerald-400 text-slate-950 border-emerald-400">
+                        Caso 1: Validación y Capacidad
+                    </button>
+                    <button onclick="switchTab(1)" class="tab-btn px-4 py-2 rounded-lg font-semibold text-sm transition-all border whitespace-nowrap bg-white/5 text-white/70 border-white/10 hover:bg-white/10">
+                        Caso 2: Modificación y Permanencia
+                    </button>
+                    <button onclick="switchTab(2)" class="tab-btn px-4 py-2 rounded-lg font-semibold text-sm transition-all border whitespace-nowrap bg-white/5 text-white/70 border-white/10 hover:bg-white/10">
+                        Caso 3: Descarte Shift-Left
+                    </button>
+                </div>
+
+                <div id="tab-contents">
+                    <!-- Caso 1 -->
+                    <div class="tab-content active">
+                        <div class="grid grid-cols-1 md:grid-cols-12 gap-6">
+                            <div class="md:col-span-3 bg-black/30 p-5 rounded-xl border border-white/10 flex flex-col">
+                                <h3 class="text-sm font-bold mb-3 text-emerald-300 uppercase tracking-wider">Entrada (Simulada)</h3>
+                                <div class="flex-grow bg-black/50 p-4 rounded-lg border border-white/5">
+                                    <pre class="console text-sm text-gray-300 whitespace-pre-wrap leading-relaxed">1
+1.0
+110.0
+25.0
+1
+55.0
+2
+0</pre>
+                                </div>
+                            </div>
+                            <div class="md:col-span-9 bg-[#0a0a0a] p-5 rounded-xl border border-gray-800 shadow-inner flex flex-col relative overflow-hidden">
+                                <h3 class="text-sm font-bold mb-3 text-green-400 uppercase tracking-wider">Salida Esperada por Pantalla</h3>
+                                <div class="flex-grow bg-black/40 p-4 rounded-lg border border-white/5 overflow-x-auto">
+                                    <pre class="console text-green-400 text-sm whitespace-pre-wrap leading-relaxed">=== SISTEMA DE TELEMETRÍA - BLENDER ===
+1. Registrar Sesión de Retención
+2. Listar Sesiones y Filtrar Alta Fidelidad
+3. Buscar y Modificar Sesión
+4. Descartar Sesión (Compactar Arreglo)
+5. Ver Estadísticas de Fidelización
+0. Salir
+Ingrese una opción: <span class="text-purple-400">&gt; </span><span class="text-yellow-400">1</span>
+Ingrese tiempo de retención en minutos (2.0 - 90.0): <span class="text-purple-400">&gt; </span><span class="text-yellow-400">1.0</span>
+[Error] El tiempo de retención debe estar entre 2.0 y 90.0 minutos.
+Ingrese tiempo de retención en minutos (2.0 - 90.0): <span class="text-purple-400">&gt; </span><span class="text-yellow-400">110.0</span>
+[Error] El tiempo de retención debe estar entre 2.0 y 90.0 minutos.
+Ingrese tiempo de retención en minutos (2.0 - 90.0): <span class="text-purple-400">&gt; </span><span class="text-yellow-400">25.0</span>
+[Éxito] Sesión registrada correctamente en la posición 0.
+
+Ingrese una opción: <span class="text-purple-400">&gt; </span><span class="text-yellow-400">1</span>
+Ingrese tiempo de retención en minutos (2.0 - 90.0): <span class="text-purple-400">&gt; </span><span class="text-yellow-400">55.0</span>
+[Éxito] Sesión registrada correctamente en la posición 1.
+
+Ingrese una opción: <span class="text-purple-400">&gt; </span><span class="text-yellow-400">2</span>
+--- REGISTRO DE RETENCIÓN BLENDER ---
+[0] 25.0 minutos
+[1] 55.0 minutos
+Sesiones con Alta Fidelidad (> 40.0 min): 1 de 2 sesiones.
+
+Ingrese una opción: <span class="text-purple-400">&gt; </span><span class="text-yellow-400">0</span>
+Finalizando sistema de telemetría de Blender.</pre>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Caso 2 -->
+                    <div class="tab-content">
+                        <div class="grid grid-cols-1 md:grid-cols-12 gap-6">
+                            <div class="md:col-span-3 bg-black/30 p-5 rounded-xl border border-white/10 flex flex-col">
+                                <h3 class="text-sm font-bold mb-3 text-emerald-300 uppercase tracking-wider">Entrada (Simulada)</h3>
+                                <div class="flex-grow bg-black/50 p-4 rounded-lg border border-white/5">
+                                    <pre class="console text-sm text-gray-300 whitespace-pre-wrap leading-relaxed">1
+30.0
+1
+65.0
+1
+80.0
+3
+65.0
+70.0
+5
+0</pre>
+                                </div>
+                            </div>
+                            <div class="md:col-span-9 bg-[#0a0a0a] p-5 rounded-xl border border-gray-800 shadow-inner flex flex-col relative overflow-hidden">
+                                <h3 class="text-sm font-bold mb-3 text-green-400 uppercase tracking-wider">Salida Esperada por Pantalla</h3>
+                                <div class="flex-grow bg-black/40 p-4 rounded-lg border border-white/5 overflow-x-auto">
+                                    <pre class="console text-green-400 text-sm whitespace-pre-wrap leading-relaxed">Ingrese una opción: <span class="text-purple-400">&gt; </span><span class="text-yellow-400">1</span>
+Ingrese tiempo de retención en minutos (2.0 - 90.0): <span class="text-purple-400">&gt; </span><span class="text-yellow-400">30.0</span>
+[Éxito] Sesión registrada correctamente en la posición 0.
+
+Ingrese una opción: <span class="text-purple-400">&gt; </span><span class="text-yellow-400">1</span>
+Ingrese tiempo de retención en minutos (2.0 - 90.0): <span class="text-purple-400">&gt; </span><span class="text-yellow-400">65.0</span>
+[Éxito] Sesión registrada correctamente en la posición 1.
+
+Ingrese una opción: <span class="text-purple-400">&gt; </span><span class="text-yellow-400">1</span>
+Ingrese tiempo de retención en minutos (2.0 - 90.0): <span class="text-purple-400">&gt; </span><span class="text-yellow-400">80.0</span>
+[Éxito] Sesión registrada correctamente en la posición 2.
+
+Ingrese una opción: <span class="text-purple-400">&gt; </span><span class="text-yellow-400">3</span>
+Ingrese el tiempo de sesión que desea buscar: <span class="text-purple-400">&gt; </span><span class="text-yellow-400">65.0</span>
+Sesión encontrada en la posición 1.
+Ingrese el nuevo tiempo corregido (2.0 - 90.0): <span class="text-purple-400">&gt; </span><span class="text-yellow-400">70.0</span>
+[Éxito] Sesión actualizada correctamente.
+
+Ingrese una opción: <span class="text-purple-400">&gt; </span><span class="text-yellow-400">5</span>
+--- ESTADÍSTICAS DE FIDELIZACIÓN ---
+Cantidad de sesiones procesadas: 3
+Promedio general de permanencia: 60.00 minutos
+Pico Máximo de permanencia: 80.0 minutos registrado en la posición 2.
+
+Ingrese una opción: <span class="text-purple-400">&gt; </span><span class="text-yellow-400">0</span>
+Finalizando sistema de telemetría de Blender.</pre>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Caso 3 -->
+                    <div class="tab-content">
+                        <div class="grid grid-cols-1 md:grid-cols-12 gap-6">
+                            <div class="md:col-span-3 bg-black/30 p-5 rounded-xl border border-white/10 flex flex-col">
+                                <h3 class="text-sm font-bold mb-3 text-emerald-300 uppercase tracking-wider">Entrada (Simulada)</h3>
+                                <div class="flex-grow bg-black/50 p-4 rounded-lg border border-white/5">
+                                    <pre class="console text-sm text-gray-300 whitespace-pre-wrap leading-relaxed">1
+15.0
+1
+50.0
+1
+85.0
+4
+50.0
+2
+0</pre>
+                                </div>
+                            </div>
+                            <div class="md:col-span-9 bg-[#0a0a0a] p-5 rounded-xl border border-gray-800 shadow-inner flex flex-col relative overflow-hidden">
+                                <h3 class="text-sm font-bold mb-3 text-green-400 uppercase tracking-wider">Salida Esperada por Pantalla</h3>
+                                <div class="flex-grow bg-black/40 p-4 rounded-lg border border-white/5 overflow-x-auto">
+                                    <pre class="console text-green-400 text-sm whitespace-pre-wrap leading-relaxed">Ingrese una opción: <span class="text-purple-400">&gt; </span><span class="text-yellow-400">1</span>
+Ingrese tiempo de retención en minutos (2.0 - 90.0): <span class="text-purple-400">&gt; </span><span class="text-yellow-400">15.0</span>
+[Éxito] Sesión registrada correctamente en la posición 0.
+
+Ingrese una opción: <span class="text-purple-400">&gt; </span><span class="text-yellow-400">1</span>
+Ingrese tiempo de retención en minutos (2.0 - 90.0): <span class="text-purple-400">&gt; </span><span class="text-yellow-400">50.0</span>
+[Éxito] Sesión registrada correctamente en la posición 1.
+
+Ingrese una opción: <span class="text-purple-400">&gt; </span><span class="text-yellow-400">1</span>
+Ingrese tiempo de retención en minutos (2.0 - 90.0): <span class="text-purple-400">&gt; </span><span class="text-yellow-400">85.0</span>
+[Éxito] Sesión registrada correctamente en la posición 2.
+
+Ingrese una opción: <span class="text-purple-400">&gt; </span><span class="text-yellow-400">4</span>
+Ingrese el tiempo de sesión a descartar: <span class="text-purple-400">&gt; </span><span class="text-yellow-400">50.0</span>
+[Éxito] Sesión eliminada y arreglo compactado correctamente.
+
+Ingrese una opción: <span class="text-purple-400">&gt; </span><span class="text-yellow-400">2</span>
+--- REGISTRO DE RETENCIÓN BLENDER ---
+[0] 15.0 minutos
+[1] 85.0 minutos
+Sesiones con Alta Fidelidad (> 40.0 min): 1 de 2 sesiones.
+
+Ingrese una opción: <span class="text-purple-400">&gt; </span><span class="text-yellow-400">0</span>
+Finalizando sistema de telemetría de Blender.</pre>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Código Base -->
+            <section class="bg-black/20 p-5 md:p-6 rounded-xl border border-white/5 shadow-inner">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-xl font-bold text-emerald-300 theme-font tracking-wide flex items-center gap-2">
+                        Código Base C++
+                    </h2>
+                </div>
+
+                <!-- Aviso Pedagógico Examen Real -->
+                <div class="mb-4 bg-amber-500/10 border border-amber-500/30 rounded-xl p-4 flex items-start gap-3 text-amber-200 shadow-md">
+                    <span class="text-2xl flex-shrink-0">⚠️</span>
+                    <div class="text-sm leading-relaxed">
+                        <strong class="font-bold text-amber-300">Aviso importante para el Examen Parcial:</strong>
+                        Esta plantilla de código base con el menú resuelto y los prototipos de funciones se entrega <em>exclusivamente</em> para esta instancia de <strong>Simulacro</strong>. En el <strong>Examen Parcial NO dispondrás de este código base de ayuda</strong>: deberás programar la solución completa desde cero (inclusión de librerías, constantes, prototipos, función <code>main</code>, menú interactivo y la lógica de cada subproceso).
+                    </div>
+                </div>
+
+                <div class="bg-[#1e1e1e] p-4 rounded-lg border border-white/10 overflow-x-auto block">
+                    <pre class="console text-sm text-[#d4d4d4] whitespace-pre-wrap leading-relaxed">#include &lt;iostream&gt;
+#include &lt;iomanip&gt;
+
+using namespace std;
+
+const int CAPACIDAD = 15;
+
+// Prototipos de funciones
+void MostrarMenu(int &amp;opc);
+void RegistrarRetencion(float arr[], int &amp;tam, int capacidad);
+void ListarRetenciones(const float arr[], int tam, float umbralAltaFidelidad);
+int BuscarRetencion(const float arr[], int tam, float valorBuscado);
+void ModificarRetencion(float arr[], int tam);
+void EliminarSesion(float arr[], int &amp;tam);
+void CalcularEstadisticas(const float arr[], int tam);
+
+int main() {
+    float retenciones[CAPACIDAD];
+    int tam = 0;
+    int opc = -1;
+
+    cout &lt;&lt; fixed &lt;&lt; setprecision(2);
+
+    do {
+        MostrarMenu(opc);
+        
+        switch (opc) {
+            case 1:
+                RegistrarRetencion(retenciones, tam, CAPACIDAD);
+                break;
+            case 2:
+                ListarRetenciones(retenciones, tam, 40.0f);
+                break;
+            case 3:
+                ModificarRetencion(retenciones, tam);
+                break;
+            case 4:
+                EliminarSesion(retenciones, tam);
+                break;
+            case 5:
+                CalcularEstadisticas(retenciones, tam);
+                break;
+            case 0:
+                cout &lt;&lt; "\nFinalizando sistema de telemetría de Blender." &lt;&lt; endl;
+                break;
+            default:
+                cout &lt;&lt; "\n[Error] Opción inválida. Intente nuevamente." &lt;&lt; endl;
+        }
+
+        if (opc != 0) {
+            cout &lt;&lt; "\nPresione una tecla para continuar...";
+            cin.ignore();
+            cin.get();
+        }
+
+    } while (opc != 0);
+
+    return 0;
+}
+
+void MostrarMenu(int &amp;opc) {
+    // [TU CÓDIGO AQUÍ]
+    // Mostrar opciones 1 a 5 y 0 Salir
+}
+
+void RegistrarRetencion(float arr[], int &amp;tam, int capacidad) {
+    // [TU CÓDIGO AQUÍ]
+    // 1. Validar que tam &lt; capacidad.
+    // 2. Solicitar tiempo en minutos y validar rango [2.0, 90.0].
+    // 3. Guardar en arr[tam] e incrementar tam++.
+}
+
+void ListarRetenciones(const float arr[], int tam, float umbralAltaFidelidad) {
+    // [TU CÓDIGO AQUÍ]
+    // 1. Verificar si tam == 0.
+    // 2. Recorrer de 0 a tam - 1 mostrando [i] minutos.
+    // 3. Contar y mostrar sesiones que superaron umbralAltaFidelidad (> 40.0).
+}
+
+int BuscarRetencion(const float arr[], int tam, float valorBuscado) {
+    // [TU CÓDIGO AQUÍ]
+    // Búsqueda secuencial. Retornar índice o -1 si no existe.
+    return -1;
+}
+
+void ModificarRetencion(float arr[], int tam) {
+    // [TU CÓDIGO AQUÍ]
+    // 1. Pedir tiempo a buscar y llamar a BuscarRetencion.
+    // 2. Si existe, pedir nuevo tiempo corregido (validar en [2.0, 90.0]) y actualizar arr[pos].
+}
+
+void EliminarSesion(float arr[], int &amp;tam) {
+    // [TU CÓDIGO AQUÍ] - ALGORITMO CLAVE SHIFT-LEFT
+    // 1. Pedir tiempo de sesión a descartar e invocar BuscarRetencion.
+    // 2. Si existe en pos: desplazar elementos a la izquierda desde pos hasta tam-2 (arr[i] = arr[i+1]).
+    // 3. Decrementar tam-- por referencia.
+}
+
+void CalcularEstadisticas(const float arr[], int tam) {
+    // [TU CÓDIGO AQUÍ]
+    // 1. Calcular tiempo promedio de permanencia.
+    // 2. Determinar el pico MÁXIMO y la posición donde se registró.
+}</pre>
+                </div>
+            </section>
+            
+        </div>
+    </div>
+
+    <script>
+        function switchTab(tabIndex) {
+            document.querySelectorAll('.tab-btn').forEach((btn, idx) => {
+                if (idx === tabIndex) {
+                    btn.classList.add('bg-emerald-400', 'text-slate-950', 'border-emerald-400');
+                    btn.classList.remove('bg-white/5', 'text-white/70', 'border-white/10', 'hover:bg-white/10');
+                } else {
+                    btn.classList.remove('bg-emerald-400', 'text-slate-950', 'border-emerald-400');
+                    btn.classList.add('bg-white/5', 'text-white/70', 'border-white/10', 'hover:bg-white/10');
+                }
+            });
+            document.querySelectorAll('.tab-content').forEach((content, idx) => {
+                if (idx === tabIndex) {
+                    content.classList.add('active');
+                } else {
+                    content.classList.remove('active');
+                }
+            });
+        }
+    </script>
+</body>
+</html>
