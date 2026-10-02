@@ -2,7 +2,16 @@
 
 Bienvenido/a al repositorio base del Taller *"Agentes de IA y Protocolo MCP para evaluación continua y autoevaluación"*. 
 
+📚 **Material Teórico:** [Sitio Web Oficial del Taller](https://sites.google.com/fi.unju.edu.ar/integracion-de-agentes-de-ia/)
+
 Este repositorio es tu **espacio de trabajo personal**. Aquí aplicarás los conceptos aprendidos durante el Día 1 y el Día 2 del taller, construyendo paso a paso la estructura de tu propia cátedra interactiva.
+
+---
+
+## 🛠️ Toolkit Docente Incluido
+Dentro de este repositorio encontrarás la carpeta `/toolkit_docente`. Esta carpeta contiene todas las guías, reglas anti-alucinaciones y plantillas avanzadas que vimos durante el taller. Utiliza este toolkit como referencia rápida en tu entorno de desarrollo para copiar estructuras y *prompts* sin tener que buscarlos externamente.
+
+---
 
 ## 🚀 Tareas del Día 1: Fundamentos y Persistencia (Onboarding)
 Tu objetivo es inicializar este repositorio como el núcleo de tu materia. Para aprobar esta etapa, debes realizar lo siguiente:
