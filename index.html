@@ -13,6 +13,32 @@
             <p>Evalúa tus conocimientos del <a href="https://sites.google.com/fi.unju.edu.ar/integracion-de-agentes-de-ia/" target="_blank">Taller de Agentes de IA en Docencia</a>.</p>
         </header>
 
+        <!-- Progress bar -->
+        <div class="progress-container">
+            <div class="progress-labels">
+                <span>Progreso del Laboratorio</span>
+                <span id="progress-text">0% completado</span>
+            </div>
+            <div class="progress-track">
+                <div class="progress-bar-fill" id="progress-bar"></div>
+            </div>
+        </div>
+
+        <!-- Student data -->
+        <section class="question-card student-card">
+            <h3>Datos del Docente / Participante</h3>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="student_name">Nombre y Apellido</label>
+                    <input type="text" id="student_name" class="modern-input" placeholder="Ej. Juan Pérez">
+                </div>
+                <div class="form-group">
+                    <label for="student_materia">Materia / Cátedra</label>
+                    <input type="text" id="student_materia" class="modern-input" placeholder="Ej. Algoritmos y Programación">
+                </div>
+            </div>
+        </section>
+
         <main id="quiz-container">
             <!-- Preguntas inyectadas por JS -->
         </main>

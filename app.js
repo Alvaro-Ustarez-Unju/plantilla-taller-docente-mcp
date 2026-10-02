@@ -297,11 +297,41 @@ function init() {
         container.appendChild(card);
     });
 
+    // Add student data fields to required keys
+    requiredKeys.push('student_name', 'student_materia');
+
+    // Bind event listeners for student data
+    ['student_name', 'student_materia'].forEach(id => {
+        document.getElementById(id).addEventListener('input', (e) => {
+            const val = e.target.value.trim();
+            if (val) {
+                state[id] = val;
+            } else {
+                delete state[id];
+            }
+            checkCompletion();
+        });
+    });
+
     document.getElementById('btn-export').onclick = exportJSON;
+    checkCompletion(); // Initial check to set progress to 0
 }
 
 function checkCompletion() {
-    const isComplete = requiredKeys.every(k => state[k] !== undefined && state[k] !== "");
+    let completedCount = 0;
+    requiredKeys.forEach(k => {
+        if (state[k] !== undefined && state[k] !== "") {
+            completedCount++;
+        }
+    });
+    
+    const percentage = Math.round((completedCount / requiredKeys.length) * 100);
+    
+    // Update progress UI
+    document.getElementById('progress-bar').style.width = `${percentage}%`;
+    document.getElementById('progress-text').innerText = `${percentage}% completado`;
+
+    const isComplete = completedCount === requiredKeys.length;
     document.getElementById('btn-export').disabled = !isComplete;
 }
 
