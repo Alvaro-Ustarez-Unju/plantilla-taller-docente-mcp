@@ -8,7 +8,8 @@ const questions = [
             "C": "El Agente responde más rápido a las preguntas formuladas por el usuario.",
             "D": "El LLM puede usar el protocolo MCP pero el Agente de IA carece de esa capacidad."
         },
-        ref: "Día 1: Introducción a Agentes vs LLMs"
+        ref: "Transformando la Evaluación Docente con MCP (Los Tres Pilares)",
+        url: "https://sites.google.com/fi.unju.edu.ar/integracion-de-agentes-de-ia/#h.t30h3ffa9hyf"
     },
     {
         id: "q2",
@@ -19,7 +20,8 @@ const questions = [
             "C": "Para definir la identidad, reglas y el contexto permanente de la IA.",
             "D": "Para configurar la conexión a internet del Entorno de Desarrollo (IDE)."
         },
-        ref: "Día 1: Setup y Persistencia"
+        ref: "La Inyección de Contexto como Solución Pedagógica",
+        url: "https://sites.google.com/fi.unju.edu.ar/integracion-de-agentes-de-ia/#h.k2gmjsuosiu5"
     },
     {
         id: "q3",
@@ -30,7 +32,8 @@ const questions = [
             "C": "Que el alumno reciba feedback automatizado en menos de 5 segundos de espera.",
             "D": "Que el examen sea aprobado automáticamente si el código compila sin arrojar errores."
         },
-        ref: "Día 1: Laboratorio Onboarding"
+        ref: "Paso 3: Human-in-the-Loop en Acción",
+        url: "https://sites.google.com/fi.unju.edu.ar/integracion-de-agentes-de-ia/#h.scj2qo5zxtep"
     },
     {
         id: "q4",
@@ -41,7 +44,8 @@ const questions = [
             "C": "Un robusto sistema de cifrado asimétrico para proteger las respuestas de los exámenes en archivos JSON.",
             "D": "Una extensión oficial y exclusiva de Google Chrome que permite leer archivos PDF localmente."
         },
-        ref: "Día 1: Arquitectura MCP"
+        ref: "Transformando la Evaluación Docente con MCP",
+        url: "https://sites.google.com/fi.unju.edu.ar/integracion-de-agentes-de-ia/#h.lp9kenpoij0x"
     }
 ];
 
@@ -72,7 +76,7 @@ function init() {
         
         const refLink = document.createElement('div');
         refLink.className = 'ref-link';
-        refLink.innerHTML = `📖 Referencia: <a href="https://sites.google.com/fi.unju.edu.ar/integracion-de-agentes-de-ia/" target="_blank">${q.ref}</a>`;
+        refLink.innerHTML = `📖 Referencia: <a href="${q.url}" target="_blank">${q.ref}</a>`;
         card.appendChild(refLink);
 
         container.appendChild(card);
