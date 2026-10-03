@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --jefe-bg: #ebf5fb;
+            --jefe-border: #3498db;
+            --obrero-bg: #fdf2e9;
+            --obrero-border: #e67e22;
+            --error: #e74c3c;
+            --success: #27ae60;
+            --mochila-color: #9b59b6;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, Arial, sans-serif;
+            margin: 0;
+            padding: 15px;
+            box-sizing: border-box;
+            background: #ffffff;
+            color: var(--primary);
+        }
+
+        .widget-container {
+            max-width: 700px;
+            margin: 0 auto;
+            border: 2px solid #ecf0f1;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+
+        h3 { margin-top: 0; text-align: center; color: var(--primary); }
+
+        /* Controles y Toggle */
+        .controls-header {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 20px;
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+        }
+
+        .radio-group {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        input[type="radio"] { transform: scale(1.2); cursor: pointer; }
+
+        button {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        button:hover { background: #1a252f; transform: scale(1.02); }
+        button:disabled { background: #95a5a6; cursor: not-allowed; transform: none; }
+
+        /* Layout Principal */
+        .simulation-area {
+            display: flex;
+            gap: 20px;
+        }
+
+        @media (max-width: 650px) {
+            .simulation-area { flex-direction: column; }
+        }
+
+        .code-panel {
+            flex: 1;
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85em;
+            line-height: 1.5;
+            white-space: pre-wrap;
+            overflow-x: auto;
+        }
+
+        .hl-var { color: #9cdcfe; }
+        .hl-kw { color: #569cd6; font-weight: bold; }
+        .hl-err { color: #f48771; }
+        .hl-ok { color: #89d185; }
+
+        .visual-panel {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            position: relative;
+        }
+
+        .box {
+            padding: 15px;
+            border-radius: 8px;
+            border: 2px solid;
+            text-align: center;
+            position: relative;
+        }
+
+        .box-jefe { background: var(--jefe-bg); border-color: var(--jefe-border); }
+        .box-obrero { background: var(--obrero-bg); border-color: var(--obrero-border); }
+        
+        .box-title { font-weight: bold; margin-bottom: 10px; font-size: 0.9em; }
+
+        /* Elementos de animación */
+        .variable-slot {
+            display: inline-block;
+            background: white;
+            border: 2px dashed #bdc3c7;
+            padding: 5px 15px;
+            border-radius: 6px;
+            font-weight: bold;
+            min-width: 30px;
+            min-height: 20px;
+        }
+
+        .bolsillo { border-color: #95a5a6; color: #7f8c8d; }
+        
+        .mochila-container {
+            height: 60px;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10;
+        }
+
+        .mochila {
+            background: var(--mochila-color);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 8px;
+            font-weight: bold;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            position: absolute;
+            bottom: -15px; /* Empieza en el obrero */
+            transition: all 1s ease-in-out;
+        }
+
+        .status-msg {
+            text-align: center;
+            font-weight: bold;
+            min-height: 20px;
+            margin-top: 10px;
+            font-size: 0.9em;
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="widget-container">
+    <h3>🎒 El Síndrome de la Mochila Vacía</h3>
+    
+    <div class="controls-header">
+        <label class="radio-group" style="color: var(--error);">
+            <input type="radio" name="modo" id="radioErr" value="error" checked onchange="cambiarModo()"> 
+            ❌ Código Erróneo
+        </label>
+        <label class="radio-group" style="color: var(--success);">
+            <input type="radio" name="modo" id="radioOk" value="correcto" onchange="cambiarModo()"> 
+            ✅ Código Corregido
+        </label>
+        <button id="btnEjecutar" onclick="ejecutarAnimacion()">▶ Ejecutar</button>
+    </div>
+
+    <div class="simulation-area">
+        <div class="code-panel" id="codeDisplay"></div>
+
+        <div class="visual-panel">
+            
+            <div class="box box-jefe">
+                <div class="box-title" style="color: var(--jefe-border);">🏢 Algoritmo Principal</div>
+                <div>miVariable = Multiplicar(5, 4)</div>
+                <div style="margin-top: 10px;">
+                    El Jefe recibe: <span class="variable-slot" id="jefeRecibe">?</span>
+                </div>
+            </div>
+
+            <div class="mochila-container">
+                <div class="mochila" id="mochilaAnimada">
+                    🎒 resultado = <span id="valMochila">?</span>
+                </div>
+            </div>
+
+            <div class="box box-obrero">
+                <div class="box-title" style="color: var(--obrero-border);">👷 Función (Obrero)</div>
+                <div style="margin-bottom: 5px; font-size: 0.85em; color: #555;">Cálculo Interno: 5 * 4 = 20</div>
+                
+                <div id="zonaBolsillo" style="margin-bottom: 5px;">
+                    <span style="font-size: 0.8em; color: #7f8c8d;">Bolsillo (calculoTemporal):</span> 
+                    <span class="variable-slot bolsillo" id="valBolsillo">vacío</span>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    
+    <div class="status-msg" id="statusMensaje">Selecciona un modo y presiona Ejecutar.</div>
+</div>
+
+<script>
+    const codeError = `<span class="hl-kw">Funcion</span> <span class="hl-var">resultado</span> = Multiplicar(num1, num2)
+    <span class="hl-kw">Definir</span> <span class="hl-var">resultado</span>, <span class="hl-var">calculoTemporal</span> <span class="hl-kw">Como Entero</span>
+    
+    <span style="color:#6a9955;">// ❌ El obrero guarda el 20 en su bolsillo...</span>
+    <span class="hl-err">calculoTemporal</span> = num1 * num2  
+    
+    <span style="color:#6a9955;">// ¡La mochila 'resultado' quedó vacía!</span>
+<span class="hl-kw">FinFuncion</span>`;
+
+    const codeSuccess = `<span class="hl-kw">Funcion</span> <span class="hl-var">resultado</span> = Multiplicar(num1, num2)
+    <span class="hl-kw">Definir</span> <span class="hl-var">resultado</span> <span class="hl-kw">Como Entero</span>
+    
+    <span style="color:#6a9955;">// ✅ El obrero guarda el 20 directo en la mochila</span>
+    <span class="hl-ok">resultado</span> = num1 * num2  
+    
+<span class="hl-kw">FinFuncion</span>`;
+
+    let modoActual = 'error';
+
+    function cambiarModo() {
+        modoActual = document.getElementById('radioErr').checked ? 'error' : 'correcto';
+        document.getElementById('codeDisplay').innerHTML = modoActual === 'error' ? codeError : codeSuccess;
+        
+        // Ajustes visuales condicionales
+        const zonaBolsillo = document.getElementById('zonaBolsillo');
+        zonaBolsillo.style.opacity = modoActual === 'error' ? '1' : '0.3';
+        
+        resetVisial();
+    }
+
+    function resetVisial() {
+        const mochila = document.getElementById('mochilaAnimada');
+        mochila.style.transition = "none";
+        mochila.style.bottom = "-15px"; // Vuelve abajo
+        mochila.style.backgroundColor = "var(--mochila-color)";
+        
+        document.getElementById('valMochila').textContent = "?";
+        document.getElementById('valBolsillo').textContent = "vacío";
+        document.getElementById('valBolsillo').style.borderColor = "#bdc3c7";
+        
+        const jefeRecibe = document.getElementById('jefeRecibe');
+        jefeRecibe.textContent = "?";
+        jefeRecibe.style.borderColor = "#bdc3c7";
+        jefeRecibe.style.color = "inherit";
+
+        document.getElementById('statusMensaje').textContent = "Listo para ejecutar.";
+        document.getElementById('statusMensaje').style.color = "var(--primary)";
+    }
+
+    async function ejecutarAnimacion() {
+        const btn = document.getElementById('btnEjecutar');
+        const mochila = document.getElementById('mochilaAnimada');
+        const valMochila = document.getElementById('valMochila');
+        const valBolsillo = document.getElementById('valBolsillo');
+        const jefeRecibe = document.getElementById('jefeRecibe');
+        const status = document.getElementById('statusMensaje');
+
+        btn.disabled = true;
+        resetVisial();
+
+        status.textContent = "⚙️ El Obrero está multiplicando 5 * 4...";
+        await delay(1000);
+
+        if (modoActual === 'error') {
+            // Guardar en bolsillo
+            valBolsillo.textContent = "20";
+            valBolsillo.style.borderColor = "var(--error)";
+            valBolsillo.style.color = "var(--error)";
+            status.textContent = "❌ Guardó el resultado en 'calculoTemporal' (Bolsillo).";
+            await delay(1500);
+            status.textContent = "⬆️ La mochila viaja de regreso (vacía)...";
+        } else {
+            // Guardar en mochila
+            valMochila.textContent = "20";
+            mochila.style.transform = "scale(1.1)";
+            setTimeout(() => mochila.style.transform = "scale(1)", 300);
+            status.textContent = "✅ Guardó el resultado en 'resultado' (Mochila).";
+            await delay(1500);
+            status.textContent = "⬆️ La mochila viaja de regreso al Jefe...";
+        }
+
+        // Animar Mochila hacia arriba
+        mochila.offsetHeight; // Reflow
+        mochila.style.transition = "all 1s ease-in-out";
+        mochila.style.bottom = "110px"; // Sube al panel del jefe
+        
+        await delay(1200);
+
+        // Jefe recibe
+        if (modoActual === 'error') {
+            jefeRecibe.textContent = "NULO / 0";
+            jefeRecibe.style.borderColor = "var(--error)";
+            jefeRecibe.style.color = "var(--error)";
+            mochila.style.backgroundColor = "var(--error)";
+            status.textContent = "💥 ¡ERROR DEL SISTEMA! El Jefe recibió una variable vacía.";
+            status.style.color = "var(--error)";
+        } else {
+            jefeRecibe.textContent = "20";
+            jefeRecibe.style.borderColor = "var(--success)";
+            jefeRecibe.style.color = "var(--success)";
+            mochila.style.backgroundColor = "var(--success)";
+            status.textContent = "🎉 ¡ÉXITO! El programa continúa funcionando perfectamente.";
+            status.style.color = "var(--success)";
+        }
+
+        setTimeout(() => { btn.disabled = false; }, 1000);
+    }
+
+    function delay(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+    // Inicializar código
+    window.onload = cambiarModo;
+</script>
+
+</body>
+</html>

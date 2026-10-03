@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --jefe-bg: #ebf5fb;
+            --jefe-border: #3498db;
+            --obrero-bg: #fdf2e9;
+            --obrero-border: #e67e22;
+            --error: #e74c3c;
+            --success: #27ae60;
+            --wall-color: #7f8c8d;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, Arial, sans-serif;
+            margin: 0;
+            padding: 15px;
+            box-sizing: border-box;
+            background: #ffffff;
+            color: var(--primary);
+        }
+
+        .widget-container {
+            max-width: 750px;
+            margin: 0 auto;
+            border: 2px solid #ecf0f1;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+
+        h3 { margin-top: 0; text-align: center; color: var(--primary); }
+
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 20px;
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+        }
+
+        .radio-group {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        button {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        button:hover { background: #1a252f; transform: scale(1.02); }
+        button:disabled { background: #95a5a6; cursor: not-allowed; }
+
+        .scenario-container {
+            display: flex;
+            align-items: stretch;
+            gap: 10px;
+            position: relative;
+        }
+
+        @media (max-width: 600px) {
+            .scenario-container { flex-direction: column; }
+            .brick-wall { height: 40px !important; width: 100% !important; background-size: 40px 20px !important; }
+            .carril-param { flex-direction: column !important; }
+        }
+
+        .panel {
+            flex: 1;
+            padding: 15px;
+            border-radius: 8px;
+            border: 2px solid;
+            background: white;
+            position: relative;
+        }
+
+        .panel-jefe { border-color: var(--jefe-border); background: var(--jefe-bg); }
+        .panel-obrero { border-color: var(--obrero-border); background: var(--obrero-bg); }
+
+        .panel-titulo { font-weight: bold; margin-bottom: 10px; font-size: 0.9em; }
+
+        /* El Muro de Aislamiento */
+        .brick-wall {
+            width: 40px;
+            background-color: var(--wall-color);
+            background-image: 
+                linear-gradient(335deg, rgba(255,255,255,0.1) 10px, transparent 10px),
+                linear-gradient(155deg, rgba(255,255,255,0.1) 10px, transparent 10px),
+                linear-gradient(335deg, rgba(255,255,255,0.1) 10px, transparent 10px),
+                linear-gradient(155deg, rgba(255,255,255,0.1) 10px, transparent 10px);
+            background-size: 20px 20px;
+            border-radius: 4px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            z-index: 5;
+        }
+
+        .wall-label {
+            writing-mode: vertical-rl;
+            text-orientation: mixed;
+            color: white;
+            font-weight: bold;
+            font-size: 0.8em;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        /* Código */
+        .codigo {
+            font-family: 'Courier New', monospace;
+            font-size: 0.8em;
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 10px;
+            border-radius: 6px;
+            white-space: pre-wrap;
+            line-height: 1.5;
+            min-height: 120px;
+        }
+
+        .hl-err { background: rgba(231, 76, 60, 0.4); padding: 2px; border-radius: 3px; color: #ffcccc;}
+        .hl-ok { color: #89d185; font-weight: bold; }
+
+        /* Variables y Paquetes */
+        .var-badge {
+            display: inline-block;
+            background: #34495e;
+            color: white;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.85em;
+            font-family: 'Courier New', monospace;
+            margin-bottom: 5px;
+            border: 1px solid #7f8c8d;
+        }
+
+        .carril-param {
+            position: absolute;
+            top: 40%;
+            left: 0;
+            width: 100%;
+            height: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        .paquete {
+            background: var(--jefe-border);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 0.85em;
+            position: absolute;
+            opacity: 0;
+            transition: all 1s ease;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+            left: 20%;
+        }
+
+        .status-bar {
+            margin-top: 15px;
+            padding: 12px;
+            border-radius: 6px;
+            text-align: center;
+            font-weight: bold;
+            background: #eee;
+            min-height: 24px;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        .search-radar {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            border: 3px solid var(--error);
+            border-radius: 50%;
+            top: 50%;
+            left: 20%;
+            transform: translate(-50%, -50%) scale(0);
+            opacity: 0;
+            z-index: 20;
+        }
+
+        @keyframes radarPing {
+            0% { transform: translate(-50%, -50%) scale(0); opacity: 1; }
+            100% { transform: translate(-50%, -50%) scale(2); opacity: 0; }
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="widget-container">
+    <h3>🧱 La Amnesia del Obrero (Variables Locales)</h3>
+    
+    <div class="controls">
+        <label class="radio-group" style="color: var(--error);">
+            <input type="radio" name="modo" id="radioErr" value="error" checked onchange="cambiarEscenario()"> 
+            ❌ Error: Amnesia
+        </label>
+        <label class="radio-group" style="color: var(--success);">
+            <input type="radio" name="modo" id="radioOk" value="correcto" onchange="cambiarEscenario()"> 
+            ✅ Correcto: Parámetro
+        </label>
+        <button id="btnEjecutar" onclick="ejecutarSimulacion()">▶ Ejecutar Algoritmo</button>
+    </div>
+
+    <div class="scenario-container">
+        
+        <div class="panel panel-jefe">
+            <div class="panel-titulo" style="color: var(--jefe-border);">🏢 Algoritmo Principal</div>
+            <div style="margin-bottom: 10px;">
+                Memoria del Jefe:<br>
+                <span class="var-badge">precioBase = 1000</span><br>
+                <span class="var-badge">iva = 1.21</span>
+            </div>
+            <div class="codigo" id="codigoJefe">
+// Llamada a la función
+precioFinal = CalcularConIva(1000)
+            </div>
+        </div>
+
+        <div class="brick-wall">
+            <span class="wall-label">SCOPE</span>
+        </div>
+
+        <div class="carril-param">
+            <div class="paquete" id="paqueteDato">📦 1000</div>
+            <div class="paquete" id="paqueteIva" style="margin-top: 40px; background: #9b59b6;">📦 1.21</div>
+        </div>
+
+        <div class="panel panel-obrero">
+            <div class="panel-titulo" style="color: var(--obrero-border);">👷 Función</div>
+            <div style="margin-bottom: 10px;">
+                Memoria del Obrero:<br>
+                <span class="var-badge" id="memPrecio">precioBase = ?</span><br>
+                <span class="var-badge" id="memIva" style="border-style: dashed; color: #ccc;">iva = ?</span>
+            </div>
+            
+            <div class="search-radar" id="radarIva"></div>
+
+            <div class="codigo" id="codigoObrero">
+Funcion final = CalcularConIva(precioBase)
+  // El obrero intenta usar "iva"
+  <span class="hl-err">final = precioBase * iva</span>
+FinFuncion
+            </div>
+        </div>
+
+    </div>
+    
+    <div class="status-bar" id="statusBar">Selecciona un escenario y presiona Ejecutar.</div>
+</div>
+
+<script>
+    let modo = 'error';
+
+    function cambiarEscenario() {
+        modo = document.getElementById('radioErr').checked ? 'error' : 'correcto';
+        
+        const codeJefe = document.getElementById('codigoJefe');
+        const codeObrero = document.getElementById('codigoObrero');
+        
+        if(modo === 'error') {
+            codeJefe.innerHTML = `// Llamada a la función\nprecioFinal = CalcularConIva(1000)`;
+            codeObrero.innerHTML = `Funcion final = CalcularConIva(precioBase)\n  // El obrero intenta adivinar "iva"\n  <span class="hl-err">final = precioBase * iva</span>\nFinFuncion`;
+        } else {
+            codeJefe.innerHTML = `// Jefe envía ambos datos\nprecioFinal = CalcularConIva(1000, <span class="hl-ok">iva</span>)`;
+            codeObrero.innerHTML = `Funcion final = CalcularConIva(precioBase, <span class="hl-ok">iva</span>)\n  // El obrero recibió "iva"\n  final = precioBase * iva\nFinFuncion`;
+        }
+        
+        resetVisual();
+    }
+
+    function resetVisual() {
+        document.getElementById('paqueteDato').style.transition = "none";
+        document.getElementById('paqueteDato').style.opacity = "0";
+        document.getElementById('paqueteDato').style.left = "20%";
+        
+        document.getElementById('paqueteIva').style.transition = "none";
+        document.getElementById('paqueteIva').style.opacity = "0";
+        document.getElementById('paqueteIva').style.left = "20%";
+
+        document.getElementById('memPrecio').textContent = "precioBase = ?";
+        document.getElementById('memIva').textContent = "iva = ?";
+        document.getElementById('memIva').style.color = "#ccc";
+        document.getElementById('memIva').style.borderStyle = "dashed";
+        
+        const status = document.getElementById('statusBar');
+        status.textContent = "Listo para ejecutar.";
+        status.style.background = "#eee";
+        status.style.color = "#333";
+    }
+
+    async function ejecutarSimulacion() {
+        const btn = document.getElementById('btnEjecutar');
+        const status = document.getElementById('statusBar');
+        const paqBase = document.getElementById('paqueteDato');
+        const paqIva = document.getElementById('paqueteIva');
+        const memPrecio = document.getElementById('memPrecio');
+        const memIva = document.getElementById('memIva');
+        const radar = document.getElementById('radarIva');
+
+        btn.disabled = true;
+        resetVisual();
+
+        status.textContent = "🏢 El Jefe llama a la función y envía los parámetros...";
+        
+        // El precio base siempre viaja
+        paqBase.style.transition = "all 1s ease-in-out";
+        paqBase.style.opacity = "1";
+        
+        if(modo === 'correcto') {
+            paqIva.style.transition = "all 1s ease-in-out";
+            paqIva.style.opacity = "1";
+        }
+
+        await delay(100);
+        paqBase.style.left = "75%";
+        if(modo === 'correcto') paqIva.style.left = "75%";
+
+        await delay(1000); // Viaje
+        
+        paqBase.style.opacity = "0";
+        memPrecio.textContent = "precioBase = 1000";
+        
+        if(modo === 'correcto') {
+            paqIva.style.opacity = "0";
+            memIva.textContent = "iva = 1.21";
+            memIva.style.color = "white";
+            memIva.style.borderStyle = "solid";
+            
+            status.textContent = "✅ El Obrero recibió 'iva' y 'precioBase'. Calcula 1210.0 con éxito.";
+            status.style.background = "var(--success)";
+            status.style.color = "white";
+        } else {
+            status.textContent = "👷 El Obrero intenta buscar 'iva'...";
+            
+            // Animación de radar buscando la variable
+            radar.style.animation = "radarPing 1s ease-out 3";
+            await delay(1500);
+            radar.style.animation = "none";
+
+            // Choque visual con el muro
+            memIva.textContent = "iva = NO DEFINIDO";
+            memIva.style.color = "var(--error)";
+            memIva.style.borderColor = "var(--error)";
+            
+            status.innerHTML = "💥 ERROR: <code>Variable 'iva' no definida</code>. El muro impide ver al Jefe.";
+            status.style.background = "var(--error)";
+            status.style.color = "white";
+        }
+
+        setTimeout(() => { btn.disabled = false; }, 1000);
+    }
+
+    function delay(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+    window.onload = cambiarEscenario;
+</script>
+
+</body>
+</html>

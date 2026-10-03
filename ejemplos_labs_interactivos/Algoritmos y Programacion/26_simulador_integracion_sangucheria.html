@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --secondary: #34495e;
+            --accent: #3498db;
+            --success: #27ae60;
+            --bg-light: #f8f9fa;
+            --ticket-bg: #fffceb;
+            --jefe-bg: #ebf5fb;
+            --obrero-bg: #fdf2e9;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, Arial, sans-serif;
+            margin: 0;
+            padding: 15px;
+            box-sizing: border-box;
+            background: #ffffff;
+            color: var(--primary);
+        }
+
+        .widget-container {
+            max-width: 650px;
+            margin: 0 auto;
+            border: 2px solid #ecf0f1;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            background: var(--bg-light);
+        }
+
+        h3 { margin-top: 0; color: var(--primary); text-align: center; }
+
+        .dashboard {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        @media (max-width: 600px) {
+            .dashboard { grid-template-columns: 1fr; }
+        }
+
+        .panel {
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 5px solid;
+            background: white;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .panel-jefe { border-color: #3498db; }
+        .panel-obrero { border-color: #e67e22; }
+
+        .panel-titulo {
+            font-weight: bold;
+            margin-bottom: 15px;
+            font-size: 0.9em;
+            color: var(--secondary);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .input-group {
+            margin-bottom: 10px;
+        }
+
+        .input-group label {
+            display: block;
+            font-size: 0.85em;
+            margin-bottom: 3px;
+            color: #555;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-family: 'Courier New', monospace;
+        }
+
+        button {
+            width: 100%;
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1em;
+            transition: background 0.3s;
+            margin-bottom: 20px;
+        }
+
+        button:hover { background: #2980b9; }
+        button:disabled { background: #95a5a6; cursor: not-allowed; }
+
+        .codigo-preview {
+            font-family: 'Courier New', monospace;
+            font-size: 0.8em;
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+
+        .highlight { color: #f1c40f; font-weight: bold; }
+        .param { color: #e74c3c; }
+
+        .ticket-impresora {
+            background: #dcdde1;
+            padding: 10px;
+            border-radius: 8px 8px 0 0;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            min-height: 200px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .ticket {
+            background: var(--ticket-bg);
+            width: 80%;
+            padding: 15px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            color: #000;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            border-bottom: 2px dashed #ccc;
+            position: absolute;
+            top: -250px; /* Oculto arriba al inicio */
+            transition: top 1s ease-in-out;
+            text-align: left;
+            white-space: pre-wrap;
+        }
+
+        .status-bar {
+            text-align: center;
+            font-weight: bold;
+            color: var(--success);
+            height: 20px;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="widget-container">
+    <h3>Simulador de Integración: Sanguchería</h3>
+    
+    <div class="dashboard">
+        <div class="panel panel-jefe">
+            <div class="panel-titulo">🏢 Algoritmo Principal (Datos)</div>
+            <div class="input-group">
+                <label>Cantidad de amigos:</label>
+                <input type="number" id="inAmigos" value="4" min="1">
+            </div>
+            <div class="input-group">
+                <label>Monto total comida ($):</label>
+                <input type="number" id="inComida" value="10000" min="0">
+            </div>
+            <div class="input-group">
+                <label>Monto total bebida ($):</label>
+                <input type="number" id="inBebida" value="2000" min="0">
+            </div>
+        </div>
+
+        <div class="panel panel-obrero">
+            <div class="panel-titulo">👷 Tu Módulo: MostrarTicket</div>
+            <div class="codigo-preview">
+SubProceso MostrarTicket(<span class="param" id="valParam1">total</span>, <span class="param" id="valParam2">cada_uno</span>)
+  Escribir "***************************"
+  Escribir "   TICKET DE PAGO"
+  Escribir "***************************"
+  Escribir "Gasto Total: $", total
+  Escribir "Cada amigo: $", cada_uno
+  Escribir "***************************"
+FinSubProceso
+            </div>
+            <div class="codigo-preview" style="background:#34495e;">
+<span style="color:#7f8c8d;">// El Jefe llama así:</span><br>
+MostrarTicket(<span class="highlight" id="valArg1">gasto_total</span>, <span class="highlight" id="valArg2">pago_individual</span>)
+            </div>
+        </div>
+    </div>
+
+    <div class="status-bar" id="statusBar">Esperando para ejecutar...</div>
+    
+    <button id="btnEjecutar" onclick="ejecutarSistema()">Ejecutar y Generar Ticket</button>
+
+    <div class="ticket-impresora">
+        <div class="ticket" id="ticketVisual"></div>
+    </div>
+</div>
+
+<script>
+    async function ejecutarSistema() {
+        const btn = document.getElementById('btnEjecutar');
+        const statusBar = document.getElementById('statusBar');
+        const ticket = document.getElementById('ticketVisual');
+        
+        // Obtener valores
+        const amigos = parseInt(document.getElementById('inAmigos').value) || 1;
+        const comida = parseFloat(document.getElementById('inComida').value) || 0;
+        const bebida = parseFloat(document.getElementById('inBebida').value) || 0;
+
+        // Limpiar estado anterior
+        btn.disabled = true;
+        ticket.style.top = "-250px";
+        ticket.innerHTML = "";
+        
+        statusBar.textContent = "⚙️ Procesando cálculos en Algoritmo Principal...";
+        statusBar.style.color = "#e67e22";
+        
+        // Simular tiempo de proceso
+        await delay(1000);
+        
+        // Proceso (El trabajo del Jefe)
+        const gastoTotal = comida + bebida;
+        const pagoIndividual = gastoTotal / amigos;
+
+        // Actualizar visual de argumentos
+        document.getElementById('valArg1').textContent = gastoTotal;
+        document.getElementById('valArg2').textContent = pagoIndividual;
+
+        statusBar.textContent = `🚀 Enviando argumentos: (${gastoTotal}, ${pagoIndividual})...`;
+        statusBar.style.color = "#3498db";
+        
+        await delay(1200);
+
+        // Actualizar visual de parámetros (El trabajo del Obrero)
+        document.getElementById('valParam1').textContent = gastoTotal;
+        document.getElementById('valParam2').textContent = pagoIndividual;
+
+        statusBar.textContent = "🖨️ Módulo MostrarTicket ejecutándose...";
+        statusBar.style.color = "#27ae60";
+
+        // Preparar contenido del ticket
+        const textoTicket = `***************************\n   TICKET DE PAGO\n***************************\nGasto Total: $${gastoTotal}\nCada amigo debe poner: $${pagoIndividual}\n***************************`;
+        ticket.textContent = textoTicket;
+
+        // Animar salida del ticket
+        ticket.style.top = "15px";
+
+        await delay(1500);
+        statusBar.textContent = "✅ Ejecución completada con éxito.";
+        btn.disabled = false;
+        
+        // Restaurar código a su estado original después de un tiempo
+        setTimeout(() => {
+            document.getElementById('valArg1').textContent = "gasto_total";
+            document.getElementById('valArg2').textContent = "pago_individual";
+            document.getElementById('valParam1').textContent = "total";
+            document.getElementById('valParam2').textContent = "cada_uno";
+        }, 4000);
+    }
+
+    function delay(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    }
+</script>
+
+</body>
+</html>

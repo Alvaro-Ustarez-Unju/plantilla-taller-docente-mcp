@@ -14,11 +14,12 @@ Dentro de este repositorio encontrarás la carpeta `/toolkit_docente`. Esta carp
 ---
 
 ## 🧪 Ejemplos de Laboratorios Interactivos
-En la carpeta `/ejemplos_labs_interactivos` encontrarás un catálogo de 19 ejemplos prácticos de laboratorios web listos para usar, especialmente diseñados para la cátedra *Algoritmos y Programación*. Estos ejemplos demuestran cómo crear interfaces visuales e interactivas (widgets) en HTML/JS para evaluar de forma didáctica:
+En la carpeta `/ejemplos_labs_interactivos` encontrarás un catálogo de 35 ejemplos prácticos de laboratorios web listos para usar, especialmente diseñados para la cátedra *Algoritmos y Programación*. Estos ejemplos demuestran cómo crear interfaces visuales e interactivas (widgets) en HTML/JS para evaluar de forma didáctica:
 - Expresiones algebraicas y linealización.
 - Operadores Relacionales (>, <, ==).
 - Operadores Lógicos (AND, OR, NOT) y Tablas de Verdad.
 - Uso matemático y de extracción del operador Módulo (%).
+- Subprocesos y Funciones (parámetros por valor/referencia, variables locales, retornos).
 
 Además, dentro de esta misma sección, encontrarás la subcarpeta `/examenes_y_simulacros`, la cual incluye paquetes completos de simulacros y exámenes reales programados en C++ (con sus respectivas resoluciones completas). ¡Puedes usarlos como base o inspiración para construir tu propio banco de evaluaciones!
 

@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>⛽ Recuperatorio M2 - Tema 3 (YPF - Refinería de Combustible)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Fira+Code&display=swap"
+        rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        .console {
+            font-family: 'Fira Code', monospace;
+        }
+
+        .theme-font {
+            font-family: 'Inter', sans-serif;
+        }
+
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        .tab-content {
+            transition: all 0.3s ease-in-out;
+            opacity: 0;
+            display: none;
+        }
+
+        .tab-content.active {
+            opacity: 1;
+            display: block;
+            animation: fadeIn 0.4s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(5px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+
+<body class="min-h-screen p-4 md:p-8 flex items-center justify-center bg-sky-950">
+
+    <div
+        class="max-w-4xl w-full bg-blue-900/90 backdrop-blur-md text-blue-50 rounded-2xl shadow-2xl overflow-hidden border border-cyan-400/20">
+
+        <div class="p-6 md:p-8 border-b border-white/10 flex justify-between items-center flex-wrap gap-4">
+            <div>
+                <h1
+                    class="text-3xl md:text-4xl font-extrabold tracking-tight mb-2 text-cyan-300 drop-shadow-md theme-font flex items-center gap-3">
+                    <img src="../../assets/ypf_oil.jpg" alt="YPF Oil"
+                        class="w-10 h-10 md:w-12 md:h-12 object-contain drop-shadow-lg rounded-lg"> Tema 3: Refinería de
+                    Combustible
+                </h1>
+                <div
+                    class="inline-block px-3 py-1 bg-white/10 rounded-full text-sm font-semibold tracking-wide text-white">
+                    YPF - Control de Bombeo y Despacho
+                </div>
+            </div>
+            <div class="h-16 flex items-center justify-center">
+                <div
+                    class="bg-white/10 rounded-xl px-4 py-2 text-2xl font-extrabold text-cyan-300 tracking-widest border border-cyan-400/30">
+                    YPF</div>
+            </div>
+        </div>
+
+        <div class="p-6 md:p-8 space-y-8">
+
+            <section>
+                <h2
+                    class="text-2xl font-bold mb-3 border-b-2 border-white/20 inline-block text-cyan-300 theme-font tracking-wide">
+                    Contexto</h2>
+                <div class="leading-relaxed opacity-90 text-lg">
+                    <p class='mb-2'>YPF necesita un sistema para supervisar sus tanques de almacenamiento en la
+                        planta de refinación. El sistema debe registrar la capacidad operativa, detectar mermas e
+                        impurezas acumuladas durante el bombeo y determinar en qué tanque se obtuvo el
+                        <strong>mayor caudal de despacho</strong> para optimizar la operación logística.</p>
+                </div>
+            </section>
+
+            <section class="bg-black/10 p-5 rounded-xl border border-white/5 shadow-inner">
+                <h2 class="text-2xl font-bold mb-3 text-cyan-300 flex items-center gap-2 theme-font tracking-wide">
+                    Tu Misión
+                </h2>
+                <div class="leading-relaxed opacity-95 text-md space-y-2">
+                    <p>Completar el programa en <strong>PSeInt</strong> o en <strong>C++</strong> (quienes lo deseen
+                        pueden resolverlo en este último lenguaje). Se te entrega un código base con el menú resuelto.
+                        Debes desarrollar:</p>
+                    <ul class="list-disc pl-5 space-y-1">
+                        <li>El bloque <strong>Segun</strong> en el algoritmo principal para invocar módulos. <span
+                                class="relative group inline-block ml-2 align-middle"><span
+                                    class="cursor-pointer bg-cyan-500/20 text-cyan-300 text-xs font-bold px-2 py-1 rounded border border-cyan-500/30">5%</span>
+                                <div
+                                    class="absolute opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-10 bottom-full left-1/2 -translate-x-1/2 mb-2 w-64 bg-gray-900 text-white text-sm rounded-lg shadow-xl border border-gray-700 p-3 pointer-events-none">
+                                    <div class="font-bold text-cyan-400 mb-1">Estructura Principal y Menú</div>
+                                    <p class="text-xs text-gray-300">Implementa correctamente la estructura condicional
+                                        múltiple, invocando los subprocesos correspondientes a cada opción.</p>
+                                    <div
+                                        class="absolute -bottom-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-gray-900 border-b border-r border-gray-700 transform rotate-45">
+                                    </div>
+                                </div>
+                            </span></li>
+                        <li><strong>Módulo de Entrada:</strong> Solicitar la cantidad de <em>tanques operativos</em> y
+                            validar que el valor esté entre 1 y 15. Además, solicitar la <em>capacidad por tanque</em>
+                            en m³ y validar que esté entre 200 y 5000. <span
+                                class="relative group inline-block ml-2 align-middle"><span
+                                    class="cursor-pointer bg-cyan-500/20 text-cyan-300 text-xs font-bold px-2 py-1 rounded border border-cyan-500/30">15%</span>
+                                <div
+                                    class="absolute opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-10 bottom-full left-1/2 -translate-x-1/2 mb-2 w-64 bg-gray-900 text-white text-sm rounded-lg shadow-xl border border-gray-700 p-3 pointer-events-none">
+                                    <div class="font-bold text-cyan-400 mb-1">Módulo de Entrada y Doble Validación</div>
+                                    <p class="text-xs text-gray-300">Utiliza estructuras repetitivas adecuadas para
+                                        validar que ambos datos estén estrictamente dentro de sus rangos solicitados.
+                                    </p>
+                                    <div
+                                        class="absolute -bottom-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-gray-900 border-b border-r border-gray-700 transform rotate-45">
+                                    </div>
+                                </div>
+                            </span></li>
+                        <li><strong>Módulo de Proceso 1:</strong> Recibir los tanques y la capacidad. Pedir el ingreso
+                            de <em>mermas e impurezas</em> detectadas en m³ (el ingreso corta al ingresar un
+                            <strong>-1</strong>). Acumular las mermas, calcular el <strong>porcentaje de merma</strong>
+                            sobre el volumen total esperado (donde total esperado = tanques × capacidad por tanque), y
+                            <strong>clasificar el estado de bombeo</strong>: si el porcentaje es menor a 1.5% mostrar
+                            "OPTIMO", si es menor a 4% mostrar "ACEPTABLE", de lo contrario mostrar "CRITICO". <span
+                                class="relative group inline-block ml-2 align-middle"><span
+                                    class="cursor-pointer bg-cyan-500/20 text-cyan-300 text-xs font-bold px-2 py-1 rounded border border-cyan-500/30">25%</span>
+                                <div
+                                    class="absolute opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-10 bottom-full left-1/2 -translate-x-1/2 mb-2 w-64 bg-gray-900 text-white text-sm rounded-lg shadow-xl border border-gray-700 p-3 pointer-events-none">
+                                    <div class="font-bold text-cyan-400 mb-1">Módulo de Proceso 1</div>
+                                    <p class="text-xs text-gray-300">Corta correctamente, acumula, calcula porcentaje y
+                                        clasifica usando condicionales anidados.</p>
+                                    <div
+                                        class="absolute -bottom-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-gray-900 border-b border-r border-gray-700 transform rotate-45">
+                                    </div>
+                                </div>
+                            </span></li>
+                        <li><strong>Módulo de Proceso 2:</strong> Recibir la cantidad de tanques. Para cada tanque
+                            ingresar el <em>volumen despachado</em> (m³) y las <em>horas de bombeo</em>. Calcular el
+                            <strong>caudal</strong> de cada tanque como: (volumen / horas). Encontrar y mostrar el
+                            <strong>caudal MÁXIMO</strong> y en qué <strong>número de tanque</strong> se registró.
+                            Además, calcular la <strong>liquidación fiscal</strong> del mejor tanque: (volumen del mejor
+                            tanque × $850.000 × 10%). <span
+                                class="relative group inline-block ml-2 align-middle"><span
+                                    class="cursor-pointer bg-cyan-500/20 text-cyan-300 text-xs font-bold px-2 py-1 rounded border border-cyan-500/30">30%</span>
+                                <div
+                                    class="absolute opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-10 bottom-full left-1/2 -translate-x-1/2 mb-2 w-64 bg-gray-900 text-white text-sm rounded-lg shadow-xl border border-gray-700 p-3 pointer-events-none">
+                                    <div class="font-bold text-cyan-400 mb-1">Módulo de Proceso 2</div>
+                                    <p class="text-xs text-gray-300">Calcula un caudal derivado de dos datos de entrada
+                                        por iteración y encuentra el máximo junto a su posición.</p>
+                                    <div
+                                        class="absolute -bottom-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-gray-900 border-b border-r border-gray-700 transform rotate-45">
+                                    </div>
+                                </div>
+                            </span></li>
+                    </ul>
+                </div>
+            </section>
+
+            <section class="bg-black/20 p-5 md:p-6 rounded-xl border border-white/5 shadow-inner">
+                <h2 class="text-xl font-bold mb-4 text-cyan-300 theme-font tracking-wide flex items-center gap-2">
+                    Casos de Prueba (Ejecuciones Esperadas)
+                </h2>
+
+                <div class="flex overflow-x-auto no-scrollbar gap-2 mb-6 pb-2 border-b border-white/10"
+                    id="tabs-container">
+                    <button onclick="switchTab(0)"
+                        class="tab-btn px-4 py-2 rounded-lg font-semibold text-sm transition-all border whitespace-nowrap bg-cyan-300 text-black border-cyan-300">
+                        Caso 1: Validación de Entrada
+                    </button>
+                    <button onclick="switchTab(1)"
+                        class="tab-btn px-4 py-2 rounded-lg font-semibold text-sm transition-all border whitespace-nowrap bg-white/5 text-white/70 border-white/10 hover:bg-white/10">
+                        Caso 2: Mermas y Mejor Caudal (Normal)
+                    </button>
+                    <button onclick="switchTab(2)"
+                        class="tab-btn px-4 py-2 rounded-lg font-semibold text-sm transition-all border whitespace-nowrap bg-white/5 text-white/70 border-white/10 hover:bg-white/10">
+                        Caso 3: Valores Límite
+                    </button>
+                </div>
+
+                <div id="tab-contents">
+                    <!-- Caso 1 -->
+                    <div class="tab-content active">
+                        <div class="grid grid-cols-1 md:grid-cols-12 gap-6">
+                            <div class="md:col-span-3 bg-black/30 p-5 rounded-xl border border-white/10 flex flex-col">
+                                <h3 class="text-sm font-bold mb-3 text-cyan-300 uppercase tracking-wider">Entrada
+                                    (Simulada)</h3>
+                                <div class="flex-grow bg-black/50 p-4 rounded-lg border border-white/5">
+                                    <pre class="console text-sm text-gray-300 whitespace-pre-wrap leading-relaxed">1
+0
+16
+3
+100
+5500
+1000
+4
+0</pre>
+                                </div>
+                            </div>
+                            <div
+                                class="md:col-span-9 bg-[#0a0a0a] p-5 rounded-xl border border-gray-800 shadow-inner flex flex-col relative overflow-hidden">
+                                <h3 class="text-sm font-bold mb-3 text-green-400 uppercase tracking-wider">Salida
+                                    Esperada por Pantalla</h3>
+                                <div class="flex-grow bg-black/40 p-4 rounded-lg border border-white/5 overflow-x-auto">
+                                    <pre class="console text-green-400 text-sm whitespace-pre-wrap leading-relaxed">=== REFINERIA YPF - CONTROL DE BOMBEO ===
+1. Ingresar Datos de Refineria
+...
+Ingrese una opción: <span class="text-purple-400">&gt; </span><span class="text-yellow-400">1</span>
+Ingrese cantidad de tanques operativos (1-15): <span class="text-purple-400">&gt; </span><span class="text-yellow-400">0</span>
+[Error] El valor debe estar entre 1 y 15.
+Ingrese cantidad de tanques operativos (1-15): <span class="text-purple-400">&gt; </span><span class="text-yellow-400">16</span>
+[Error] El valor debe estar entre 1 y 15.
+Ingrese cantidad de tanques operativos (1-15): <span class="text-purple-400">&gt; </span><span class="text-yellow-400">3</span>
+Ingrese capacidad por tanque en m3 (200-5000): <span class="text-purple-400">&gt; </span><span class="text-yellow-400">100</span>
+[Error] El valor debe estar entre 200 y 5000.
+Ingrese capacidad por tanque en m3 (200-5000): <span class="text-purple-400">&gt; </span><span class="text-yellow-400">5500</span>
+[Error] El valor debe estar entre 200 y 5000.
+Ingrese capacidad por tanque en m3 (200-5000): <span class="text-purple-400">&gt; </span><span class="text-yellow-400">1000</span>
+(Regresa al menú)
+
+Ingrese una opción: <span class="text-purple-400">&gt; </span><span class="text-yellow-400">4</span>
+Tanques registrados: 3 | Capacidad por tanque: 1000 m3
+
+Ingrese una opción: <span class="text-purple-400">&gt; </span><span class="text-yellow-400">0</span>
+(Fin del programa)</pre>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Caso 2 -->
+                    <div class="tab-content ">
+                        <div class="grid grid-cols-1 md:grid-cols-12 gap-6">
+                            <div class="md:col-span-3 bg-black/30 p-5 rounded-xl border border-white/10 flex flex-col">
+                                <h3 class="text-sm font-bold mb-3 text-cyan-300 uppercase tracking-wider">Entrada
+                                    (Simulada)</h3>
+                                <div class="flex-grow bg-black/50 p-4 rounded-lg border border-white/5">
+                                    <pre class="console text-sm text-gray-300 whitespace-pre-wrap leading-relaxed">1
+3
+500
+2
+10
+8
+6
+-1
+3
+480
+6
+500
+4
+450
+9
+0</pre>
+                                </div>
+                            </div>
+                            <div
+                                class="md:col-span-9 bg-[#0a0a0a] p-5 rounded-xl border border-gray-800 shadow-inner flex flex-col relative overflow-hidden">
+                                <h3 class="text-sm font-bold mb-3 text-green-400 uppercase tracking-wider">Salida
+                                    Esperada por Pantalla</h3>
+                                <div class="flex-grow bg-black/40 p-4 rounded-lg border border-white/5 overflow-x-auto">
+                                    <pre class="console text-green-400 text-sm whitespace-pre-wrap leading-relaxed">Ingrese una opción: <span class="text-purple-400">&gt; </span><span class="text-yellow-400">1</span>
+Ingrese cantidad de tanques operativos (1-15): <span class="text-purple-400">&gt; </span><span class="text-yellow-400">3</span>
+Ingrese capacidad por tanque en m3 (200-5000): <span class="text-purple-400">&gt; </span><span class="text-yellow-400">500</span>
+(Regresa al menú)
+
+Ingrese una opción: <span class="text-purple-400">&gt; </span><span class="text-yellow-400">2</span>
+Ingrese mermas detectadas en m3 (-1 para finalizar): <span class="text-purple-400">&gt; </span><span class="text-yellow-400">10</span>
+Ingrese mermas detectadas en m3 (-1 para finalizar): <span class="text-purple-400">&gt; </span><span class="text-yellow-400">8</span>
+Ingrese mermas detectadas en m3 (-1 para finalizar): <span class="text-purple-400">&gt; </span><span class="text-yellow-400">6</span>
+Ingrese mermas detectadas en m3 (-1 para finalizar): <span class="text-purple-400">&gt; </span><span class="text-yellow-400">-1</span>
+Total mermas: 24 m3
+Porcentaje de merma sobre volumen esperado (1500 m3): 1.6%
+Estado de bombeo: ACEPTABLE
+(Regresa al menú)
+
+Ingrese una opción: <span class="text-purple-400">&gt; </span><span class="text-yellow-400">3</span>
+--- Tanque 1 ---
+Volumen despachado en tanque 1 (m3): <span class="text-purple-400">&gt; </span><span class="text-yellow-400">480</span>
+Horas de bombeo del tanque 1: <span class="text-purple-400">&gt; </span><span class="text-yellow-400">6</span>
+Caudal tanque 1: 80 m3/h
+--- Tanque 2 ---
+Volumen despachado en tanque 2 (m3): <span class="text-purple-400">&gt; </span><span class="text-yellow-400">500</span>
+Horas de bombeo del tanque 2: <span class="text-purple-400">&gt; </span><span class="text-yellow-400">4</span>
+Caudal tanque 2: 125 m3/h
+--- Tanque 3 ---
+Volumen despachado en tanque 3 (m3): <span class="text-purple-400">&gt; </span><span class="text-yellow-400">450</span>
+Horas de bombeo del tanque 3: <span class="text-purple-400">&gt; </span><span class="text-yellow-400">9</span>
+Caudal tanque 3: 50 m3/h
+El mayor caudal fue 125 m3/h en el tanque 2.
+Liquidacion fiscal del tanque 2 ($850.000/m3 x 10%): $42500000
+
+Ingrese una opción: <span class="text-purple-400">&gt; </span><span class="text-yellow-400">0</span>
+(Fin del programa)</pre>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Caso 3 -->
+                    <div class="tab-content ">
+                        <div class="grid grid-cols-1 md:grid-cols-12 gap-6">
+                            <div class="md:col-span-3 bg-black/30 p-5 rounded-xl border border-white/10 flex flex-col">
+                                <h3 class="text-sm font-bold mb-3 text-cyan-300 uppercase tracking-wider">Entrada
+                                    (Simulada)</h3>
+                                <div class="flex-grow bg-black/50 p-4 rounded-lg border border-white/5">
+                                    <pre class="console text-sm text-gray-300 whitespace-pre-wrap leading-relaxed">1
+1
+200
+2
+8
+-1
+3
+190
+2
+0</pre>
+                                </div>
+                            </div>
+                            <div
+                                class="md:col-span-9 bg-[#0a0a0a] p-5 rounded-xl border border-gray-800 shadow-inner flex flex-col relative overflow-hidden">
+                                <h3 class="text-sm font-bold mb-3 text-green-400 uppercase tracking-wider">Salida
+                                    Esperada por Pantalla</h3>
+                                <div class="flex-grow bg-black/40 p-4 rounded-lg border border-white/5 overflow-x-auto">
+                                    <pre class="console text-green-400 text-sm whitespace-pre-wrap leading-relaxed">Ingrese una opción: <span class="text-purple-400">&gt; </span><span class="text-yellow-400">1</span>
+Ingrese cantidad de tanques operativos (1-15): <span class="text-purple-400">&gt; </span><span class="text-yellow-400">1</span>
+Ingrese capacidad por tanque en m3 (200-5000): <span class="text-purple-400">&gt; </span><span class="text-yellow-400">200</span>
+(Regresa al menú)
+
+Ingrese una opción: <span class="text-purple-400">&gt; </span><span class="text-yellow-400">2</span>
+Ingrese mermas detectadas en m3 (-1 para finalizar): <span class="text-purple-400">&gt; </span><span class="text-yellow-400">8</span>
+Ingrese mermas detectadas en m3 (-1 para finalizar): <span class="text-purple-400">&gt; </span><span class="text-yellow-400">-1</span>
+Total mermas: 8 m3
+Porcentaje de merma sobre volumen esperado (200 m3): 4%
+Estado de bombeo: CRITICO
+
+Ingrese una opción: <span class="text-purple-400">&gt; </span><span class="text-yellow-400">3</span>
+--- Tanque 1 ---
+Volumen despachado en tanque 1 (m3): <span class="text-purple-400">&gt; </span><span class="text-yellow-400">190</span>
+Horas de bombeo del tanque 1: <span class="text-purple-400">&gt; </span><span class="text-yellow-400">2</span>
+Caudal tanque 1: 95 m3/h
+El mayor caudal fue 95 m3/h en el tanque 1.
+Liquidacion fiscal del tanque 1 ($850.000/m3 x 10%): $16150000
+
+Ingrese una opción: <span class="text-purple-400">&gt; </span><span class="text-yellow-400">0</span>
+(Fin del programa)</pre>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="bg-black/20 p-5 md:p-6 rounded-xl border border-white/5 shadow-inner">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-xl font-bold text-cyan-300 theme-font tracking-wide flex items-center gap-2">
+                        Código Base
+                    </h2>
+                    <div class="flex bg-black/40 rounded-lg p-1 border border-white/10">
+                        <button onclick="switchCode('pseint')" id="btn-pseint"
+                            class="px-3 py-1 rounded-md text-sm font-semibold bg-cyan-500 text-white transition-colors">PSeInt</button>
+                        <button onclick="switchCode('cpp')" id="btn-cpp"
+                            class="px-3 py-1 rounded-md text-sm font-semibold text-white/60 hover:text-white transition-colors">C++</button>
+                    </div>
+                </div>
+
+                <!-- PSeInt Code -->
+                <div id="code-pseint" class="bg-[#1e1e1e] p-4 rounded-lg border border-white/10 overflow-x-auto block">
+                    <pre class="console text-sm text-[#d4d4d4] whitespace-pre-wrap leading-relaxed">Algoritmo RefineriaYPF_Tema3
+	Definir opc, tanques, capacidadPorTanque Como Entero;
+	tanques = 0;
+	capacidadPorTanque = 0;
+	opc = -1;
+	
+	Repetir
+		MostrarMenu(opc);
+		
+		// [TU CODIGO AQUI]
+
+		Esperar Tecla;
+	Mientras Que opc &lt;&gt; 0
+FinAlgoritmo
+
+SubProceso MostrarMenu(opc Por Referencia)
+	Borrar Pantalla;
+	Escribir "=== REFINERIA YPF - CONTROL DE BOMBEO ===";
+	Escribir "1. Ingresar Datos de Refineria";
+	Escribir "2. Controlar Mermas en Bombeo";
+	Escribir "3. Buscar Tanque con Mejor Caudal";
+	Escribir "4. Ver Estado Actual";
+	Escribir "0. Salir";
+	Escribir "Ingrese una opcion: ";
+	Leer opc;
+FinSubProceso
+
+// [TU CODIGO AQUI]
+// Desarrolla el Modulo de Entrada.
+SubProceso IngresarDatos()
+	
+FinSubProceso
+
+// [TU CODIGO AQUI]
+// Desarrolla el Modulo de Proceso 1.
+SubProceso ControlMermas()
+	
+FinSubProceso
+
+// [TU CODIGO AQUI]
+// Desarrolla el Modulo de Proceso 2.
+SubProceso BuscarMejorCaudal()
+	
+FinSubProceso
+
+SubProceso MostrarEstado(tanques, capacidadPorTanque)
+	Escribir "Tanques registrados: ", tanques, " | Capacidad por tanque: ", capacidadPorTanque, " m3";
+FinSubProceso</pre>
+                </div>
+
+                <!-- C++ Code -->
+                <div id="code-cpp" class="bg-[#1e1e1e] p-4 rounded-lg border border-white/10 overflow-x-auto hidden">
+                    <pre class="console text-sm text-[#d4d4d4] whitespace-pre-wrap leading-relaxed">#include &lt;iostream&gt;
+using namespace std;
+
+int tanques = 0;
+int capacidadPorTanque = 0;
+
+void MostrarMenu(int &amp;opc);
+void IngresarDatos();
+void ControlMermas();
+void BuscarMejorCaudal();
+void MostrarEstado();
+
+int main() {
+    int opc = -1;
+    
+    do {
+        MostrarMenu(opc);
+        
+        // [TU CODIGO AQUI]
+        
+        system("pause");
+    } while (opc != 0);
+    
+    return 0;
+}
+
+void MostrarMenu(int &amp;opc) {
+    system("cls");
+    cout &lt;&lt; "=== REFINERIA YPF - CONTROL DE BOMBEO ===" &lt;&lt; endl;
+    cout &lt;&lt; "1. Ingresar Datos de Refineria" &lt;&lt; endl;
+    cout &lt;&lt; "2. Controlar Mermas en Bombeo" &lt;&lt; endl;
+    cout &lt;&lt; "3. Buscar Tanque con Mejor Caudal" &lt;&lt; endl;
+    cout &lt;&lt; "4. Ver Estado Actual" &lt;&lt; endl;
+    cout &lt;&lt; "0. Salir" &lt;&lt; endl;
+    cout &lt;&lt; "Ingrese una opcion: ";
+    cin &gt;&gt; opc;
+}
+
+// [TU CODIGO AQUI]
+// Desarrolla el Modulo de Entrada.
+void IngresarDatos() {
+
+}
+
+// [TU CODIGO AQUI]
+// Desarrolla el Modulo de Proceso 1.
+void ControlMermas() {
+
+}
+
+// [TU CODIGO AQUI]
+// Desarrolla el Modulo de Proceso 2.
+void BuscarMejorCaudal() {
+
+}
+
+void MostrarEstado() {
+    cout &lt;&lt; "Tanques registrados: " &lt;&lt; tanques &lt;&lt; " | Capacidad por tanque: " &lt;&lt; capacidadPorTanque &lt;&lt; " m3" &lt;&lt; endl;
+}
+</pre>
+                </div>
+            </section>
+
+            <section class="bg-black/20 p-5 md:p-6 rounded-xl border border-white/5 shadow-inner">
+                <h2 class="text-xl font-bold mb-4 text-cyan-300 theme-font tracking-wide flex items-center gap-2">
+                    📝 Parte 2: Prueba de Escritorio (Papel y Lápiz) <span
+                        class="relative group inline-block ml-3 align-middle"><span
+                            class="cursor-pointer bg-cyan-500/20 text-cyan-300 text-sm font-bold px-3 py-1 rounded border border-cyan-500/30">25%</span>
+                        <div
+                            class="absolute opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-10 bottom-full left-1/2 -translate-x-1/2 mb-2 w-64 bg-gray-900 text-white text-sm rounded-lg shadow-xl border border-gray-700 p-3 pointer-events-none font-normal">
+                            <div class="font-bold text-cyan-400 mb-1">Prueba de Escritorio</div>
+                            <p class="text-xs text-gray-300">Refleja paso a paso el cambio de valor de cada variable y
+                                anota la salida exacta por pantalla esperada.</p>
+                            <div
+                                class="absolute -bottom-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-gray-900 border-b border-r border-gray-700 transform rotate-45">
+                            </div>
+                        </div>
+                    </span>
+                </h2>
+                <div class="leading-relaxed opacity-95 text md space-y-4">
+                    <div class="bg-sky-950/50 p-5 rounded-xl border border-cyan-500/20 shadow-md flex items-start gap-4">
+                        <div class="text-3xl">📄</div>
+                        <div>
+                            <p class="font-bold text-cyan-200 mb-1">Entrega en formato físico</p>
+                            <p class="text-cyan-100 text-sm">Una vez que hayas finalizado y entregado la Parte 1 (código
+                                en computadora), el docente te entregará una hoja impresa con el pseudocódigo
+                                correspondiente a la Parte 2 para que realices la prueba de escritorio en papel y lápiz.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+    </div>
+
+    <script>
+        function switchCode(lang) {
+            const pseintBtn = document.getElementById('btn-pseint');
+            const cppBtn = document.getElementById('btn-cpp');
+            const pseintCode = document.getElementById('code-pseint');
+            const cppCode = document.getElementById('code-cpp');
+
+            if (lang === 'pseint') {
+                pseintBtn.className = "px-3 py-1 rounded-md text-sm font-semibold bg-cyan-500 text-white transition-colors";
+                cppBtn.className = "px-3 py-1 rounded-md text-sm font-semibold text-white/60 hover:text-white transition-colors";
+                pseintCode.classList.remove('hidden');
+                pseintCode.classList.add('block');
+                cppCode.classList.remove('block');
+                cppCode.classList.add('hidden');
+            } else {
+                cppBtn.className = "px-3 py-1 rounded-md text-sm font-semibold bg-cyan-500 text-white transition-colors";
+                pseintBtn.className = "px-3 py-1 rounded-md text-sm font-semibold text-white/60 hover:text-white transition-colors";
+                cppCode.classList.remove('hidden');
+                cppCode.classList.add('block');
+                pseintCode.classList.remove('block');
+                pseintCode.classList.add('hidden');
+            }
+        }
+
+        function switchTab(tabIndex) {
+            document.querySelectorAll('.tab-btn').forEach((btn, idx) => {
+                if (idx === tabIndex) {
+                    btn.classList.add('bg-cyan-300', 'text-black', 'border-cyan-300');
+                    btn.classList.remove('bg-white/5', 'text-white/70', 'border-white/10', 'hover:bg-white/10');
+                } else {
+                    btn.classList.remove('bg-cyan-300', 'text-black', 'border-cyan-300');
+                    btn.classList.add('bg-white/5', 'text-white/70', 'border-white/10', 'hover:bg-white/10');
+                }
+            });
+            document.querySelectorAll('.tab-content').forEach((content, idx) => {
+                if (idx === tabIndex) {
+                    content.classList.add('active');
+                } else {
+                    content.classList.remove('active');
+                }
+            });
+        }
+    </script>
+</body>
+
+</html>

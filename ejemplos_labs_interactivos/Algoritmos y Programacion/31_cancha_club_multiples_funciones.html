@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --jefe-bg: #ebf5fb;
+            --jefe-border: #3498db;
+            --perimetro-bg: #fdf2e9;
+            --perimetro-border: #e67e22;
+            --area-bg: #e8f8f5;
+            --area-border: #1abc9c;
+            --cesped: #2ecc71;
+            --alambre: #d35400;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, Arial, sans-serif;
+            margin: 0;
+            padding: 15px;
+            box-sizing: border-box;
+            background: #ffffff;
+            color: var(--primary);
+        }
+
+        .widget-container {
+            max-width: 700px;
+            margin: 0 auto;
+            border: 2px solid #ecf0f1;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+
+        h3 { margin-top: 0; text-align: center; color: var(--primary); }
+
+        .panel {
+            padding: 15px;
+            border-radius: 8px;
+            border: 2px solid;
+            margin-bottom: 15px;
+            position: relative;
+        }
+
+        .panel-jefe { background: var(--jefe-bg); border-color: var(--jefe-border); }
+        .panel-obrero { flex: 1; min-width: 200px; transition: all 0.3s; opacity: 0.6; }
+        .panel-perimetro { background: var(--perimetro-bg); border-color: var(--perimetro-border); }
+        .panel-area { background: var(--area-bg); border-color: var(--area-border); }
+        
+        .panel-obrero.activo { opacity: 1; transform: scale(1.02); box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+
+        .panel-titulo {
+            font-weight: bold;
+            margin-bottom: 15px;
+            font-size: 0.9em;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .controles {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .input-group { display: flex; flex-direction: column; }
+        .input-group label { font-size: 0.8em; font-weight: bold; color: #555; }
+        
+        input {
+            width: 80px;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            text-align: center;
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+        }
+
+        button {
+            background: var(--jefe-border);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+            margin-top: 15px;
+            height: 35px;
+        }
+
+        button:hover { background: #2980b9; }
+        button:disabled { background: #95a5a6; cursor: not-allowed; }
+
+        .obreros-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        /* Representación Visual de la Cancha */
+        .cancha-wrapper {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 180px;
+            background: #f1f2f6;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .cancha-visual {
+            width: 0px;
+            height: 0px;
+            border: 4px dashed #bdc3c7;
+            background: transparent;
+            transition: all 0.8s ease-in-out;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .cancha-medida-base { position: absolute; bottom: -25px; font-size: 0.8em; font-weight: bold; }
+        .cancha-medida-altura { position: absolute; left: -35px; font-size: 0.8em; font-weight: bold; }
+
+        .codigo-miniatura {
+            font-family: 'Courier New', monospace;
+            font-size: 0.8em;
+            color: #333;
+            background: rgba(255,255,255,0.7);
+            padding: 10px;
+            border-radius: 4px;
+            margin-top: 10px;
+        }
+
+        .highlight-var { font-weight: bold; padding: 2px 4px; border-radius: 3px; }
+        .var-per { background: #fad7a1; color: #d35400; }
+        .var-area { background: #a2d9ce; color: #16a085; }
+
+        .resultado-jefe {
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 10px;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            min-height: 40px;
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="widget-container">
+    <h3>Cancha del Club: Múltiples Funciones</h3>
+    
+    <div class="panel panel-jefe">
+        <div class="panel-titulo" style="color: var(--jefe-border);">🏢 Algoritmo Principal</div>
+        <div class="controles">
+            <div class="input-group">
+                <label>Base (m)</label>
+                <input type="number" id="inBase" value="40" min="10" max="100">
+            </div>
+            <div class="input-group">
+                <label>Altura (m)</label>
+                <input type="number" id="inAltura" value="25" min="10" max="100">
+            </div>
+            <button id="btnEjecutar" onclick="ejecutarSistema()">Llamar a los Especialistas</button>
+        </div>
+        
+        <div class="resultado-jefe" id="consolaJefe">Esperando medidas...</div>
+    </div>
+
+    <div class="cancha-wrapper">
+        <div class="cancha-visual" id="canchaVis">
+            <div class="cancha-medida-base" id="lblBase"></div>
+            <div class="cancha-medida-altura" id="lblAltura"></div>
+        </div>
+    </div>
+
+    <div class="obreros-container">
+        
+        <div class="panel panel-obrero panel-perimetro" id="panelPer">
+            <div class="panel-titulo" style="color: var(--perimetro-border);">👷 Especialista 1: Alambre</div>
+            <div class="codigo-miniatura">
+Funcion alambre = CalcularPerimetro(b, a)<br>
+&nbsp;&nbsp;alambre = (b * 2) + (a * 2)<br>
+FinFuncion
+            </div>
+            <div style="margin-top: 10px; font-weight: bold; text-align: center; color: var(--perimetro-border);">
+                Retorno: <span class="highlight-var var-per" id="resPerimetro">?</span>
+            </div>
+        </div>
+
+        <div class="panel panel-obrero panel-area" id="panelArea">
+            <div class="panel-titulo" style="color: var(--area-border);">👷 Especialista 2: Césped</div>
+            <div class="codigo-miniatura">
+Funcion cesped = CalcularArea(b, a)<br>
+&nbsp;&nbsp;cesped = b * a<br>
+FinFuncion
+            </div>
+            <div style="margin-top: 10px; font-weight: bold; text-align: center; color: var(--area-border);">
+                Retorno: <span class="highlight-var var-area" id="resArea">?</span>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    async function ejecutarSistema() {
+        // 1. Obtener datos y preparar UI
+        const base = parseInt(document.getElementById('inBase').value) || 0;
+        const altura = parseInt(document.getElementById('inAltura').value) || 0;
+        
+        const btn = document.getElementById('btnEjecutar');
+        const consola = document.getElementById('consolaJefe');
+        const cancha = document.getElementById('canchaVis');
+        const lblBase = document.getElementById('lblBase');
+        const lblAltura = document.getElementById('lblAltura');
+        
+        const panelPer = document.getElementById('panelPer');
+        const resPer = document.getElementById('resPerimetro');
+        const panelArea = document.getElementById('panelArea');
+        const resArea = document.getElementById('resArea');
+
+        // Reset estado visual
+        btn.disabled = true;
+        consola.innerHTML = "> Iniciando cálculos...";
+        resPer.textContent = "?";
+        resArea.textContent = "?";
+        cancha.style.borderColor = "#bdc3c7";
+        cancha.style.backgroundColor = "transparent";
+        panelPer.classList.remove('activo');
+        panelArea.classList.remove('activo');
+
+        // Dibujar dimensiones relativas (Max width 250px aprox para encajar)
+        const scale = 2.5; 
+        cancha.style.width = (base * scale) + "px";
+        cancha.style.height = (altura * scale) + "px";
+        lblBase.textContent = base + "m";
+        lblAltura.textContent = altura + "m";
+        
+        await delay(1000);
+
+        // --- PASO 1: Llamada a Función Perímetro ---
+        consola.innerHTML = "> metrosAlambre <- CalcularPerimetro(" + base + ", " + altura + ")<br>⏳ Esperando al Especialista 1...";
+        panelPer.classList.add('activo');
+        
+        // Animación visual alambre
+        cancha.style.borderColor = "var(--alambre)";
+        cancha.style.borderStyle = "solid";
+        cancha.style.boxShadow = "0 0 15px rgba(211, 84, 0, 0.5)";
+        
+        await delay(1500);
+        
+        const perimetroCalculado = (base * 2) + (altura * 2);
+        resPer.textContent = perimetroCalculado + " m";
+        consola.innerHTML = "> metrosAlambre = " + perimetroCalculado + " ✔️<br>";
+        
+        panelPer.classList.remove('activo');
+        cancha.style.boxShadow = "none";
+        
+        await delay(1000);
+
+        // --- PASO 2: Llamada a Función Área ---
+        consola.innerHTML += "> metrosCesped <- CalcularArea(" + base + ", " + altura + ")<br>⏳ Esperando al Especialista 2...";
+        panelArea.classList.add('activo');
+        
+        // Animación visual césped
+        cancha.style.backgroundColor = "var(--cesped)";
+        
+        await delay(1500);
+        
+        const areaCalculada = base * altura;
+        resArea.textContent = areaCalculada + " m²";
+        consola.innerHTML = "> metrosAlambre = " + perimetroCalculado + " ✔️<br>";
+        consola.innerHTML += "> metrosCesped = " + areaCalculada + " ✔️<br>";
+        
+        panelArea.classList.remove('activo');
+        
+        await delay(1000);
+
+        // --- FINAL: Salida del Jefe ---
+        consola.innerHTML += "<br>🖨️ Se necesitan " + perimetroCalculado + " metros de alambre.<br>🖨️ Se necesitan " + areaCalculada + " m2 de césped.";
+        
+        btn.disabled = false;
+    }
+
+    function delay(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+    // Dibujar forma inicial al cargar
+    window.onload = () => {
+        const cancha = document.getElementById('canchaVis');
+        cancha.style.width = "100px";
+        cancha.style.height = "62.5px";
+    }
+</script>
+
+</body>
+</html>

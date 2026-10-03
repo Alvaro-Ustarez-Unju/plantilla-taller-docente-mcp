@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --error: #e74c3c;
+            --error-light: #fadbd8;
+            --success: #27ae60;
+            --success-light: #d5f5e3;
+            --jefe-bg: #ebf5fb;
+            --ticket-bg: #fffceb;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, Arial, sans-serif;
+            margin: 0;
+            padding: 15px;
+            box-sizing: border-box;
+            background: #ffffff;
+            color: var(--primary);
+        }
+
+        .widget-container {
+            max-width: 800px;
+            margin: 0 auto;
+            border: 2px solid #ecf0f1;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+
+        h3 { margin-top: 0; text-align: center; color: var(--primary); }
+
+        /* Panel Principal */
+        .panel-jefe {
+            background: var(--jefe-bg);
+            border: 2px solid #3498db;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+
+        .panel-titulo {
+            font-weight: bold;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            color: #2980b9;
+        }
+
+        .inputs-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            align-items: flex-end;
+        }
+
+        .input-group { flex: 1; min-width: 120px; }
+        .input-group label { display: block; font-size: 0.85em; margin-bottom: 5px; font-weight: bold; }
+        .input-group input { 
+            width: 100%; padding: 8px; border: 1px solid #bdc3c7; 
+            border-radius: 4px; box-sizing: border-box; 
+        }
+
+        button {
+            background: #34495e;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.3s;
+            height: 35px;
+        }
+
+        button:hover { background: #2c3e50; transform: scale(1.02); }
+
+        /* Comparación */
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        @media (max-width: 600px) {
+            .comparison-grid { grid-template-columns: 1fr; }
+        }
+
+        .modulo-card {
+            border-radius: 8px;
+            padding: 15px;
+            border: 2px solid;
+            background: #f8f9fa;
+        }
+
+        .card-bad { border-color: var(--error); }
+        .card-good { border-color: var(--success); }
+
+        .card-title {
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 10px;
+            padding-bottom: 5px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .card-bad .card-title { color: var(--error); }
+        .card-good .card-title { color: var(--success); }
+
+        .codigo-snippet {
+            font-family: 'Courier New', monospace;
+            font-size: 0.85em;
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            line-height: 1.5;
+            white-space: pre-wrap; /* ESTA ES LA CORRECCIÓN CLAVE */
+            text-align: left;
+            overflow-x: auto;
+        }
+
+        .hl-bad { background: rgba(231, 76, 60, 0.4); padding: 2px; border-radius: 3px; }
+        .hl-good { color: #569cd6; font-weight: bold; }
+
+        .ticket-area {
+            background: #e0e0e0;
+            padding: 10px;
+            border-radius: 6px;
+            display: flex;
+            justify-content: center;
+            min-height: 150px;
+        }
+
+        .ticket {
+            background: var(--ticket-bg);
+            width: 90%;
+            padding: 15px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85em;
+            color: #000;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            border-bottom: 2px dashed #999;
+            white-space: pre-wrap;
+            transition: all 0.3s ease;
+        }
+
+        .alert-error {
+            background: var(--error-light);
+            color: #c0392b;
+            padding: 8px;
+            font-size: 0.85em;
+            text-align: center;
+            border-radius: 4px;
+            margin-top: 10px;
+            font-weight: bold;
+            display: none;
+        }
+
+        .alert-success {
+            background: var(--success-light);
+            color: #1e8449;
+            padding: 8px;
+            font-size: 0.85em;
+            text-align: center;
+            border-radius: 4px;
+            margin-top: 10px;
+            font-weight: bold;
+            display: none;
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="widget-container">
+    <h3>El Peligro del "Hardcodeo"</h3>
+    
+    <div class="panel-jefe">
+        <div class="panel-titulo">🏢 Algoritmo Principal (Cambia los datos aquí)</div>
+        <div class="inputs-container">
+            <div class="input-group">
+                <label>Amigos:</label>
+                <input type="number" id="inAmigos" value="5" min="1">
+            </div>
+            <div class="input-group">
+                <label>Total Gasto ($):</label>
+                <input type="number" id="inGasto" value="20000" min="0">
+            </div>
+            <button onclick="ejecutarAmbos()">▶ Ejecutar Programa</button>
+        </div>
+    </div>
+
+    <div class="comparison-grid">
+        <div class="modulo-card card-bad">
+            <div class="card-title">❌ Obrero Malo (Hardcodeado)</div>
+            <div class="codigo-snippet">SubProceso MostrarTicket(total, cada_uno)
+    Escribir "***************************"
+    <span class="hl-bad">Escribir "Gasto Total: $12000"</span>
+    <span class="hl-bad">Escribir "Cada amigo: $3000"</span>
+    Escribir "***************************"
+FinSubProceso</div>
+            <div class="ticket-area">
+                <div class="ticket" id="ticketBad">Esperando ejecución...</div>
+            </div>
+            <div class="alert-error" id="alertaBad">⚠️ ¡Ignoró los parámetros! Mostró datos falsos.</div>
+        </div>
+
+        <div class="modulo-card card-good">
+            <div class="card-title">✅ Obrero Bueno (Con Parámetros)</div>
+            <div class="codigo-snippet">SubProceso MostrarTicket(total, cada_uno)
+    Escribir "***************************"
+    Escribir "Gasto Total: $", <span class="hl-good">total</span>
+    Escribir "Cada amigo: $", <span class="hl-good">cada_uno</span>
+    Escribir "***************************"
+FinSubProceso</div>
+            <div class="ticket-area">
+                <div class="ticket" id="ticketGood">Esperando ejecución...</div>
+            </div>
+            <div class="alert-success" id="alertaGood">✅ Utilizó los parámetros. Ticket exacto.</div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function ejecutarAmbos() {
+        // Datos reales
+        const amigos = parseInt(document.getElementById('inAmigos').value) || 1;
+        const gastoReal = parseFloat(document.getElementById('inGasto').value) || 0;
+        const pagoIndividualReal = (gastoReal / amigos).toFixed(2);
+
+        // UI Elements
+        const tBad = document.getElementById('ticketBad');
+        const tGood = document.getElementById('ticketGood');
+        const aBad = document.getElementById('alertaBad');
+        const aGood = document.getElementById('alertaGood');
+
+        // Efecto visual de "impresión" (borrar y reaparecer)
+        tBad.style.opacity = '0.5';
+        tGood.style.opacity = '0.5';
+
+        setTimeout(() => {
+            // Ejecución Módulo Malo (Hardcodeado a 12000 y 3000)
+            tBad.innerHTML = `***************************\n      TICKET DE PAGO\n***************************\nGasto Total: $12000\nCada amigo: $3000\n***************************`;
+            
+            // Ejecución Módulo Bueno (Dinámico)
+            tGood.innerHTML = `***************************\n      TICKET DE PAGO\n***************************\nGasto Total: $${gastoReal}\nCada amigo: $${pagoIndividualReal}\n***************************`;
+
+            // Restaurar opacidad y mostrar alertas
+            tBad.style.opacity = '1';
+            tGood.style.opacity = '1';
+
+            // Comprobar si el obrero malo falló (siempre falla a menos que coincidan los datos mágicos)
+            if (gastoReal !== 12000 || parseFloat(pagoIndividualReal) !== 3000) {
+                tBad.style.color = "#c0392b"; // Texto en rojo para evidenciar error
+                aBad.style.display = "block";
+            } else {
+                tBad.style.color = "#000";
+                aBad.style.display = "none";
+            }
+            
+            aGood.style.display = "block";
+
+        }, 300);
+    }
+
+    // Ejecutar una vez al inicio para mostrar estado inicial
+    window.onload = ejecutarAmbos;
+</script>
+
+</body>
+</html>

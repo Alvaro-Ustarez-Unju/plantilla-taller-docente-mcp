@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prueba de Escritorio - Examen 2</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            color: #000;
+        }
+
+        .page {
+            max-width: 800px;
+            margin: 0 auto;
+            page-break-after: always;
+        }
+
+        .page:last-child {
+            page-break-after: auto;
+        }
+
+        h1,
+        h2,
+        h3 {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .student-info {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #000;
+            padding-bottom: 10px;
+        }
+
+        .student-info div {
+            font-size: 16px;
+        }
+
+        .code-container {
+            background-color: #f9f9f9;
+            border: 1px solid #ccc;
+            padding: 15px;
+            margin-bottom: 30px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 14px;
+            line-height: 1.5;
+            white-space: pre-wrap;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 40px;
+        }
+
+        table,
+        th,
+        td {
+            border: 1px solid #000;
+        }
+
+        th,
+        td {
+            padding: 10px;
+            text-align: center;
+            min-height: 30px;
+        }
+
+        .empty-row td {
+            height: 30px;
+        }
+
+        .print-btn {
+            display: block;
+            margin: 20px auto;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        @media print {
+            .print-btn {
+                display: none;
+            }
+
+            body {
+                padding: 0;
+            }
+
+            .page {
+                margin: 0;
+                max-width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <button class="print-btn" onclick="window.print()">Imprimir Pruebas de Escritorio</button>
+
+    <!-- HOJA 1: ENUNCIADOS -->
+    <div class="page">
+        <h2>Enunciado - Tema 1 (Racha Goleadora)</h2>
+        <p>Analiza el siguiente pseudocódigo y realiza la prueba de escritorio. Indica qué valores toman las variables
+            en cada paso y qué imprime finalmente el algoritmo.</p>
+
+        <div class="code-container">Algoritmo PruebaEscritorio_RachaGoleadora
+    Definir partido, goles, confianza Como Entero;
+    goles = 0;
+    confianza = 50;
+    partido = 1;
+    
+    Mientras (partido <= 4 && confianza > 0) Hacer
+        Si (confianza >= 70) Entonces
+            goles = goles + 2;
+            confianza = confianza - 20;
+        SiNo
+            goles = goles + 1;
+            confianza = confianza + 30;
+        FinSi
+        
+        partido = partido + 1;
+    FinMientras
+    
+    Escribir "Total de goles en la copa: ", goles;
+FinAlgoritmo</div>
+
+        <h2>Enunciado - Tema 2 (Pases Consecutivos)</h2>
+        <p>Analiza el siguiente pseudocódigo y realiza la prueba de escritorio. Indica qué valores toman las variables
+            en cada paso y qué imprime finalmente el algoritmo.</p>
+
+        <div class="code-container">Algoritmo PruebaEscritorio_PasesConsecutivos
+    Definir pases_acertados, precision, dificultad Como Entero;
+    pases_acertados = 0;
+    precision = 100;
+    dificultad = 10;
+    
+    Mientras (precision > 40 && pases_acertados < 4) Hacer
+        pases_acertados = pases_acertados + 1;
+        
+        Si (pases_acertados % 2 == 0) Entonces
+            precision = precision - (dificultad * 2);
+        SiNo
+            precision = precision - dificultad;
+        FinSi
+        
+        dificultad = dificultad + 5;
+    FinMientras
+    
+    Escribir "Pases logrados: ", pases_acertados, " | Precisión final: ", precision;
+FinAlgoritmo</div>
+        </div>
+
+        <!-- HOJA 2: TABLAS -->
+        <div class="page">
+            <h2>Tabla de Prueba de Escritorio - Tema 1</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>partido</th>
+                        <th>goles</th>
+                        <th>confianza</th>
+                        <th>Salida por Pantalla</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td>0</td>
+                        <td>50</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>1</td>
+                        <td>80</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>3</td>
+                        <td>60</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>4</td>
+                        <td>4</td>
+                        <td>90</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>5</td>
+                        <td>6</td>
+                        <td>70</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td>Total de goles en la copa: 6</td>
+                    </tr>
+                </tbody>
+            </table>
+            <br><br><br><br>
+            <h2>Tabla de Prueba de Escritorio - Tema 2</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>pases_acertados</th>
+                        <th>precision</th>
+                        <th>dificultad</th>
+                        <th>Salida por Pantalla</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>0</td>
+                        <td>100</td>
+                        <td>10</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>1</td>
+                        <td>90</td>
+                        <td>15</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>60</td>
+                        <td>20</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>40</td>
+                        <td>25</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td>Pases logrados: 3 | Precisión final: 40</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+</body>
+
+</html>

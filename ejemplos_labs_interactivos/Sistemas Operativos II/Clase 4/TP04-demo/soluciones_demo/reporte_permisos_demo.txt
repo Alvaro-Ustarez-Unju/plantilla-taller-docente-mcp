@@ -1,6 +1,0 @@
-=== REPORTE DOCENTE DE PERMISOS POSIX CON STAT ===
-777 | drwxrwxrwx | soluciones_demo/lab_permisos_demo/restringido
-777 | -rwxrwxrwx | soluciones_demo/lab_permisos_demo/restringido/claves_backup.txt
-777 | -rwxrwxrwx | soluciones_demo/lab_permisos_demo/restringido/deploy.sh
-777 | drwxrwxrwx | soluciones_demo/lab_permisos_demo/compartido
-777 | -rwxrwxrwx | soluciones_demo/lab_permisos_demo/compartido/colaboracion.txt

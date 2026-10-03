@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --bg-code: #f4f7f6;
+            --text-code: #2c3e50;
+            --accent-color: #e74c3c;
+        }
+
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            padding: 20px;
+            background: #ffffff;
+            color: var(--primary-color);
+            box-sizing: border-box;
+        }
+
+        .widget-container {
+            border: 2px solid #ddd;
+            border-radius: 12px;
+            padding: 20px;
+            max-width: 600px;
+            margin: auto;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .editor {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .code-block {
+            background: var(--bg-code);
+            padding: 15px;
+            border-left: 5px solid var(--secondary-color);
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            white-space: pre-wrap;
+            font-size: 0.9em;
+        }
+
+        .highlight {
+            background-color: #ffeaa7;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        .console {
+            background: #000;
+            color: #0f0;
+            padding: 10px;
+            border-radius: 4px;
+            height: 120px;
+            overflow-y: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+
+        .btn-run {
+            background-color: var(--secondary-color);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .btn-run:hover {
+            opacity: 0.9;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="widget-container">
+        <h3>Visualizador de SubProceso</h3>
+        <div class="editor">
+            <div id="code-main" class="code-block">
+                Algoritmo SistemaPrincipal
+                Escribir "Iniciando..."
+                <span id="line-call">MostrarBienvenida();</span>
+                Escribir "Fin del programa"
+                FinAlgoritmo
+            </div>
+
+            <div id="code-sub" class="code-block">
+                SubProceso MostrarBienvenida
+                Escribir "***********************"
+                Escribir "* Bienvenido al Sistema"
+                Escribir "***********************"
+                FinSubProceso
+            </div>
+
+            <button class="btn-run" onclick="ejecutar()">Ejecutar Programa</button>
+
+            <div class="console" id="console">Consola de salida...</div>
+        </div>
+    </div>
+
+    <script>
+        async function ejecutar() {
+            const consoleEl = document.getElementById('console');
+            const callEl = document.getElementById('line-call');
+            const subEl = document.getElementById('code-sub');
+
+            consoleEl.innerHTML = "> Ejecutando Algoritmo Principal...<br>";
+
+            // Simular paso 1
+            await new Promise(r => setTimeout(r, 800));
+            consoleEl.innerHTML += "> Iniciando...<br>";
+
+            // Simular el salto al SubProceso
+            callEl.classList.add('highlight');
+            subEl.classList.add('highlight');
+            consoleEl.innerHTML += ">> ¡Salto al SubProceso!<br>";
+
+            await new Promise(r => setTimeout(r, 1000));
+            consoleEl.innerHTML += "***********************<br>* Bienvenido al Sistema<br>***********************<br>";
+
+            // Retorno
+            await new Promise(r => setTimeout(r, 800));
+            callEl.classList.remove('highlight');
+            subEl.classList.remove('highlight');
+            consoleEl.innerHTML += "> Regresando al Principal...<br>> Fin del programa.";
+        }
+    </script>
+
+</body>
+
+</html>

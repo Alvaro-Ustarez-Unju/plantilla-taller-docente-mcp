@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --success: #27ae60;
+            --error: #e74c3c;
+            --bg: #f8f9fa;
+        }
+
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            margin: 0;
+            padding: 10px;
+            box-sizing: border-box;
+            background: var(--bg);
+        }
+
+        .widget-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            max-width: 500px;
+            margin: 0 auto;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        h3 { color: var(--primary); margin-top: 0; }
+
+        .rules-box {
+            background: #eef2f7;
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 0.85em;
+            margin-bottom: 15px;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 10px;
+            margin: 8px 0;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            box-sizing: border-box;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        #result {
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 6px;
+            text-align: center;
+            font-weight: bold;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+<div class="widget-card">
+    <h3>Validador de Nomenclatura</h3>
+    
+    <div class="rules-box">
+        <strong>Reglas:</strong><br>
+        • SubProceso: PascalCase (Ej: <code>CalcularTotal</code>)<br>
+        • Variable: camelCase (Ej: <code>gastoTotal</code>)
+    </div>
+
+    <input type="text" id="inputName" placeholder="Escribe el nombre...">
+    <select id="typeSelector">
+        <option value="subproceso">Es un SubProceso</option>
+        <option value="variable">Es una Variable</option>
+    </select>
+    
+    <button onclick="validar()">Validar Nombre</button>
+
+    <div id="result"></div>
+</div>
+
+<script>
+    function validar() {
+        const nombre = document.getElementById('inputName').value.trim();
+        const tipo = document.getElementById('typeSelector').value;
+        const res = document.getElementById('result');
+        
+        if (!nombre) return;
+
+        let esCorrecto = false;
+        let mensaje = "";
+
+        // Regex para camelCase (minúscula inicial, luego alfanumérico)
+        const camelCase = /^[a-z][a-zA-Z0-9]*$/;
+        // Regex para PascalCase (mayúscula inicial, luego alfanumérico)
+        const pascalCase = /^[A-Z][a-zA-Z0-9]*$/;
+
+        if (tipo === 'variable') {
+            esCorrecto = camelCase.test(nombre);
+            mensaje = esCorrecto ? "¡Correcto! Es una variable en camelCase." : "Error: Las variables deben iniciar en minúscula (camelCase).";
+        } else {
+            esCorrecto = pascalCase.test(nombre);
+            mensaje = esCorrecto ? "¡Correcto! Es un SubProceso en PascalCase." : "Error: Los SubProcesos deben iniciar en mayúscula (PascalCase).";
+        }
+
+        res.style.display = "block";
+        res.style.backgroundColor = esCorrecto ? "#d4edda" : "#f8d7da";
+        res.style.color = esCorrecto ? "#155724" : "#721c24";
+        res.textContent = mensaje;
+    }
+</script>
+
+</body>
+</html>

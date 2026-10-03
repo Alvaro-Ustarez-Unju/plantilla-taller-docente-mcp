@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🏆 2do Simulacro de Examen - Tema 2 (Mundial 2026 - Entradas Argentinas)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Fira+Code&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .console { font-family: 'Fira Code', monospace; }
+        .theme-font { font-family: 'Inter', sans-serif; }
+        
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        
+        .tab-content {
+            transition: all 0.3s ease-in-out;
+            opacity: 0;
+            display: none;
+        }
+        .tab-content.active {
+            opacity: 1;
+            display: block;
+            animation: fadeIn 0.4s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="min-h-screen p-4 md:p-8 flex items-center justify-center bg-blue-900">
+
+    <div class="max-w-4xl w-full bg-blue-800/90 backdrop-blur-md text-blue-50 rounded-2xl shadow-2xl overflow-hidden border border-blue-400/20">
+        
+        <div class="p-6 md:p-8 border-b border-white/10">
+            <h1 class="text-3xl md:text-4xl font-extrabold tracking-tight mb-2 text-blue-300 drop-shadow-md theme-font">
+                🏆 Tema 2: Entradas Hinchada Argentina
+            </h1>
+            <div class="inline-block px-3 py-1 bg-white/10 rounded-full text-sm font-semibold tracking-wide text-white">
+                Mundial 2026 - Menú y Estadísticas
+            </div>
+        </div>
+
+        <div class="p-6 md:p-8 space-y-8">
+            
+            <section>
+                <h2 class="text-2xl font-bold mb-3 border-b-2 border-white/20 inline-block text-blue-300 theme-font tracking-wide">Contexto</h2>
+                <div class="leading-relaxed opacity-90 text-lg">
+                    <p class='mb-2'>La AFA necesita un systema para controlar la venta de entradas de los hinchas argentinos en los diferentes estadios donde jugará la Selección en el Mundial 2026. Además, el Dibu Martínez ha pedido que se lleve un registro estricto para que la hinchada se haga sentir.</p>
+                </div>
+            </section>
+
+            <section class="bg-black/10 p-5 rounded-xl border border-white/5 shadow-inner">
+                <h2 class="text-2xl font-bold mb-3 text-blue-300 flex items-center gap-2 theme-font tracking-wide">
+                    Tu Misión
+                </h2>
+                <div class="leading-relaxed opacity-95 text-md space-y-2">
+                    <p>Completar el programa en PSeInt que administra esta información. Se te entrega un archivo base con el menú y salida resueltos. Debes desarrollar:</p>
+                    <ul class="list-disc pl-5 space-y-1">
+                        <li>El bloque <strong>Segun</strong> en el algoritmo principal para invocar módulos.</li>
+                        <li><strong>Módulo de Entrada:</strong> Solicitar <em>capacidad total</em> del estadio y validar que sea mayor a 10000.</li>
+                        <li><strong>Módulo de Proceso 1:</strong> Recibir la capacidad total por parámetro. Procesar <em>N</em> sectores, pedir entradas vendidas validando que sean positivas y, además, <strong>verificar que no superen la capacidad total</strong> del estadio. Identificar el valor <strong>MÍNIMO</strong> de ventas y en qué <strong>sector (posición)</strong> ocurrió.</li>
+                        <li><strong>Módulo de Proceso 2:</strong> Recibir la capacidad total por parámetro. Procesar <em>N</em> sectores, validar ventas, sumarlas en un <strong>ACUMULADOR</strong> y calcular qué <strong>PORCENTAJE</strong> exacto representan las ventas totales acumuladas sobre dicha capacidad total del estadio.</li>
+                    </ul>
+                </div>
+            </section>
+
+            <section class="bg-black/20 p-5 md:p-6 rounded-xl border border-white/5 shadow-inner">
+                <h2 class="text-xl font-bold mb-4 text-blue-300 theme-font tracking-wide flex items-center gap-2">
+                    Casos de Prueba (Ejecuciones Esperadas)
+                </h2>
+                
+                <div class="flex overflow-x-auto no-scrollbar gap-2 mb-6 pb-2 border-b border-white/10" id="tabs-container">
+                    <button onclick="switchTab(0)" class="tab-btn px-4 py-2 rounded-lg font-semibold text-sm transition-all border whitespace-nowrap bg-blue-300 text-black border-blue-300">
+                        Caso 1: Validar Capacidad Inválida
+                    </button>
+                    <button onclick="switchTab(1)" class="tab-btn px-4 py-2 rounded-lg font-semibold text-sm transition-all border whitespace-nowrap bg-white/5 text-white/70 border-white/10 hover:bg-white/10">
+                        Caso 2: Búsqueda de Mínimo y Porcentaje
+                    </button>
+                </div>
+
+                <div id="tab-contents">
+                    <div class="tab-content active">
+                        <div class="grid grid-cols-1 md:grid-cols-12 gap-6">
+                            <div class="md:col-span-4 bg-black/30 p-5 rounded-xl border border-white/10 flex flex-col">
+                                <h3 class="text-sm font-bold mb-3 text-blue-300 uppercase tracking-wider">Entrada (Simulada)</h3>
+                                <div class="flex-grow bg-black/50 p-4 rounded-lg border border-white/5">
+                                    <pre class="console text-sm text-gray-300 whitespace-pre-wrap leading-relaxed">Opción 1
+(ingresa 5000)
+(ingresa 50000)
+Opción 4
+Opción 0</pre>
+                                </div>
+                            </div>
+                            <div class="md:col-span-8 bg-[#0a0a0a] p-5 rounded-xl border border-gray-800 shadow-inner flex flex-col relative overflow-hidden">
+                                <h3 class="text-sm font-bold mb-3 text-green-400 uppercase tracking-wider">Salida Esperada por Pantalla</h3>
+                                <div class="flex-grow bg-black/40 p-4 rounded-lg border border-white/5 overflow-x-auto">
+                                    <pre class="console text-green-400 text-sm whitespace-pre-wrap leading-relaxed">=== ENTRADAS HINCHADA ARGENTINA 2026 ===
+Ingrese una opción: 1
+Ingrese la capacidad total del estadio: 5000
+[Error] La capacidad debe ser mayor a 10000.
+Ingrese la capacidad total del estadio: 50000
+(Regresa al menú)
+
+Ingrese una opción: 4
+Capacidad total registrada del estadio: 50000
+
+Ingrese una opción: 0
+(Fin del programa)</pre>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-content ">
+                        <div class="grid grid-cols-1 md:grid-cols-12 gap-6">
+                            <div class="md:col-span-4 bg-black/30 p-5 rounded-xl border border-white/10 flex flex-col">
+                                <h3 class="text-sm font-bold mb-3 text-blue-300 uppercase tracking-wider">Entrada (Simulada)</h3>
+                                <div class="flex-grow bg-black/50 p-4 rounded-lg border border-white/5">
+                                    <pre class="console text-sm text-gray-300 whitespace-pre-wrap leading-relaxed">Asume Capacidad = 50000
+
+Opción 2
+(N=3 sectores)
+(ventas: 10000, 2000, 60000 -> ¡Error!)
+(reingresa sector 3: 15000)
+
+Opción 3
+(N=2 sectores)
+(ventas: 2500, 2500)
+
+Opción 0</pre>
+                                </div>
+                            </div>
+                            <div class="md:col-span-8 bg-[#0a0a0a] p-5 rounded-xl border border-gray-800 shadow-inner flex flex-col relative overflow-hidden">
+                                <h3 class="text-sm font-bold mb-3 text-green-400 uppercase tracking-wider">Salida Esperada por Pantalla</h3>
+                                <div class="flex-grow bg-black/40 p-4 rounded-lg border border-white/5 overflow-x-auto">
+                                    <pre class="console text-green-400 text-sm whitespace-pre-wrap leading-relaxed">Ingrese una opción: 2
+Ingrese la cantidad de sectores a analizar: 3
+Ventas sector 1: 10000
+Ventas sector 2: 2000
+Ventas sector 3: 60000
+[Error] Las ventas no pueden superar la capacidad total (50000).
+Ventas sector 3: 15000
+El sector con menos ventas fue el sector 2 con 2000 entradas.
+
+Ingrese una opción: 3
+Ingrese la cantidad de sectores a calcular: 2
+Ventas sector 1: 2500
+Ventas sector 2: 2500
+Ventas totales acumuladas en sectores: 5000
+Porcentaje de ventas respecto a la capacidad del estadio: 10.0%
+
+Ingrese una opción: 0
+(Fin del programa)</pre>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="bg-black/20 p-5 md:p-6 rounded-xl border border-white/5 shadow-inner">
+                <h2 class="text-xl font-bold mb-4 text-blue-300 theme-font tracking-wide flex items-center gap-2">
+                    Código Base (PSeInt)
+                </h2>
+                <div class="bg-[#1e1e1e] p-4 rounded-lg border border-white/10 overflow-x-auto">
+                    <pre class="console text-sm text-[#d4d4d4] whitespace-pre-wrap leading-relaxed">Algoritmo HinchadaArgentina_Tema2
+	Definir opc, capacidadTotal Como Entero;
+	capacidadTotal = 0;
+	opc = -1;
+	
+	Repetir
+		MostrarMenu(opc);
+		
+		// [TU CÓDIGO AQUÍ - Construye el Segun completo con las opciones 0, 1, 2, 3 y 4]
+		// Opción 1: Llama a IngresarCapacidadTotal (Pasar variable por referencia)
+		// Opción 2: Llama a ProcesarSectorMinimo (Pasar capacidadTotal por valor para validar topes)
+		// Opción 3: Llama a CalcularPorcentajeVentas (Pasar capacidadTotal por valor para calcular porcentaje)
+		// Opción 4: Llama a MostrarEstado (Pasar variable por valor)
+		// Opción 0: Mostrar mensaje de salida
+		
+		Esperar Tecla;
+	Mientras Que opc <> 0
+FinAlgoritmo
+
+SubProceso MostrarMenu(opc Por Referencia)
+	Borrar Pantalla;
+	Escribir "=== ENTRADAS HINCHADA ARGENTINA 2026 ===";
+	Escribir "1. Ingresar Capacidad Total (Entrada)";
+	Escribir "2. Buscar Sector con Menos Ventas (Extremo con Tope)";
+	Escribir "3. Calcular Porcentaje de Ocupación Real (Porcentaje)";
+	Escribir "4. Ver Estado Actual (Salida)";
+	Escribir "0. Salir";
+	Escribir "Ingrese una opción: ";
+	Leer opc;
+FinSubProceso
+
+// [TU CÓDIGO AQUÍ]
+// Desarrolla el Módulo de Entrada.
+// Recuerda usar paso Por Referencia para guardar el valor en capacidadTotal, y validar que la capacidad sea > 10000.
+SubProceso IngresarCapacidadTotal()
+	
+FinSubProceso
+
+// [TU CÓDIGO AQUÍ]
+// Desarrolla el Módulo para hallar el MÍNIMO y su POSICIÓN.
+// 1. Recibe la capacidadTotal como parámetro (Por Valor).
+// 2. Pedir N sectores e iterar pidiendo ventas.
+// 3. Validar que las ventas sean positivas y que NO superen a capacidadTotal.
+// 4. Determinar el mínimo, en qué iteración ocurrió y mostrar el resultado.
+SubProceso ProcesarSectorMinimo(capacidadTotal)
+	
+FinSubProceso
+
+// [TU CÓDIGO AQUÍ]
+// Desarrolla el Módulo para calcular PORCENTAJE.
+// 1. Recibe la capacidadTotal como parámetro (Por Valor).
+// 2. Pedir N sectores e iterar acumulando las entradas vendidas validando (deben ser positivas).
+// 3. Mostrar las ventas totales calculando qué porcentaje representan frente a la capacidadTotal.
+SubProceso CalcularPorcentajeVentas(capacidadTotal)
+	
+FinSubProceso
+
+SubProceso MostrarEstado(capacidadTotal)
+	Escribir "Capacidad total registrada del estadio: ", capacidadTotal;
+FinSubProceso</pre>
+                </div>
+            </section>
+
+            <section class="bg-black/20 p-5 md:p-6 rounded-xl border border-white/5 shadow-inner">
+                <h2 class="text-xl font-bold mb-4 text-blue-300 theme-font tracking-wide flex items-center gap-2">
+                    📝 Parte 2: Prueba de Escritorio (Papel y Lápiz)
+                </h2>
+                <div class="leading-relaxed opacity-95 text-md space-y-4">
+                    <p>Analiza el siguiente pseudocódigo y realiza la prueba de escritorio. Indica qué valores toman las variables en cada paso y qué imprime finalmente el algoritmo.</p>
+                    
+                    <div class="bg-[#1e1e1e] p-4 rounded-lg border border-white/10 overflow-x-auto">
+                        <pre class="console text-sm text-[#d4d4d4] whitespace-pre-wrap leading-relaxed">Algoritmo PruebaEscritorio_Dibu
+    Definir atajadas_dibu, penales_pateados Como Entero
+    atajadas_dibu = 1
+    penales_pateados = 0
+    
+    Mientras penales_pateados &lt; 5 Hacer
+        Si atajadas_dibu &lt;= 2 Entonces
+            atajadas_dibu = atajadas_dibu + 1
+        SiNo
+            atajadas_dibu = atajadas_dibu + 0
+        FinSi
+        penales_pateados = penales_pateados + 2
+    FinMientras
+    
+    Escribir "Atajadas totales del Dibu: ", atajadas_dibu
+FinAlgoritmo</pre>
+                    </div>
+
+                    <div class="bg-blue-950/50 p-5 rounded-xl border border-blue-500/20 shadow-md">
+                        <p class="font-bold text-blue-200 mb-2">Tu tarea:</p>
+                        <p class="text-blue-100 mb-4 text-sm">Dibuja en tu hoja una tabla como la siguiente para registrar los cambios en las variables paso a paso, y luego anota la salida final por pantalla.</p>
+                        
+                        <div class="overflow-x-auto no-scrollbar">
+                            <table class="w-full text-left border-collapse min-w-[500px]">
+                                <thead>
+                                    <tr class="bg-blue-800/60 border-b border-blue-400/40 text-blue-200">
+                                        <th class="p-3 font-semibold w-1/4">Iteración</th>
+                                        <th class="p-3 font-semibold w-1/4">penales_pateados</th>
+                                        <th class="p-3 font-semibold w-1/4">atajadas_dibu</th>
+                                        <th class="p-3 font-semibold w-1/4">Condición (penales_pateados &lt; 5)</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="text-blue-100">
+                                    <tr class="border-b border-blue-400/10">
+                                        <td class="p-3">Inicialización</td>
+                                        <td class="p-3"><div class="h-6 w-full bg-black/20 rounded"></div></td>
+                                        <td class="p-3"><div class="h-6 w-full bg-black/20 rounded"></div></td>
+                                        <td class="p-3 text-gray-400 italic text-sm">-</td>
+                                    </tr>
+                                    <tr class="border-b border-blue-400/10">
+                                        <td class="p-3">1</td>
+                                        <td class="p-3"><div class="h-6 w-full bg-black/20 rounded"></div></td>
+                                        <td class="p-3"><div class="h-6 w-full bg-black/20 rounded"></div></td>
+                                        <td class="p-3"><div class="h-6 w-full bg-black/20 rounded"></div></td>
+                                    </tr>
+                                    <tr class="border-b border-blue-400/10">
+                                        <td class="p-3">2</td>
+                                        <td class="p-3"><div class="h-6 w-full bg-black/20 rounded"></div></td>
+                                        <td class="p-3"><div class="h-6 w-full bg-black/20 rounded"></div></td>
+                                        <td class="p-3"><div class="h-6 w-full bg-black/20 rounded"></div></td>
+                                    </tr>
+                                    <tr class="border-b border-blue-400/10">
+                                        <td class="p-3">3</td>
+                                        <td class="p-3"><div class="h-6 w-full bg-black/20 rounded"></div></td>
+                                        <td class="p-3"><div class="h-6 w-full bg-black/20 rounded"></div></td>
+                                        <td class="p-3"><div class="h-6 w-full bg-black/20 rounded"></div></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="p-3">4 (Fin de ciclo)</td>
+                                        <td class="p-3"><div class="h-6 w-full bg-black/20 rounded"></div></td>
+                                        <td class="p-3"><div class="h-6 w-full bg-black/20 rounded"></div></td>
+                                        <td class="p-3"><div class="h-6 w-full bg-black/20 rounded"></div></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="mt-6 border-t border-blue-500/20 pt-4">
+                            <h3 class="text-sm font-bold mb-2 text-green-400 uppercase tracking-wider">Salida Final por Pantalla</h3>
+                            <div class="h-12 w-full bg-[#0a0a0a] border border-gray-700 rounded-lg flex items-center px-4">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+        </div>
+    </div>
+
+    <script>
+        function switchTab(tabIndex) {
+            document.querySelectorAll('.tab-btn').forEach((btn, idx) => {
+                if (idx === tabIndex) {
+                    btn.classList.add('bg-blue-300', 'text-black', 'border-blue-300');
+                    btn.classList.remove('bg-white/5', 'text-white/70', 'border-white/10', 'hover:bg-white/10');
+                } else {
+                    btn.classList.remove('bg-blue-300', 'text-black', 'border-blue-300');
+                    btn.classList.add('bg-white/5', 'text-white/70', 'border-white/10', 'hover:bg-white/10');
+                }
+            });
+            document.querySelectorAll('.tab-content').forEach((content, idx) => {
+                if (idx === tabIndex) {
+                    content.classList.add('active');
+                } else {
+                    content.classList.remove('active');
+                }
+            });
+        }
+    </script>
+</body>
+</html>
