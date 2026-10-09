@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --jefe-bg: #ebf5fb;
+            --jefe-border: #3498db;
+            --obrero-bg: #fdf2e9;
+            --obrero-border: #e67e22;
+            --error: #e74c3c;
+            --success: #27ae60;
+            --arg1-color: #9b59b6;
+            --arg2-color: #16a085;
+            --text-dark: #333;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, Arial, sans-serif;
+            margin: 0;
+            padding: 15px;
+            box-sizing: border-box;
+            background: #ffffff;
+            color: var(--primary);
+        }
+
+        .widget-container {
+            max-width: 650px;
+            margin: 0 auto;
+            border: 2px solid #ecf0f1;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+
+        h3 { margin-top: 0; text-align: center; color: var(--primary); }
+
+        .panel {
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 5px solid;
+            background: white;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            position: relative;
+        }
+
+        .panel-jefe { border-color: var(--jefe-border); background: var(--jefe-bg); margin-bottom: 0; }
+        .panel-obrero { border-color: var(--obrero-border); background: var(--obrero-bg); }
+
+        .panel-titulo { font-weight: bold; margin-bottom: 10px; font-size: 0.9em; }
+
+        .controles {
+            display: flex;
+            gap: 10px;
+            align-items: flex-end;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+
+        .input-group { display: flex; flex-direction: column; }
+        .input-group label { font-size: 0.8em; font-weight: bold; margin-bottom: 3px; }
+        
+        input {
+            width: 70px;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            text-align: center;
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+
+        button {
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.3s;
+            height: 40px;
+        }
+
+        .btn-run { background: var(--success); flex-grow: 1; }
+        .btn-run:hover { background: #219653; }
+        .btn-run:disabled { background: #95a5a6; cursor: not-allowed; }
+
+        .btn-swap { background: #34495e; }
+        .btn-swap:hover { background: #2c3e50; }
+
+        .codigo {
+            font-family: 'Courier New', monospace;
+            font-size: 0.85em;
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 10px;
+            white-space: pre-wrap;
+        }
+
+        .hl-kw { color: #569cd6; font-weight: bold; }
+        .hl-var { color: #9cdcfe; }
+
+        /* Variables y Cajas */
+        .var-box {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-weight: bold;
+            color: white;
+            min-width: 20px;
+            text-align: center;
+        }
+        
+        .box-arg1 { background: var(--arg1-color); }
+        .box-arg2 { background: var(--arg2-color); }
+        
+        .param-slot {
+            display: inline-block;
+            background: white;
+            border: 2px dashed #7f8c8d;
+            padding: 2px 10px;
+            border-radius: 4px;
+            color: #7f8c8d;
+            font-weight: bold;
+            min-width: 20px;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        /* Área de Tránsito */
+        .transito-area {
+            height: 100px;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 60px; /* Distancia entre carriles */
+        }
+
+        .carril {
+            position: relative;
+            width: 40px;
+            height: 100%;
+            border-left: 2px dashed #bdc3c7;
+            border-right: 2px dashed #bdc3c7;
+            background: rgba(236, 240, 241, 0.5);
+            display: flex;
+            justify-content: center;
+        }
+
+        .carril::after {
+            content: "↓";
+            position: absolute;
+            bottom: 5px;
+            color: #bdc3c7;
+            font-weight: bold;
+        }
+
+        .paquete {
+            position: absolute;
+            top: -20px;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            color: white;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+            opacity: 0;
+            transition: all 1s ease-in-out;
+            z-index: 10;
+        }
+
+        .carril-1 .paquete { background: var(--arg1-color); }
+        .carril-2 .paquete { background: var(--arg2-color); }
+
+        .resultado-final {
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 6px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 1.1em;
+            background: #fff;
+            border: 2px solid #ccc;
+            min-height: 25px;
+        }
+
+        .alerta { color: var(--error); font-size: 0.85em; display: none; margin-top: 5px; }
+
+    </style>
+</head>
+<body>
+
+<div class="widget-container">
+    <h3>El Orden de los Argumentos</h3>
+    
+    <div class="panel panel-jefe">
+        <div class="panel-titulo" style="color: var(--jefe-border);">🏢 Algoritmo Principal</div>
+        
+        <div class="controles">
+            <div class="input-group">
+                <label style="color: var(--arg1-color);">Arg 1</label>
+                <input type="number" id="inArg1" value="10">
+            </div>
+            <button class="btn-swap" onclick="invertirValores()" title="Invertir valores">⇄ Invertir</button>
+            <div class="input-group">
+                <label style="color: var(--arg2-color);">Arg 2</label>
+                <input type="number" id="inArg2" value="3">
+            </div>
+            <button class="btn-run" id="btnRun" onclick="ejecutar()">Llamar Función</button>
+        </div>
+
+        <div class="codigo">
+<span class="hl-var">resultadoFinal</span> = CalcularPotencia( <span class="var-box box-arg1" id="lblArg1">10</span> , <span class="var-box box-arg2" id="lblArg2">3</span> )
+        </div>
+    </div>
+
+    <div class="transito-area">
+        <div class="carril carril-1">
+            <div class="paquete" id="paquete1">10</div>
+        </div>
+        <div class="carril carril-2">
+            <div class="paquete" id="paquete2">3</div>
+        </div>
+    </div>
+
+    <div class="panel panel-obrero">
+        <div class="panel-titulo" style="color: var(--obrero-border);">👷 Función (El Obrero Calculador)</div>
+        
+        <div class="codigo">
+<span class="hl-kw">Funcion</span> <span class="hl-var">retorno</span> = CalcularPotencia( base , exponente )
+    <span style="color:#6a9955;">// El parámetro 1 recibe el Argumento 1</span>
+    <span style="color:#6a9955;">// El parámetro 2 recibe el Argumento 2</span>
+    <span class="hl-var">retorno</span> = <span class="param-slot" id="slotBase">base</span> ^ <span class="param-slot" id="slotExp">exponente</span>
+<span class="hl-kw">FinFuncion</span>
+        </div>
+
+        <div class="resultado-final" id="resFinal">Esperando ejecución...</div>
+        <div class="alerta" id="alertaError">⚠️ Nota cómo el orden de envío alteró dramáticamente el resultado, ¡aunque el código sea el mismo!</div>
+    </div>
+</div>
+
+<script>
+    // Sincronizar etiquetas de código cuando el usuario escribe
+    document.getElementById('inArg1').addEventListener('input', syncLabels);
+    document.getElementById('inArg2').addEventListener('input', syncLabels);
+
+    function syncLabels() {
+        document.getElementById('lblArg1').textContent = document.getElementById('inArg1').value || '0';
+        document.getElementById('lblArg2').textContent = document.getElementById('inArg2').value || '0';
+    }
+
+    function invertirValores() {
+        const in1 = document.getElementById('inArg1');
+        const in2 = document.getElementById('inArg2');
+        const temp = in1.value;
+        in1.value = in2.value;
+        in2.value = temp;
+        syncLabels();
+        
+        // Reset visuales
+        document.getElementById('resFinal').textContent = "Esperando ejecución...";
+        document.getElementById('resFinal').style.borderColor = "#ccc";
+        document.getElementById('slotBase').textContent = "base";
+        document.getElementById('slotBase').style.borderColor = "#7f8c8d";
+        document.getElementById('slotBase').style.backgroundColor = "white";
+        document.getElementById('slotExp').textContent = "exponente";
+        document.getElementById('slotExp').style.borderColor = "#7f8c8d";
+        document.getElementById('slotExp').style.backgroundColor = "white";
+        document.getElementById('alertaError').style.display = "none";
+    }
+
+    async function ejecutar() {
+        const arg1 = parseFloat(document.getElementById('inArg1').value) || 0;
+        const arg2 = parseFloat(document.getElementById('inArg2').value) || 0;
+        
+        const btn = document.getElementById('btnRun');
+        const p1 = document.getElementById('paquete1');
+        const p2 = document.getElementById('paquete2');
+        const slotBase = document.getElementById('slotBase');
+        const slotExp = document.getElementById('slotExp');
+        const resFinal = document.getElementById('resFinal');
+        const alerta = document.getElementById('alertaError');
+
+        btn.disabled = true;
+        alerta.style.display = "none";
+        resFinal.textContent = "⚙️ Procesando...";
+        resFinal.style.borderColor = "#ccc";
+        
+        slotBase.textContent = "base";
+        slotBase.style.backgroundColor = "white";
+        slotBase.style.borderColor = "#7f8c8d";
+        slotExp.textContent = "exponente";
+        slotExp.style.backgroundColor = "white";
+        slotExp.style.borderColor = "#7f8c8d";
+
+        // Setup Paquetes
+        p1.textContent = arg1;
+        p2.textContent = arg2;
+        
+        p1.style.transition = "none";
+        p2.style.transition = "none";
+        p1.style.top = "-20px";
+        p2.style.top = "-20px";
+        
+        // Reflow
+        p1.offsetHeight;
+        
+        // Iniciar Animación
+        p1.style.transition = "all 1s ease-in-out";
+        p2.style.transition = "all 1s ease-in-out";
+        p1.style.opacity = "1";
+        p2.style.opacity = "1";
+        
+        p1.style.top = "100px";
+        p2.style.top = "100px";
+        
+        await delay(1000); // Esperar viaje
+        
+        p1.style.opacity = "0";
+        p2.style.opacity = "0";
+
+        // Aterrizaje en los parámetros
+        slotBase.textContent = arg1;
+        slotBase.style.borderColor = "var(--arg1-color)";
+        slotBase.style.backgroundColor = "rgba(155, 89, 182, 0.1)";
+        
+        slotExp.textContent = arg2;
+        slotExp.style.borderColor = "var(--arg2-color)";
+        slotExp.style.backgroundColor = "rgba(22, 160, 133, 0.1)";
+        
+        await delay(800);
+
+        // Cálculo
+        const calculo = Math.pow(arg1, arg2);
+        
+        // Formatear números muy grandes para evitar desbordes
+        let textoCalculo = calculo;
+        if(calculo > 1000000) {
+            textoCalculo = calculo.toExponential(2);
+        }
+
+        resFinal.innerHTML = `Cálculo: ${arg1} <sup>${arg2}</sup> = <span style="color:var(--success); font-size:1.2em;">${textoCalculo}</span>`;
+        resFinal.style.borderColor = "var(--success)";
+
+        // Mostrar alerta si el cálculo es extraño (ej. invirtieron 10 y 3)
+        if (arg1 !== 10 || arg2 !== 3) {
+            alerta.style.display = "block";
+        }
+
+        setTimeout(() => { btn.disabled = false; }, 500);
+    }
+
+    function delay(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    }
+</script>
+
+</body>
+</html>

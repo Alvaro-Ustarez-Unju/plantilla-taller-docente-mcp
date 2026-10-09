@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --jefe-bg: #ebf5fb;
+            --jefe-border: #3498db;
+            --obrero-bg: #fdf2e9;
+            --obrero-border: #e67e22;
+            --doc-original: #a2d9ce;
+            --doc-copia: #f9e79f;
+            --text-dark: #333;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, Arial, sans-serif;
+            margin: 0;
+            padding: 15px;
+            box-sizing: border-box;
+            background: #ffffff;
+            color: var(--primary);
+        }
+
+        .widget-container {
+            max-width: 600px;
+            margin: 0 auto;
+            border: 2px solid #ecf0f1;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+
+        h3, h4 { margin-top: 0; }
+        
+        .panel {
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 5px solid;
+            margin-bottom: 15px;
+            position: relative;
+            min-height: 120px;
+        }
+
+        .panel-jefe { background: var(--jefe-bg); border-color: var(--jefe-border); }
+        .panel-obrero { background: var(--obrero-bg); border-color: var(--obrero-border); }
+
+        .controles {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            align-items: center;
+        }
+
+        input {
+            width: 80px;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-family: inherit;
+            text-align: center;
+        }
+
+        button {
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        .btn-jefe { background: var(--jefe-border); }
+        .btn-jefe:hover { background: #2980b9; }
+        .btn-jefe:disabled { background: #95a5a6; cursor: not-allowed; }
+
+        .btn-obrero { background: var(--obrero-border); display: none; }
+        .btn-obrero:hover { background: #d35400; }
+
+        .documento {
+            display: inline-flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 90px;
+            height: 110px;
+            border: 2px solid #ccc;
+            border-radius: 4px;
+            font-weight: bold;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            position: absolute;
+            transition: all 0.8s ease;
+            opacity: 0;
+            z-index: 10;
+        }
+
+        .doc-orig { background: var(--doc-original); right: 20px; top: 20px; }
+        .doc-copia { background: var(--doc-copia); right: 20px; top: 20px; border-style: dashed; }
+
+        .doc-titulo { font-size: 0.7em; margin-bottom: 5px; color: #555; text-transform: uppercase; }
+        .doc-valor { font-size: 1.5em; color: var(--text-dark); }
+
+        .consola {
+            background: #1e1e1e;
+            color: #ecf0f1;
+            padding: 12px;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            height: 120px;
+            overflow-y: auto;
+            font-size: 0.85em;
+            line-height: 1.4;
+        }
+
+        .log-jefe { color: #3498db; }
+        .log-obrero { color: #e67e22; }
+        .log-alerta { color: #e74c3c; font-weight: bold; }
+        
+        .fotocopiadora-msg {
+            text-align: center;
+            font-size: 0.9em;
+            color: #7f8c8d;
+            font-style: italic;
+            height: 20px;
+            margin-bottom: 10px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+    </style>
+</head>
+<body>
+
+<div class="widget-container">
+    <h3>Protección de Datos: Paso por Valor</h3>
+    
+    <div class="panel panel-jefe" id="panelJefe">
+        <h4>🏢 Algoritmo Principal</h4>
+        <div class="controles">
+            <label>miVariable = </label>
+            <input type="number" id="inputValor" value="10">
+            <button class="btn-jefe" id="btnEnviar" onclick="enviarValor()">Llamar Módulo</button>
+        </div>
+        
+        <div id="docOriginal" class="documento doc-orig">
+            <span class="doc-titulo">Original</span>
+            <span class="doc-valor" id="valOriginal">--</span>
+        </div>
+    </div>
+
+    <div class="fotocopiadora-msg" id="msgFotocopia">🖨️ Generando fotocopia de seguridad...</div>
+
+    <div class="panel panel-obrero" id="panelObrero">
+        <h4>👷 SubProceso (Módulo)</h4>
+        <div class="controles">
+            <button class="btn-obrero" id="btnAlterar" onclick="alterarFotocopia()">Alterar valorFotocopia a 999</button>
+        </div>
+        
+        <div id="docCopia" class="documento doc-copia">
+            <span class="doc-titulo">Fotocopia</span>
+            <span class="doc-valor" id="valCopia">--</span>
+        </div>
+    </div>
+
+    <div class="consola" id="consolaSalida">Esperando ejecución...</div>
+</div>
+
+<script>
+    let valorActual = 0;
+
+    async function enviarValor() {
+        const input = document.getElementById('inputValor').value;
+        if(input === "") return;
+        valorActual = input;
+        
+        const btnEnviar = document.getElementById('btnEnviar');
+        const btnAlterar = document.getElementById('btnAlterar');
+        const docOrig = document.getElementById('docOriginal');
+        const valOrig = document.getElementById('valOriginal');
+        const docCopia = document.getElementById('docCopia');
+        const valCopia = document.getElementById('valCopia');
+        const consola = document.getElementById('consolaSalida');
+        const msgFoto = document.getElementById('msgFotocopia');
+
+        // Reset UI
+        btnEnviar.disabled = true;
+        btnAlterar.style.display = "none";
+        docCopia.style.opacity = "0";
+        docCopia.style.transform = "translateY(0)";
+        consola.innerHTML = "";
+        
+        // Mostrar Original
+        valOrig.textContent = valorActual;
+        docOrig.style.opacity = "1";
+        logConsola(`[Principal] miVariable definida como: ${valorActual}`, 'log-jefe');
+        
+        await delay(1000);
+        
+        // Efecto fotocopia
+        msgFoto.style.opacity = "1";
+        logConsola(`[Sistema] Enviando parámetro (Paso por Valor)...`);
+        
+        await delay(1200);
+        msgFoto.style.opacity = "0";
+        
+        // Aparece la copia y viaja
+        valCopia.textContent = valorActual;
+        docCopia.style.top = "-80px"; // Inicia arriba (en el panel jefe)
+        docCopia.style.opacity = "1";
+        
+        await delay(100);
+        docCopia.style.transform = "translateY(100px)"; // Baja al panel obrero
+        
+        await delay(800);
+        logConsola(`[SubProceso] Recibe valorFotocopia: ${valorActual}`, 'log-obrero');
+        btnAlterar.style.display = "block";
+    }
+
+    async function alterarFotocopia() {
+        const btnAlterar = document.getElementById('btnAlterar');
+        const valCopia = document.getElementById('valCopia');
+        const valOrig = document.getElementById('valOriginal');
+        const docCopia = document.getElementById('docCopia');
+        const btnEnviar = document.getElementById('btnEnviar');
+
+        btnAlterar.disabled = true;
+        
+        logConsola(`[SubProceso] Modificando parámetro interno...`, 'log-alerta');
+        
+        // Alterar solo la copia
+        docCopia.style.transform = "translateY(100px) scale(1.1) rotate(-5deg)";
+        docCopia.style.borderColor = "#e74c3c";
+        valCopia.style.color = "#e74c3c";
+        valCopia.textContent = "999";
+        
+        await delay(600);
+        docCopia.style.transform = "translateY(100px) scale(1) rotate(0deg)";
+        
+        logConsola(`[SubProceso] valorFotocopia ahora es: 999`, 'log-obrero');
+        
+        await delay(1200);
+        logConsola(`[Sistema] Fin del SubProceso. Regresando al Principal...`);
+        
+        await delay(1000);
+        
+        // Demostrar que el original sigue igual
+        docOriginal.style.transform = "scale(1.1)";
+        setTimeout(() => docOriginal.style.transform = "scale(1)", 300);
+        
+        logConsola(`[Principal] miVariable SIGUE SIENDO: ${valorActual} ✅`, 'log-jefe');
+        
+        // Restaurar estado para volver a jugar
+        setTimeout(() => {
+            btnEnviar.disabled = false;
+            btnAlterar.disabled = false;
+            btnAlterar.style.display = "none";
+            docCopia.style.borderColor = "#ccc";
+            valCopia.style.color = "var(--text-dark)";
+            docCopia.style.opacity = "0";
+            docCopia.style.transform = "translateY(0)";
+        }, 3000);
+    }
+
+    function logConsola(texto, clase = '') {
+        const consola = document.getElementById('consolaSalida');
+        consola.innerHTML += `<div class="${clase}">> ${texto}</div>`;
+        consola.scrollTop = consola.scrollHeight;
+    }
+
+    function delay(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    }
+</script>
+
+</body>
+</html>

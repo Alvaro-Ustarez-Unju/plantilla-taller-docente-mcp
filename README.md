@@ -13,16 +13,43 @@ Dentro de este repositorio encontrarás la carpeta `/toolkit_docente`. Esta carp
 
 ---
 
-## 🧪 Ejemplos de Laboratorios Interactivos
-En la carpeta `/ejemplos_labs_interactivos` encontrarás un catálogo de 19 ejemplos prácticos de laboratorios web listos para usar, especialmente diseñados para la cátedra *Algoritmos y Programación*. Estos ejemplos demuestran cómo crear interfaces visuales e interactivas (widgets) en HTML/JS para evaluar de forma didáctica:
-- Expresiones algebraicas y linealización.
-- Operadores Relacionales (>, <, ==).
-- Operadores Lógicos (AND, OR, NOT) y Tablas de Verdad.
-- Uso matemático y de extracción del operador Módulo (%).
+## 🧪 Catálogo de Ejemplos y Laboratorios por Materia
+En la carpeta `/ejemplos_labs_interactivos` encontrarás un rico ecosistema de recursos didácticos reales, interactivos y listos para usar en tus clases, organizados por cátedras universitarias:
 
-Además, dentro de esta misma sección, encontrarás la subcarpeta `/examenes_y_simulacros`, la cual incluye paquetes completos de simulacros y exámenes reales programados en C++ (con sus respectivas resoluciones completas). ¡Puedes usarlos como base o inspiración para construir tu propio banco de evaluaciones!
+### 1. 💻 Algoritmos y Programación (`/Algoritmos y Programacion`)
+- **35 Laboratorios Web Interactivos:** Archivos `.html` autocontenidos y de carga directa en el navegador, cubriendo:
+  - Expresiones algebraicas y linealización para computadora.
+  - Operadores relacionales (`>`, `<`, `==`) y lógica con situaciones de contexto real.
+  - Operadores lógicos (`AND`, `OR`, `NOT`) y tablas de verdad dinámicas.
+  - Operador módulo (`%` / `MOD`) para descomposición temporal y numérica.
+  - Subprocesos y funciones (paso de parámetros por valor/referencia, ámbito local de variables y retorno).
+- **Banco de Parciales y Simulacros (`/examenes_y_simulacros`):** Paquetes integrales de evaluación que contienen enunciados web temáticos interactivos, resoluciones de referencia en C++, rúbricas analíticas y especificaciones formales SDD (*Spec-Driven Development*).
 
-¡Explóralos haciendo doble clic en cualquiera de los archivos `.html` para verlos en acción en tu navegador!
+### 2. 🌳 Estructuras de Datos (`/Estructuras de Datos`)
+- **Simuladores y Widgets Visuales:** Herramientas interactivas para experimentar con grafos y estructuras dinámicas:
+  - `estructuras_dinamicas.html`: Explorador y manipulador interactivo de memoria y nodos.
+  - `dijkstra.html`: Simulación visual paso a paso del algoritmo de caminos mínimos de Dijkstra sobre grafos ponderados.
+  - `puntos_articulacion.html`: Análisis topológico de grafos y detección de nodos críticos/puentes de corte.
+  - `guia_conversion.html`: Asistente visual y conceptual para transformaciones entre representaciones.
+
+### 3. 🎲 Modelos y Simulación (`/Modelos y Simulacion`)
+- **Simuladores Estocásticos y Estadísticos:**
+  - `TP2-Simulador-MonteCarlo`: Aplicación web interactiva completa (HTML/CSS/JS) para experimentación con el método de Monte Carlo y análisis de convergencia.
+  - `TP3-Generacion de Nros PseudoAleatorios`: Generadores congruenciales lineales y algoritmos de generación de variables uniformes.
+  - `TP4-Pruebas-Estadisticas`: Baterías de pruebas estadísticas de bondad de ajuste (Chi-Cuadrado, Kolmogorov-Smirnov, etc.).
+
+### 4. 🐧 Sistemas Operativos I (`/Sistemas Operativos I`)
+- **Guías Prácticas y Autoevaluaciones (Clases 1 a 5):**
+  - Laboratorios prácticos de permisos de archivos en Linux (SUID, GUID, Sticky Bit, umask) y scripts de verificación automatizada.
+  - Prácticas de criptografía simétrica/asimétrica (RSA), integridad y firma con SHA-256.
+  - Cuestionarios conceptuales psicométricos calibrados para Quizizz (`quizizz.md`) y material teórico de cátedra.
+
+### 5. ⚙️ Sistemas Operativos II (`/Sistemas Operativos II`)
+- **Concurrencia, Procesos y Evaluación Continua (Clases 1 a 4):**
+  - Guías y ejercicios sobre ciclo de vida de procesos, planificación, interbloqueo (*deadlocks*) y sincronización.
+  - Proyectos estructurados con autograders en Python (`autograder.py`) y rúbricas en JSON para integración con GitHub Classroom y GitHub Actions.
+
+> **💡 Cómo utilizarlos:** Los archivos `.html` pueden abrirse directamente en cualquier navegador moderno haciendo doble clic sobre ellos, o integrarse en Google Sites, Moodle o plataformas institucionales como widgets de práctica activa.
 
 ---
 

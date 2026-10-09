@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --bg-light: #f8f9fa;
+            --border-color: #dee2e6;
+            --entrada: #3498db;
+            --proceso: #9b59b6;
+            --salida: #e74c3c;
+            --jefe-bg: #ebf5fb;
+            --obrero-bg: #fdf2e9;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, Arial, sans-serif;
+            margin: 0;
+            padding: 15px;
+            box-sizing: border-box;
+            background: #ffffff;
+            color: var(--primary);
+        }
+
+        .widget-container {
+            max-width: 650px;
+            margin: 0 auto;
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+
+        .header-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        h3 { margin: 0; color: var(--primary); }
+
+        button {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        button:hover { background: #1a252f; transform: scale(1.02); }
+        button:disabled { background: #95a5a6; cursor: not-allowed; transform: none; }
+
+        .ide-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .modulo {
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            padding: 15px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.95em;
+            background: var(--bg-light);
+            position: relative;
+            transition: all 0.5s ease;
+        }
+
+        .modulo-titulo {
+            position: absolute;
+            top: -12px;
+            left: 15px;
+            background: white;
+            padding: 0 10px;
+            font-weight: bold;
+            font-family: 'Segoe UI', sans-serif;
+            font-size: 0.85em;
+            color: #7f8c8d;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+        }
+
+        .linea {
+            padding: 5px;
+            margin: 2px 0;
+            border-radius: 4px;
+            transition: all 0.5s ease;
+        }
+
+        /* Colores por responsabilidad */
+        .l-entrada { border-left: 4px solid var(--entrada); }
+        .l-proceso { border-left: 4px solid var(--proceso); }
+        .l-salida { border-left: 4px solid var(--salida); background: rgba(231, 76, 60, 0.05); }
+        
+        .l-llamada { 
+            border-left: 4px solid #f1c40f; 
+            background: #fef9e7; 
+            font-weight: bold; 
+            display: none; 
+        }
+
+        /* Obrero (Inicialmente oculto) */
+        #moduloObrero {
+            opacity: 0;
+            transform: translateY(-20px);
+            display: none;
+        }
+
+        .comentario { color: #27ae60; font-size: 0.9em; }
+        .ident { margin-left: 20px; }
+
+        .leyenda {
+            display: flex;
+            gap: 15px;
+            font-size: 0.8em;
+            margin-bottom: 15px;
+            padding: 10px;
+            background: #f1f2f6;
+            border-radius: 6px;
+        }
+
+        .badge {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+        .d-ent { background: var(--entrada); }
+        .d-pro { background: var(--proceso); }
+        .d-sal { background: var(--salida); }
+
+        #mensajeEstado {
+            text-align: center;
+            font-weight: bold;
+            color: #d35400;
+            min-height: 24px;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="widget-container">
+    <div class="header-bar">
+        <h3>Evolución: De Monolito a Módulo</h3>
+        <button id="btnExtraer" onclick="extraerSalida()">Extraer Módulo de Salida</button>
+    </div>
+
+    <div class="leyenda">
+        <div class="badge"><span class="dot d-ent"></span> Entrada (Se queda)</div>
+        <div class="badge"><span class="dot d-pro"></span> Proceso (Se queda)</div>
+        <div class="badge"><span class="dot d-sal"></span> Salida (Se extrae)</div>
+    </div>
+
+    <div id="mensajeEstado">Paso 1: Código Monolítico (Todo junto)</div>
+
+    <div class="ide-container">
+        <div class="modulo" id="moduloJefe">
+            <span class="modulo-titulo">Algoritmo Principal (Jefe)</span>
+            <div class="linea">Algoritmo CalcularSueldo</div>
+            
+            <div class="linea ident l-entrada">
+                <span class="comentario">// 1. Entrada</span><br>
+                Leer horasTrabajadas;
+            </div>
+            
+            <div class="linea ident l-proceso">
+                <span class="comentario">// 2. Proceso</span><br>
+                sueldoFinal <- horasTrabajadas * 1500;
+            </div>
+
+            <div class="linea ident l-salida" id="bloqueSalidaViejo">
+                <span class="comentario">// 3. Salida</span><br>
+                Escribir "***********************";<br>
+                Escribir "El sueldo es: $", sueldoFinal;<br>
+                Escribir "***********************";
+            </div>
+
+            <div class="linea ident l-llamada" id="bloqueLlamada">
+                <span class="comentario">// 3. Delegar Salida al Obrero</span><br>
+                MostrarRecibo(sueldoFinal);
+            </div>
+
+            <div class="linea">FinAlgoritmo</div>
+        </div>
+
+        <div class="modulo" id="moduloObrero">
+            <span class="modulo-titulo" style="color: var(--salida); border-color: var(--salida);">Nuevo SubProceso (Obrero)</span>
+            <div class="linea" style="color: var(--salida); font-weight:bold;">SubProceso MostrarRecibo(monto)</div>
+            <div class="linea ident" id="contenidoObrero">
+                <span class="comentario">// Lógica de salida aislada</span><br>
+                Escribir "***********************";<br>
+                Escribir "El sueldo es: $", monto;<br>
+                Escribir "***********************";
+            </div>
+            <div class="linea" style="color: var(--salida); font-weight:bold;">FinSubProceso</div>
+        </div>
+    </div>
+</div>
+
+<script>
+    async function extraerSalida() {
+        const btn = document.getElementById('btnExtraer');
+        const msj = document.getElementById('mensajeEstado');
+        const bloqueViejo = document.getElementById('bloqueSalidaViejo');
+        const bloqueLlamada = document.getElementById('bloqueLlamada');
+        const moduloObrero = document.getElementById('moduloObrero');
+        const moduloJefe = document.getElementById('moduloJefe');
+
+        btn.disabled = true;
+
+        // Fase 1: Identificar
+        msj.textContent = "Seleccionando la lógica de Salida...";
+        bloqueViejo.style.transform = "scale(1.02)";
+        bloqueViejo.style.boxShadow = "0 0 10px rgba(231, 76, 60, 0.3)";
+        await delay(1500);
+
+        // Fase 2: Extraer
+        msj.textContent = "Extrayendo hacia un nuevo SubProceso...";
+        bloqueViejo.style.opacity = "0";
+        bloqueViejo.style.transform = "scale(0.9) translateY(20px)";
+        await delay(800);
+        bloqueViejo.style.display = "none";
+
+        // Mostrar el obrero
+        moduloObrero.style.display = "block";
+        moduloJefe.style.background = "var(--jefe-bg)";
+        moduloObrero.style.background = "var(--obrero-bg)";
+        
+        // Reflow for transition
+        moduloObrero.offsetHeight; 
+        moduloObrero.style.opacity = "1";
+        moduloObrero.style.transform = "translateY(0)";
+        await delay(1200);
+
+        // Fase 3: Delegar
+        msj.textContent = "Reemplazando por una Llamada al Módulo...";
+        bloqueLlamada.style.display = "block";
+        bloqueLlamada.style.animation = "aparecer 0.5s ease";
+        await delay(1000);
+
+        msj.textContent = "¡Listo! El Algoritmo Principal ahora está modularizado.";
+        msj.style.color = "#27ae60";
+        btn.textContent = "Modularización Completada ✅";
+    }
+
+    function delay(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    }
+</script>
+<style>
+    @keyframes aparecer {
+        from { opacity: 0; transform: translateX(-10px); }
+        to { opacity: 1; transform: translateX(0); }
+    }
+</style>
+
+</body>
+</html>

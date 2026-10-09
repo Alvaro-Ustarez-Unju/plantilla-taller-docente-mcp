@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🍺 Recuperatorio M2 - Tema 4 (Quilmes - Planta de Envasado)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Fira+Code&display=swap"
+        rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        .console {
+            font-family: 'Fira Code', monospace;
+        }
+
+        .theme-font {
+            font-family: 'Inter', sans-serif;
+        }
+
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        .tab-content {
+            transition: all 0.3s ease-in-out;
+            opacity: 0;
+            display: none;
+        }
+
+        .tab-content.active {
+            opacity: 1;
+            display: block;
+            animation: fadeIn 0.4s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(5px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+
+<body class="min-h-screen p-4 md:p-8 flex items-center justify-center bg-[#0f172a]">
+
+    <div
+        class="max-w-4xl w-full bg-blue-950/90 backdrop-blur-md text-blue-50 rounded-2xl shadow-2xl overflow-hidden border border-amber-400/20">
+
+        <div class="p-6 md:p-8 border-b border-white/10 flex justify-between items-center flex-wrap gap-4">
+            <div>
+                <h1
+                    class="text-3xl md:text-4xl font-extrabold tracking-tight mb-2 text-amber-400 drop-shadow-md theme-font flex items-center gap-3">
+                    <img src="../../assets/quilmes_beer.jpg" alt="Quilmes Beer"
+                        class="w-10 h-10 md:w-12 md:h-12 object-contain drop-shadow-lg rounded-lg"> Tema 4: Planta de
+                    Envasado
+                </h1>
+                <div
+                    class="inline-block px-3 py-1 bg-white/10 rounded-full text-sm font-semibold tracking-wide text-white">
+                    Cervecería Quilmes - Stock y Operarios
+                </div>
+            </div>
+            <div class="h-16 flex items-center justify-center">
+                <div
+                    class="bg-white/10 rounded-xl px-4 py-2 text-2xl font-extrabold text-amber-400 tracking-widest border border-amber-400/30">
+                    QUILMES</div>
+            </div>
+        </div>
+
+        <div class="p-6 md:p-8 space-y-8">
+
+            <section>
+                <h2
+                    class="text-2xl font-bold mb-3 border-b-2 border-white/20 inline-block text-amber-400 theme-font tracking-wide">
+                    Contexto</h2>
+                <div class="leading-relaxed opacity-90 text-lg">
+                    <p class='mb-2'>La planta de envasado de Cervecería Quilmes en Quilmes, Buenos Aires, necesita
+                        gestionar el stock de barriles que se despachan a distintos eventos y distribuidores. El sistema
+                        debe controlar el consumo de barriles hasta alcanzar el umbral de reserva, y además determinar
+                        cuál operario de etiquetado logró el <strong>menor tiempo de procesamiento</strong> para
+                        otorgarle una bonificación basada en el stock restante.</p>
+                </div>
+            </section>
+
+            <section class="bg-black/10 p-5 rounded-xl border border-white/5 shadow-inner">
+                <h2 class="text-2xl font-bold mb-3 text-amber-400 flex items-center gap-2 theme-font tracking-wide">
+                    Tu Misión
+                </h2>
+                <div class="leading-relaxed opacity-95 text-md space-y-2">
+                    <p>Completar el programa en <strong>PSeInt</strong> o en <strong>C++</strong> (quienes lo deseen
+                        pueden resolverlo en este último lenguaje). Se te entrega un código base con el menú resuelto.
+                        Debes desarrollar:</p>
+                    <ul class="list-disc pl-5 space-y-1">
+                        <li>El bloque <strong>Segun</strong> en el algoritmo principal para invocar módulos. <span
+                                class="relative group inline-block ml-2 align-middle"><span
+                                    class="cursor-pointer bg-amber-500/20 text-amber-400 text-xs font-bold px-2 py-1 rounded border border-amber-500/30">5%</span>
+                                <div
+                                    class="absolute opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-10 bottom-full left-1/2 -translate-x-1/2 mb-2 w-64 bg-gray-900 text-white text-sm rounded-lg shadow-xl border border-gray-700 p-3 pointer-events-none">
+                                    <div class="font-bold text-amber-400 mb-1">Estructura Principal y Menú</div>
+                                    <p class="text-xs text-gray-300">Implementa correctamente la estructura condicional
+                                        múltiple, invocando los subprocesos correspondientes a cada opción.</p>
+                                    <div
+                                        class="absolute -bottom-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-gray-900 border-b border-r border-gray-700 transform rotate-45">
+                                    </div>
+                                </div>
+                            </span></li>
+                        <li><strong>Módulo de Entrada:</strong> Solicitar el <em>stock inicial de barriles</em> y
+                            validar que esté en el rango de 100 a 4000. Además, solicitar la <em>cantidad de
+                                operarios</em> de etiquetado y validar que esté entre 2 y 12. <span
+                                class="relative group inline-block ml-2 align-middle"><span
+                                    class="cursor-pointer bg-amber-500/20 text-amber-400 text-xs font-bold px-2 py-1 rounded border border-amber-500/30">15%</span>
+                                <div
+                                    class="absolute opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-10 bottom-full left-1/2 -translate-x-1/2 mb-2 w-64 bg-gray-900 text-white text-sm rounded-lg shadow-xl border border-gray-700 p-3 pointer-events-none">
+                                    <div class="font-bold text-amber-400 mb-1">Módulo de Entrada y Doble Validación</div>
+                                    <p class="text-xs text-gray-300">Utiliza estructuras repetitivas adecuadas para
+                                        validar que ambos datos estén estrictamente dentro de sus rangos solicitados.
+                                    </p>
+                                    <div
+                                        class="absolute -bottom-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-gray-900 border-b border-r border-gray-700 transform rotate-45">
+                                    </div>
+                                </div>
+                            </span></li>
+                        <li><strong>Módulo de Proceso 1:</strong> Recibir el stock. Pedir <em>barriles a despachar</em>
+                            en cada envío. <strong>Validar</strong> que la cantidad solicitada no supere el stock
+                            disponible. Si es válida, <strong>restarlos</strong> del stock; de lo contrario, mostrar un
+                            mensaje de error y volver a pedir. El ciclo debe detenerse cuando el stock caiga por debajo
+                            del <em>umbral</em> de 50 barriles. Una vez detenido, calcular el
+                            <strong>porcentaje de stock consumido</strong> sobre el stock inicial. Si el porcentaje
+                            consumido supera el 75%, mostrar "REPOSICION URGENTE: ALERTA DE STOCK"; de lo contrario,
+                            mostrar "Stock dentro de parametros". <span
+                                class="relative group inline-block ml-2 align-middle"><span
+                                    class="cursor-pointer bg-amber-500/20 text-amber-400 text-xs font-bold px-2 py-1 rounded border border-amber-500/30">25%</span>
+                                <div
+                                    class="absolute opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-10 bottom-full left-1/2 -translate-x-1/2 mb-2 w-64 bg-gray-900 text-white text-sm rounded-lg shadow-xl border border-gray-700 p-3 pointer-events-none">
+                                    <div class="font-bold text-amber-400 mb-1">Módulo de Proceso 1</div>
+                                    <p class="text-xs text-gray-300">Valida que el despacho no supere el stock, corta
+                                        correctamente con umbral, calcula porcentaje consumido y clasifica con
+                                        condicional.</p>
+                                    <div
+                                        class="absolute -bottom-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-gray-900 border-b border-r border-gray-700 transform rotate-45">
+                                    </div>
+                                </div>
+                            </span></li>
+                        <li><strong>Módulo de Proceso 2:</strong> Recibir el stock (saldo restante) y la cantidad de
+                            operarios. Para cada operario solicitar su <em>nombre</em> y <em>tiempo de etiquetado</em>
+                            (en segundos). Determinar el <strong>MÍNIMO</strong> tiempo de etiquetado y
+                            <strong>qué operario</strong> lo logró. Mostrar al mejor operario y anunciar que recibe una
+                            bonificación equivalente al <strong>3% del valor del stock restante</strong> (donde cada
+                            barril vale $45.000). <span
+                                class="relative group inline-block ml-2 align-middle"><span
+                                    class="cursor-pointer bg-amber-500/20 text-amber-400 text-xs font-bold px-2 py-1 rounded border border-amber-500/30">30%</span>
+                                <div
+                                    class="absolute opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-10 bottom-full left-1/2 -translate-x-1/2 mb-2 w-64 bg-gray-900 text-white text-sm rounded-lg shadow-xl border border-gray-700 p-3 pointer-events-none">
+                                    <div class="font-bold text-amber-400 mb-1">Módulo de Proceso 2</div>
+                                    <p class="text-xs text-gray-300">Encuentra el mínimo con identificador de texto, y
+                                        calcula una bonificación derivada de un valor de stock compuesto.</p>
+                                    <div
+                                        class="absolute -bottom-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-gray-900 border-b border-r border-gray-700 transform rotate-45">
+                                    </div>
+                                </div>
+                            </span></li>
+                    </ul>
+                </div>
+            </section>
+
+            <section class="bg-black/20 p-5 md:p-6 rounded-xl border border-white/5 shadow-inner">
+                <h2 class="text-xl font-bold mb-4 text-amber-400 theme-font tracking-wide flex items-center gap-2">
+                    Casos de Prueba (Ejecuciones Esperadas)
+                </h2>
+
+                <div class="flex overflow-x-auto no-scrollbar gap-2 mb-6 pb-2 border-b border-white/10"
+                    id="tabs-container">
+                    <button onclick="switchTab(0)"
+                        class="tab-btn px-4 py-2 rounded-lg font-semibold text-sm transition-all border whitespace-nowrap bg-amber-400 text-black border-amber-400">
+                        Caso 1: Validación de Entrada
+                    </button>
+                    <button onclick="switchTab(1)"
+                        class="tab-btn px-4 py-2 rounded-lg font-semibold text-sm transition-all border whitespace-nowrap bg-white/5 text-white/70 border-white/10 hover:bg-white/10">
+                        Caso 2: Despacho y Mejor Operario (Normal)
+                    </button>
+                    <button onclick="switchTab(2)"
+                        class="tab-btn px-4 py-2 rounded-lg font-semibold text-sm transition-all border whitespace-nowrap bg-white/5 text-white/70 border-white/10 hover:bg-white/10">
+                        Caso 3: Valores Límite
+                    </button>
+                </div>
+
+                <div id="tab-contents">
+                    <!-- Caso 1 -->
+                    <div class="tab-content active">
+                        <div class="grid grid-cols-1 md:grid-cols-12 gap-6">
+                            <div class="md:col-span-3 bg-black/30 p-5 rounded-xl border border-white/10 flex flex-col">
+                                <h3 class="text-sm font-bold mb-3 text-amber-400 uppercase tracking-wider">Entrada
+                                    (Simulada)</h3>
+                                <div class="flex-grow bg-black/50 p-4 rounded-lg border border-white/5">
+                                    <pre class="console text-sm text-gray-300 whitespace-pre-wrap leading-relaxed">1
+50
+5000
+200
+2
+1
+13
+4
+4
+0</pre>
+                                </div>
+                            </div>
+                            <div
+                                class="md:col-span-9 bg-[#0a0a0a] p-5 rounded-xl border border-gray-800 shadow-inner flex flex-col relative overflow-hidden">
+                                <h3 class="text-sm font-bold mb-3 text-green-400 uppercase tracking-wider">Salida
+                                    Esperada por Pantalla</h3>
+                                <div class="flex-grow bg-black/40 p-4 rounded-lg border border-white/5 overflow-x-auto">
+                                    <pre class="console text-green-400 text-sm whitespace-pre-wrap leading-relaxed">=== CERVECERIA QUILMES - PLANTA DE ENVASADO ===
+1. Ingresar Datos de Planta
+...
+Ingrese una opción: <span class="text-purple-400">&gt; </span><span class="text-yellow-400">1</span>
+Ingrese stock inicial de barriles (100-4000): <span class="text-purple-400">&gt; </span><span class="text-yellow-400">50</span>
+[Error] El valor debe estar entre 100 y 4000.
+Ingrese stock inicial de barriles (100-4000): <span class="text-purple-400">&gt; </span><span class="text-yellow-400">5000</span>
+[Error] El valor debe estar entre 100 y 4000.
+Ingrese stock inicial de barriles (100-4000): <span class="text-purple-400">&gt; </span><span class="text-yellow-400">200</span>
+Ingrese cantidad de operarios de etiquetado (2-12): <span class="text-purple-400">&gt; </span><span class="text-yellow-400">1</span>
+[Error] El valor debe estar entre 2 y 12.
+Ingrese cantidad de operarios de etiquetado (2-12): <span class="text-purple-400">&gt; </span><span class="text-yellow-400">13</span>
+[Error] El valor debe estar entre 2 y 12.
+Ingrese cantidad de operarios de etiquetado (2-12): <span class="text-purple-400">&gt; </span><span class="text-yellow-400">4</span>
+(Regresa al menú)
+
+Ingrese una opción: <span class="text-purple-400">&gt; </span><span class="text-yellow-400">4</span>
+Stock registrado: 200 barriles | Operarios: 4
+
+Ingrese una opción: <span class="text-purple-400">&gt; </span><span class="text-yellow-400">0</span>
+(Fin del programa)</pre>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Caso 2 -->
+                    <div class="tab-content ">
+                        <div class="grid grid-cols-1 md:grid-cols-12 gap-6">
+                            <div class="md:col-span-3 bg-black/30 p-5 rounded-xl border border-white/10 flex flex-col">
+                                <h3 class="text-sm font-bold mb-3 text-amber-400 uppercase tracking-wider">Entrada
+                                    (Simulada)</h3>
+                                <div class="flex-grow bg-black/50 p-4 rounded-lg border border-white/5">
+                                    <pre class="console text-sm text-gray-300 whitespace-pre-wrap leading-relaxed">1
+200
+3
+2
+80
+85
+3
+Laura
+45
+Pedro
+38
+Maria
+52
+0</pre>
+                                </div>
+                            </div>
+                            <div
+                                class="md:col-span-9 bg-[#0a0a0a] p-5 rounded-xl border border-gray-800 shadow-inner flex flex-col relative overflow-hidden">
+                                <h3 class="text-sm font-bold mb-3 text-green-400 uppercase tracking-wider">Salida
+                                    Esperada por Pantalla</h3>
+                                <div class="flex-grow bg-black/40 p-4 rounded-lg border border-white/5 overflow-x-auto">
+                                    <pre class="console text-green-400 text-sm whitespace-pre-wrap leading-relaxed">Ingrese una opción: <span class="text-purple-400">&gt; </span><span class="text-yellow-400">1</span>
+Ingrese stock inicial de barriles (100-4000): <span class="text-purple-400">&gt; </span><span class="text-yellow-400">200</span>
+Ingrese cantidad de operarios de etiquetado (2-12): <span class="text-purple-400">&gt; </span><span class="text-yellow-400">3</span>
+(Regresa al menú)
+
+Ingrese una opción: <span class="text-purple-400">&gt; </span><span class="text-yellow-400">2</span>
+Ingrese barriles a despachar: <span class="text-purple-400">&gt; </span><span class="text-yellow-400">80</span>
+Stock restante: 120 barriles
+Ingrese barriles a despachar: <span class="text-purple-400">&gt; </span><span class="text-yellow-400">85</span>
+Stock restante: 35 barriles
+[Alerta] El stock bajo del umbral de 50 barriles.
+Porcentaje consumido sobre stock inicial: 82.5%
+REPOSICION URGENTE: ALERTA DE STOCK
+(Regresa al menú)
+
+Ingrese una opción: <span class="text-purple-400">&gt; </span><span class="text-yellow-400">3</span>
+Nombre del operario 1: <span class="text-purple-400">&gt; </span><span class="text-yellow-400">Laura</span>
+Tiempo de etiquetado de Laura (seg): <span class="text-purple-400">&gt; </span><span class="text-yellow-400">45</span>
+Nombre del operario 2: <span class="text-purple-400">&gt; </span><span class="text-yellow-400">Pedro</span>
+Tiempo de etiquetado de Pedro (seg): <span class="text-purple-400">&gt; </span><span class="text-yellow-400">38</span>
+Nombre del operario 3: <span class="text-purple-400">&gt; </span><span class="text-yellow-400">Maria</span>
+Tiempo de etiquetado de Maria (seg): <span class="text-purple-400">&gt; </span><span class="text-yellow-400">52</span>
+El mejor tiempo fue de Pedro con 38 segundos.
+Bonificacion otorgada (3% de 35 barriles x $45.000): $47250
+
+Ingrese una opción: <span class="text-purple-400">&gt; </span><span class="text-yellow-400">0</span>
+(Fin del programa)</pre>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Caso 3 -->
+                    <div class="tab-content ">
+                        <div class="grid grid-cols-1 md:grid-cols-12 gap-6">
+                            <div class="md:col-span-3 bg-black/30 p-5 rounded-xl border border-white/10 flex flex-col">
+                                <h3 class="text-sm font-bold mb-3 text-amber-400 uppercase tracking-wider">Entrada
+                                    (Simulada)</h3>
+                                <div class="flex-grow bg-black/50 p-4 rounded-lg border border-white/5">
+                                    <pre class="console text-sm text-gray-300 whitespace-pre-wrap leading-relaxed">1
+100
+2
+2
+110
+55
+3
+Ana
+60
+Luis
+72
+0</pre>
+                                </div>
+                            </div>
+                            <div
+                                class="md:col-span-9 bg-[#0a0a0a] p-5 rounded-xl border border-gray-800 shadow-inner flex flex-col relative overflow-hidden">
+                                <h3 class="text-sm font-bold mb-3 text-green-400 uppercase tracking-wider">Salida
+                                    Esperada por Pantalla</h3>
+                                <div class="flex-grow bg-black/40 p-4 rounded-lg border border-white/5 overflow-x-auto">
+                                    <pre class="console text-green-400 text-sm whitespace-pre-wrap leading-relaxed">Ingrese una opción: <span class="text-purple-400">&gt; </span><span class="text-yellow-400">1</span>
+Ingrese stock inicial de barriles (100-4000): <span class="text-purple-400">&gt; </span><span class="text-yellow-400">100</span>
+Ingrese cantidad de operarios de etiquetado (2-12): <span class="text-purple-400">&gt; </span><span class="text-yellow-400">2</span>
+(Regresa al menú)
+
+Ingrese una opción: <span class="text-purple-400">&gt; </span><span class="text-yellow-400">2</span>
+Ingrese barriles a despachar: <span class="text-purple-400">&gt; </span><span class="text-yellow-400">110</span>
+[Error] No hay suficiente stock. Stock actual: 100
+Ingrese barriles a despachar: <span class="text-purple-400">&gt; </span><span class="text-yellow-400">55</span>
+Stock restante: 45 barriles
+[Alerta] El stock bajo del umbral de 50 barriles.
+Porcentaje consumido sobre stock inicial: 55%
+Stock dentro de parametros
+(Regresa al menú)
+
+Ingrese una opción: <span class="text-purple-400">&gt; </span><span class="text-yellow-400">3</span>
+Nombre del operario 1: <span class="text-purple-400">&gt; </span><span class="text-yellow-400">Ana</span>
+Tiempo de etiquetado de Ana (seg): <span class="text-purple-400">&gt; </span><span class="text-yellow-400">60</span>
+Nombre del operario 2: <span class="text-purple-400">&gt; </span><span class="text-yellow-400">Luis</span>
+Tiempo de etiquetado de Luis (seg): <span class="text-purple-400">&gt; </span><span class="text-yellow-400">72</span>
+El mejor tiempo fue de Ana con 60 segundos.
+Bonificacion otorgada (3% de 45 barriles x $45.000): $60750
+
+Ingrese una opción: <span class="text-purple-400">&gt; </span><span class="text-yellow-400">0</span>
+(Fin del programa)</pre>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="bg-black/20 p-5 md:p-6 rounded-xl border border-white/5 shadow-inner">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-xl font-bold text-amber-400 theme-font tracking-wide flex items-center gap-2">
+                        Código Base
+                    </h2>
+                    <div class="flex bg-black/40 rounded-lg p-1 border border-white/10">
+                        <button onclick="switchCode('pseint')" id="btn-pseint"
+                            class="px-3 py-1 rounded-md text-sm font-semibold bg-amber-500 text-white transition-colors">PSeInt</button>
+                        <button onclick="switchCode('cpp')" id="btn-cpp"
+                            class="px-3 py-1 rounded-md text-sm font-semibold text-white/60 hover:text-white transition-colors">C++</button>
+                    </div>
+                </div>
+
+                <!-- PSeInt Code -->
+                <div id="code-pseint" class="bg-[#1e1e1e] p-4 rounded-lg border border-white/10 overflow-x-auto block">
+                    <pre class="console text-sm text-[#d4d4d4] whitespace-pre-wrap leading-relaxed">Algoritmo CerveceriaQuilmes_Tema4
+	Definir opc, stockBarriles, stockInicial, operarios Como Entero;
+	stockBarriles = 0;
+	stockInicial = 0;
+	operarios = 0;
+	opc = -1;
+	
+	Repetir
+		MostrarMenu(opc);
+		
+		// [TU CODIGO AQUI]
+
+		Esperar Tecla;
+	Mientras Que opc &lt;&gt; 0
+FinAlgoritmo
+
+SubProceso MostrarMenu(opc Por Referencia)
+	Borrar Pantalla;
+	Escribir "=== CERVECERIA QUILMES - PLANTA DE ENVASADO ===";
+	Escribir "1. Ingresar Datos de Planta";
+	Escribir "2. Procesar Despacho de Barriles";
+	Escribir "3. Buscar Mejor Operario y Bonificacion";
+	Escribir "4. Ver Estado Actual";
+	Escribir "0. Salir";
+	Escribir "Ingrese una opcion: ";
+	Leer opc;
+FinSubProceso
+
+// [TU CODIGO AQUI]
+// Desarrolla el Modulo de Entrada.
+SubProceso IngresarDatos()
+	
+FinSubProceso
+
+// [TU CODIGO AQUI]
+// Desarrolla el Modulo de Proceso 1.
+SubProceso ProcesarDespacho()
+	
+FinSubProceso
+
+// [TU CODIGO AQUI]
+// Desarrolla el Modulo de Proceso 2.
+SubProceso BuscarMejorOperario()
+	
+FinSubProceso
+
+SubProceso MostrarEstado(stockBarriles, operarios)
+	Escribir "Stock registrado: ", stockBarriles, " barriles | Operarios: ", operarios;
+FinSubProceso</pre>
+                </div>
+
+                <!-- C++ Code -->
+                <div id="code-cpp" class="bg-[#1e1e1e] p-4 rounded-lg border border-white/10 overflow-x-auto hidden">
+                    <pre class="console text-sm text-[#d4d4d4] whitespace-pre-wrap leading-relaxed">#include &lt;iostream&gt;
+#include &lt;string&gt;
+using namespace std;
+
+int stockBarriles = 0;
+int stockInicial = 0;
+int operarios = 0;
+
+void MostrarMenu(int &amp;opc);
+void IngresarDatos();
+void ProcesarDespacho();
+void BuscarMejorOperario();
+void MostrarEstado();
+
+int main() {
+    int opc = -1;
+    
+    do {
+        MostrarMenu(opc);
+        
+        // [TU CODIGO AQUI]
+        
+        system("pause");
+    } while (opc != 0);
+    
+    return 0;
+}
+
+void MostrarMenu(int &amp;opc) {
+    system("cls");
+    cout &lt;&lt; "=== CERVECERIA QUILMES - PLANTA DE ENVASADO ===" &lt;&lt; endl;
+    cout &lt;&lt; "1. Ingresar Datos de Planta" &lt;&lt; endl;
+    cout &lt;&lt; "2. Procesar Despacho de Barriles" &lt;&lt; endl;
+    cout &lt;&lt; "3. Buscar Mejor Operario y Bonificacion" &lt;&lt; endl;
+    cout &lt;&lt; "4. Ver Estado Actual" &lt;&lt; endl;
+    cout &lt;&lt; "0. Salir" &lt;&lt; endl;
+    cout &lt;&lt; "Ingrese una opcion: ";
+    cin &gt;&gt; opc;
+}
+
+// [TU CODIGO AQUI]
+// Desarrolla el Modulo de Entrada.
+void IngresarDatos() {
+
+}
+
+// [TU CODIGO AQUI]
+// Desarrolla el Modulo de Proceso 1.
+void ProcesarDespacho() {
+
+}
+
+// [TU CODIGO AQUI]
+// Desarrolla el Modulo de Proceso 2.
+void BuscarMejorOperario() {
+
+}
+
+void MostrarEstado() {
+    cout &lt;&lt; "Stock registrado: " &lt;&lt; stockBarriles &lt;&lt; " barriles | Operarios: " &lt;&lt; operarios &lt;&lt; endl;
+}
+</pre>
+                </div>
+            </section>
+
+            <section class="bg-black/20 p-5 md:p-6 rounded-xl border border-white/5 shadow-inner">
+                <h2 class="text-xl font-bold mb-4 text-amber-400 theme-font tracking-wide flex items-center gap-2">
+                    📝 Parte 2: Prueba de Escritorio (Papel y Lápiz) <span
+                        class="relative group inline-block ml-3 align-middle"><span
+                            class="cursor-pointer bg-amber-500/20 text-amber-400 text-sm font-bold px-3 py-1 rounded border border-amber-500/30">25%</span>
+                        <div
+                            class="absolute opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-10 bottom-full left-1/2 -translate-x-1/2 mb-2 w-64 bg-gray-900 text-white text-sm rounded-lg shadow-xl border border-gray-700 p-3 pointer-events-none font-normal">
+                            <div class="font-bold text-amber-400 mb-1">Prueba de Escritorio</div>
+                            <p class="text-xs text-gray-300">Refleja paso a paso el cambio de valor de cada variable y
+                                anota la salida exacta por pantalla esperada.</p>
+                            <div
+                                class="absolute -bottom-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-gray-900 border-b border-r border-gray-700 transform rotate-45">
+                            </div>
+                        </div>
+                    </span>
+                </h2>
+                <div class="leading-relaxed opacity-95 text-md space-y-4">
+                    <div class="bg-[#0f172a]/80 p-5 rounded-xl border border-amber-500/20 shadow-md flex items-start gap-4">
+                        <div class="text-3xl">📄</div>
+                        <div>
+                            <p class="font-bold text-amber-200 mb-1">Entrega en formato físico</p>
+                            <p class="text-amber-100 text-sm">Una vez que hayas finalizado y entregado la Parte 1 (código
+                                en computadora), el docente te entregará una hoja impresa con el pseudocódigo
+                                correspondiente a la Parte 2 para que realices la prueba de escritorio en papel y lápiz.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+    </div>
+
+    <script>
+        function switchCode(lang) {
+            const pseintBtn = document.getElementById('btn-pseint');
+            const cppBtn = document.getElementById('btn-cpp');
+            const pseintCode = document.getElementById('code-pseint');
+            const cppCode = document.getElementById('code-cpp');
+
+            if (lang === 'pseint') {
+                pseintBtn.className = "px-3 py-1 rounded-md text-sm font-semibold bg-amber-500 text-white transition-colors";
+                cppBtn.className = "px-3 py-1 rounded-md text-sm font-semibold text-white/60 hover:text-white transition-colors";
+                pseintCode.classList.remove('hidden');
+                pseintCode.classList.add('block');
+                cppCode.classList.remove('block');
+                cppCode.classList.add('hidden');
+            } else {
+                cppBtn.className = "px-3 py-1 rounded-md text-sm font-semibold bg-amber-500 text-white transition-colors";
+                pseintBtn.className = "px-3 py-1 rounded-md text-sm font-semibold text-white/60 hover:text-white transition-colors";
+                cppCode.classList.remove('hidden');
+                cppCode.classList.add('block');
+                pseintCode.classList.remove('block');
+                pseintCode.classList.add('hidden');
+            }
+        }
+
+        function switchTab(tabIndex) {
+            document.querySelectorAll('.tab-btn').forEach((btn, idx) => {
+                if (idx === tabIndex) {
+                    btn.classList.add('bg-amber-400', 'text-black', 'border-amber-400');
+                    btn.classList.remove('bg-white/5', 'text-white/70', 'border-white/10', 'hover:bg-white/10');
+                } else {
+                    btn.classList.remove('bg-amber-400', 'text-black', 'border-amber-400');
+                    btn.classList.add('bg-white/5', 'text-white/70', 'border-white/10', 'hover:bg-white/10');
+                }
+            });
+            document.querySelectorAll('.tab-content').forEach((content, idx) => {
+                if (idx === tabIndex) {
+                    content.classList.add('active');
+                } else {
+                    content.classList.remove('active');
+                }
+            });
+        }
+    </script>
+</body>
+
+</html>

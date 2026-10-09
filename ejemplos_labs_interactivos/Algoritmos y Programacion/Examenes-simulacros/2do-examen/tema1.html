@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🏆 Examen - Tema 1 (Mundial 2026 - Pases y Posesión)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Fira+Code&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .console { font-family: 'Fira Code', monospace; }
+        .theme-font { font-family: 'Inter', sans-serif; }
+        
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        
+        .tab-content {
+            transition: all 0.3s ease-in-out;
+            opacity: 0;
+            display: none;
+        }
+        .tab-content.active {
+            opacity: 1;
+            display: block;
+            animation: fadeIn 0.4s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="min-h-screen p-4 md:p-8 flex items-center justify-center bg-indigo-900">
+
+    <div class="max-w-4xl w-full bg-indigo-800/90 backdrop-blur-md text-indigo-50 rounded-2xl shadow-2xl overflow-hidden border border-indigo-400/20">
+        
+        <div class="p-6 md:p-8 border-b border-white/10 flex justify-between items-center flex-wrap gap-4">
+            <div>
+                <h1 class="text-3xl md:text-4xl font-extrabold tracking-tight mb-2 text-indigo-300 drop-shadow-md theme-font">
+                    🏆 Tema 1: Efectividad de Pases y Control
+                </h1>
+                <div class="inline-block px-3 py-1 bg-white/10 rounded-full text-sm font-semibold tracking-wide text-white">
+                    Mundial 2026 - Posesión y Asociación
+                </div>
+            </div>
+            <!-- API Image -->
+            <div id="api-image-container" class="h-16 flex items-center justify-center"></div>
+        </div>
+
+        <div class="p-6 md:p-8 space-y-8">
+            
+            <section>
+                <h2 class="text-2xl font-bold mb-3 border-b-2 border-white/20 inline-block text-indigo-300 theme-font tracking-wide">Contexto</h2>
+                <div class="leading-relaxed opacity-90 text-lg">
+                    <p class='mb-2'>El cuerpo técnico de Lionel Scaloni, junto a Pablo Aimar, está analizando las asociaciones del equipo para el Mundial 2026. Necesitan evaluar la efectividad de pases acumulados y determinar en qué partido se sufrió la peor posesión de balón para corregir errores.</p>
+                </div>
+            </section>
+
+            <section class="bg-black/10 p-5 rounded-xl border border-white/5 shadow-inner">
+                <h2 class="text-2xl font-bold mb-3 text-indigo-300 flex items-center gap-2 theme-font tracking-wide">
+                    Tu Misión
+                </h2>
+                <div class="leading-relaxed opacity-95 text-md space-y-2">
+                    <p>Completar el programa en <strong>PSeInt</strong> o en <strong>C++</strong> (quienes lo deseen pueden resolverlo en este último lenguaje). Se te entrega un código base con el menú resuelto. Debes desarrollar:</p>
+                    <ul class="list-disc pl-5 space-y-1">
+                        <li>El bloque <strong>Segun</strong> en el algoritmo principal para invocar módulos. <span class="relative group inline-block ml-2 align-middle"><span class="cursor-pointer bg-indigo-500/20 text-indigo-300 text-xs font-bold px-2 py-1 rounded border border-indigo-500/30">5%</span><div class="absolute opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-10 bottom-full left-1/2 -translate-x-1/2 mb-2 w-64 bg-gray-900 text-white text-sm rounded-lg shadow-xl border border-gray-700 p-3 pointer-events-none"><div class="font-bold text-indigo-400 mb-1">Estructura Principal y Menú</div><p class="text-xs text-gray-300">Implementa correctamente la estructura condicional múltiple, invocando los subprocesos correspondientes a cada opción.</p><div class="absolute -bottom-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-gray-900 border-b border-r border-gray-700 transform rotate-45"></div></div></span></li>
+                        <li><strong>Módulo de Entrada:</strong> Solicitar cantidad de <em>amistosos previos</em> jugados y validar que el valor se encuentre entre 1 y 10. <span class="relative group inline-block ml-2 align-middle"><span class="cursor-pointer bg-indigo-500/20 text-indigo-300 text-xs font-bold px-2 py-1 rounded border border-indigo-500/30">15%</span><div class="absolute opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-10 bottom-full left-1/2 -translate-x-1/2 mb-2 w-64 bg-gray-900 text-white text-sm rounded-lg shadow-xl border border-gray-700 p-3 pointer-events-none"><div class="font-bold text-indigo-400 mb-1">Módulo de Entrada y Validación</div><p class="text-xs text-gray-300">Utiliza una estructura repetitiva adecuada para validar que el dato esté estrictamente dentro del rango solicitado.</p><div class="absolute -bottom-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-gray-900 border-b border-r border-gray-700 transform rotate-45"></div></div></span></li>
+                        <li><strong>Módulo de Proceso 1:</strong> Recibir los amistosos. Pedir el ingreso de <em>pases exitosos</em> logrados en distintas secuencias (el ingreso corta al ingresar un <strong>0</strong>). Calcular y mostrar el porcentaje que representan los pases acumulados sobre el objetivo de pases establecido (donde objetivo = amistosos * 500 pases). <span class="relative group inline-block ml-2 align-middle"><span class="cursor-pointer bg-indigo-500/20 text-indigo-300 text-xs font-bold px-2 py-1 rounded border border-indigo-500/30">25%</span><div class="absolute opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-10 bottom-full left-1/2 -translate-x-1/2 mb-2 w-64 bg-gray-900 text-white text-sm rounded-lg shadow-xl border border-gray-700 p-3 pointer-events-none"><div class="font-bold text-indigo-400 mb-1">Módulo de Proceso 1</div><p class="text-xs text-gray-300">Corta correctamente y calcula porcentajes/operaciones sin errores lógicos.</p><div class="absolute -bottom-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-gray-900 border-b border-r border-gray-700 transform rotate-45"></div></div></span></li>
+                        <li><strong>Módulo de Proceso 2:</strong> Recibir los amistosos. Ingresar el <em>porcentaje de posesión</em> obtenido por el equipo en cada uno de los <em>amistosos previos</em>, buscar y mostrar el valor <strong>MÍNIMO</strong> de posesión (peor partido) y en qué <strong>posición numérica (nro de partido)</strong> ocurrió. <span class="relative group inline-block ml-2 align-middle"><span class="cursor-pointer bg-indigo-500/20 text-indigo-300 text-xs font-bold px-2 py-1 rounded border border-indigo-500/30">30%</span><div class="absolute opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-10 bottom-full left-1/2 -translate-x-1/2 mb-2 w-64 bg-gray-900 text-white text-sm rounded-lg shadow-xl border border-gray-700 p-3 pointer-events-none"><div class="font-bold text-indigo-400 mb-1">Módulo de Proceso 2</div><p class="text-xs text-gray-300">Encuentra exitosamente el Máximo/Mínimo junto a su identificador.</p><div class="absolute -bottom-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-gray-900 border-b border-r border-gray-700 transform rotate-45"></div></div></span></li>
+                    </ul>
+                </div>
+            </section>
+
+            <section class="bg-black/20 p-5 md:p-6 rounded-xl border border-white/5 shadow-inner">
+                <h2 class="text-xl font-bold mb-4 text-indigo-300 theme-font tracking-wide flex items-center gap-2">
+                    Casos de Prueba (Ejecuciones Esperadas)
+                </h2>
+                
+                <div class="flex overflow-x-auto no-scrollbar gap-2 mb-6 pb-2 border-b border-white/10" id="tabs-container">
+                    <button onclick="switchTab(0)" class="tab-btn px-4 py-2 rounded-lg font-semibold text-sm transition-all border whitespace-nowrap bg-indigo-300 text-black border-indigo-300">
+                        Caso 1: Límites y Error en Entrada
+                    </button>
+                    <button onclick="switchTab(1)" class="tab-btn px-4 py-2 rounded-lg font-semibold text-sm transition-all border whitespace-nowrap bg-white/5 text-white/70 border-white/10 hover:bg-white/10">
+                        Caso 2: Efectividad y Mínimos (Normal)
+                    </button>
+                    <button onclick="switchTab(2)" class="tab-btn px-4 py-2 rounded-lg font-semibold text-sm transition-all border whitespace-nowrap bg-white/5 text-white/70 border-white/10 hover:bg-white/10">
+                        Caso 3: Valores Límite
+                    </button>
+                </div>
+
+                <div id="tab-contents">
+                    <div class="tab-content active">
+                        <div class="grid grid-cols-1 md:grid-cols-12 gap-6">
+                            <div class="md:col-span-3 bg-black/30 p-5 rounded-xl border border-white/10 flex flex-col">
+                                <h3 class="text-sm font-bold mb-3 text-indigo-300 uppercase tracking-wider">Entrada (Simulada)</h3>
+                                <div class="flex-grow bg-black/50 p-4 rounded-lg border border-white/5">
+                                    <pre class="console text-sm text-gray-300 whitespace-pre-wrap leading-relaxed">1
+0
+11
+10
+4
+0</pre>
+                                </div>
+                            </div>
+                            <div class="md:col-span-9 bg-[#0a0a0a] p-5 rounded-xl border border-gray-800 shadow-inner flex flex-col relative overflow-hidden">
+                                <h3 class="text-sm font-bold mb-3 text-green-400 uppercase tracking-wider">Salida Esperada por Pantalla</h3>
+                                <div class="flex-grow bg-black/40 p-4 rounded-lg border border-white/5 overflow-x-auto">
+                                    <pre class="console text-green-400 text-sm whitespace-pre-wrap leading-relaxed">=== EVALUACIÓN SCALONETA 2026 ===
+1. Ingresar Cantidad de Amistosos Previos (Entrada)
+...
+Ingrese una opción: <span class="text-purple-400">&gt; </span><span class="text-yellow-400">1</span>
+Ingrese cantidad de amistosos previos (1-10): <span class="text-purple-400">&gt; </span><span class="text-yellow-400">0</span>
+[Error] El valor debe estar entre 1 y 10.
+Ingrese cantidad de amistosos previos (1-10): <span class="text-purple-400">&gt; </span><span class="text-yellow-400">11</span>
+[Error] El valor debe estar entre 1 y 10.
+Ingrese cantidad de amistosos previos (1-10): <span class="text-purple-400">&gt; </span><span class="text-yellow-400">10</span>
+(Regresa al menú)
+
+Ingrese una opción: <span class="text-purple-400">&gt; </span><span class="text-yellow-400">4</span>
+Amistosos registrados en el sistema: 10
+
+Ingrese una opción: <span class="text-purple-400">&gt; </span><span class="text-yellow-400">0</span>
+(Fin del programa)</pre>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-content ">
+                        <div class="grid grid-cols-1 md:grid-cols-12 gap-6">
+                            <div class="md:col-span-3 bg-black/30 p-5 rounded-xl border border-white/10 flex flex-col">
+                                <h3 class="text-sm font-bold mb-3 text-indigo-300 uppercase tracking-wider">Entrada (Simulada)</h3>
+                                <div class="flex-grow bg-black/50 p-4 rounded-lg border border-white/5">
+                                    <pre class="console text-sm text-gray-300 whitespace-pre-wrap leading-relaxed">1
+2
+2
+500
+250
+0
+3
+65
+52
+0</pre>
+                                </div>
+                            </div>
+                            <div class="md:col-span-9 bg-[#0a0a0a] p-5 rounded-xl border border-gray-800 shadow-inner flex flex-col relative overflow-hidden">
+                                <h3 class="text-sm font-bold mb-3 text-green-400 uppercase tracking-wider">Salida Esperada por Pantalla</h3>
+                                <div class="flex-grow bg-black/40 p-4 rounded-lg border border-white/5 overflow-x-auto">
+                                    <pre class="console text-green-400 text-sm whitespace-pre-wrap leading-relaxed">Ingrese una opción: <span class="text-purple-400">&gt; </span><span class="text-yellow-400">1</span>
+Ingrese cantidad de amistosos previos (1-10): <span class="text-purple-400">&gt; </span><span class="text-yellow-400">2</span>
+(Regresa al menú)
+
+Ingrese una opción: <span class="text-purple-400">&gt; </span><span class="text-yellow-400">2</span>
+Ingrese pases en secuencia (0 para finalizar): <span class="text-purple-400">&gt; </span><span class="text-yellow-400">500</span>
+Ingrese pases en secuencia (0 para finalizar): <span class="text-purple-400">&gt; </span><span class="text-yellow-400">250</span>
+Ingrese pases en secuencia (0 para finalizar): <span class="text-purple-400">&gt; </span><span class="text-yellow-400">0</span>
+Total pases logrados: 750
+Porcentaje sobre objetivo esperado (1000 pases): 75%
+(Regresa al menú)
+
+Ingrese una opción: <span class="text-purple-400">&gt; </span><span class="text-yellow-400">3</span>
+Ingrese % de posesión en partido 1: <span class="text-purple-400">&gt; </span><span class="text-yellow-400">65</span>
+Ingrese % de posesión en partido 2: <span class="text-purple-400">&gt; </span><span class="text-yellow-400">52</span>
+La posesión mínima fue 52% en el partido 2.
+
+Ingrese una opción: <span class="text-purple-400">&gt; </span><span class="text-yellow-400">0</span>
+(Fin del programa)</pre>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Caso 3 -->
+                    <div class="tab-content ">
+                        <div class="grid grid-cols-1 md:grid-cols-12 gap-6">
+                            <div class="md:col-span-3 bg-black/30 p-5 rounded-xl border border-white/10 flex flex-col">
+                                <h3 class="text-sm font-bold mb-3 text-indigo-300 uppercase tracking-wider">Entrada (Simulada)</h3>
+                                <div class="flex-grow bg-black/50 p-4 rounded-lg border border-white/5">
+                                    <pre class="console text-sm text-gray-300 whitespace-pre-wrap leading-relaxed">1
+1
+2
+500
+0
+3
+40
+0</pre>
+                                </div>
+                            </div>
+                            <div class="md:col-span-9 bg-[#0a0a0a] p-5 rounded-xl border border-gray-800 shadow-inner flex flex-col relative overflow-hidden">
+                                <h3 class="text-sm font-bold mb-3 text-green-400 uppercase tracking-wider">Salida Esperada por Pantalla</h3>
+                                <div class="flex-grow bg-black/40 p-4 rounded-lg border border-white/5 overflow-x-auto">
+                                    <pre class="console text-green-400 text-sm whitespace-pre-wrap leading-relaxed">Ingrese una opción: <span class="text-purple-400">&gt; </span><span class="text-yellow-400">1</span>
+Ingrese cantidad de amistosos previos (1-10): <span class="text-purple-400">&gt; </span><span class="text-yellow-400">1</span>
+(Regresa al menú)
+
+Ingrese una opción: <span class="text-purple-400">&gt; </span><span class="text-yellow-400">2</span>
+Ingrese pases en secuencia (0 para finalizar): <span class="text-purple-400">&gt; </span><span class="text-yellow-400">500</span>
+Ingrese pases en secuencia (0 para finalizar): <span class="text-purple-400">&gt; </span><span class="text-yellow-400">0</span>
+Total pases logrados: 500
+Porcentaje sobre objetivo esperado (500 pases): 100%
+(Regresa al menú)
+
+Ingrese una opción: <span class="text-purple-400">&gt; </span><span class="text-yellow-400">3</span>
+Ingrese % de posesión en partido 1: <span class="text-purple-400">&gt; </span><span class="text-yellow-400">40</span>
+La posesión mínima fue 40% en el partido 1.
+
+Ingrese una opción: <span class="text-purple-400">&gt; </span><span class="text-yellow-400">0</span>
+(Fin del programa)</pre>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="bg-black/20 p-5 md:p-6 rounded-xl border border-white/5 shadow-inner">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-xl font-bold text-indigo-300 theme-font tracking-wide flex items-center gap-2">
+                        Código Base
+                    </h2>
+                    <div class="flex bg-black/40 rounded-lg p-1 border border-white/10">
+                        <button onclick="switchCode('pseint')" id="btn-pseint" class="px-3 py-1 rounded-md text-sm font-semibold bg-indigo-500 text-white transition-colors">PSeInt</button>
+                        <button onclick="switchCode('cpp')" id="btn-cpp" class="px-3 py-1 rounded-md text-sm font-semibold text-white/60 hover:text-white transition-colors">C++</button>
+                    </div>
+                </div>
+                
+                <!-- PSeInt Code -->
+                <div id="code-pseint" class="bg-[#1e1e1e] p-4 rounded-lg border border-white/10 overflow-x-auto block">
+                    <pre class="console text-sm text-[#d4d4d4] whitespace-pre-wrap leading-relaxed">Algoritmo Evaluacion_Tema1
+	Definir opc, amistosos Como Entero;
+	amistosos = 0;
+	opc = -1;
+	
+	Repetir
+		MostrarMenu(opc);
+		
+		// [TU CÓDIGO AQUÍ - Construye el Segun completo con las opciones 0, 1, 2, 3 y 4]
+
+		Esperar Tecla;
+	Mientras Que opc <> 0
+FinAlgoritmo
+
+SubProceso MostrarMenu(opc Por Referencia)
+	Borrar Pantalla;
+	Escribir "=== EVALUACIÓN SCALONETA 2026 ===";
+	Escribir "1. Ingresar Cantidad de Amistosos Previos";
+	Escribir "2. Calcular Efectividad de Pases";
+	Escribir "3. Buscar Peor Posesión de Balón"
+	Escribir "4. Ver Estado Actual";
+	Escribir "0. Salir";
+	Escribir "Ingrese una opción: ";
+	Leer opc;
+FinSubProceso
+
+// [TU CÓDIGO AQUÍ]
+// Desarrolla el Módulo de Entrada.
+// validar rango [1, 10].
+SubProceso IngresarAmistosos()
+	
+FinSubProceso
+
+// [TU CÓDIGO AQUÍ]
+// Desarrolla el Módulo de Proceso 1..
+// Pedir pases en secuencias hasta ingresar 0.
+// Acumular y calcular % sobre (amistosos * 500).
+SubProceso CalcularEfectividadPases()
+	
+FinSubProceso
+
+// [TU CÓDIGO AQUÍ]
+// Desarrolla el Módulo de Proceso 2..
+// Hallar la posesión mínima y su posición.
+SubProceso BuscarPeorPosesion()
+	
+FinSubProceso
+
+SubProceso MostrarEstado(amistosos)
+	Escribir "Amistosos registrados en el sistema: ", amistosos;
+FinSubProceso</pre>
+                </div>
+
+                <!-- C++ Code -->
+                <div id="code-cpp" class="bg-[#1e1e1e] p-4 rounded-lg border border-white/10 overflow-x-auto hidden">
+                    <pre class="console text-sm text-[#d4d4d4] whitespace-pre-wrap leading-relaxed">#include &lt;iostream&gt;
+using namespace std;
+
+void MostrarMenu(int &amp;opc);
+void IngresarAmistosos();
+void CalcularEfectividadPases();
+void BuscarPeorPosesion();
+void MostrarEstado(int amistosos);
+
+int main() {
+    int opc = -1;
+    int amistosos = 0;
+    
+    do {
+        MostrarMenu(opc);
+        
+        // [TU CÓDIGO AQUÍ - Construye el switch completo con las opciones 0, 1, 2, 3 y 4]
+        
+        system("pause");
+    } while (opc != 0);
+    
+    return 0;
+}
+
+void MostrarMenu(int &amp;opc) {
+    system("cls");
+// Desarrolla el Módulo de Entrada.
+// validar rango [1, 10].
+void IngresarAmistosos() {
+
+}
+
+// [TU CÓDIGO AQUÍ]
+// Desarrolla el Módulo de Proceso 1..
+// Pedir pases en secuencias hasta ingresar 0.
+// Acumular y calcular % sobre (amistosos * 500).
+void CalcularEfectividadPases() {
+
+}
+
+// [TU CÓDIGO AQUÍ]
+// Desarrolla el Módulo de Proceso 2..
+// Hallar la posesión mínima y su posición.
+void BuscarPeorPosesion() {
+
+}
+
+void MostrarEstado(int amistosos) {
+    cout &lt;&lt; "Amistosos registrados en el sistema: " &lt;&lt; amistosos &lt;&lt; endl;
+}
+</pre>
+                </div>
+            </section>
+
+            <section class="bg-black/20 p-5 md:p-6 rounded-xl border border-white/5 shadow-inner">
+                <h2 class="text-xl font-bold mb-4 text-indigo-300 theme-font tracking-wide flex items-center gap-2">
+                    📝 Parte 2: Prueba de Escritorio (Papel y Lápiz) <span class="relative group inline-block ml-3 align-middle"><span class="cursor-pointer bg-indigo-500/20 text-indigo-300 text-sm font-bold px-3 py-1 rounded border border-indigo-500/30">25%</span><div class="absolute opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-10 bottom-full left-1/2 -translate-x-1/2 mb-2 w-64 bg-gray-900 text-white text-sm rounded-lg shadow-xl border border-gray-700 p-3 pointer-events-none font-normal"><div class="font-bold text-indigo-400 mb-1">Prueba de Escritorio</div><p class="text-xs text-gray-300">Refleja paso a paso el cambio de valor de cada variable y anota la salida exacta por pantalla esperada.</p><div class="absolute -bottom-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-gray-900 border-b border-r border-gray-700 transform rotate-45"></div></div></span>
+                </h2>
+                <div class="leading-relaxed opacity-95 text-md space-y-4">
+                    <div class="bg-indigo-950/50 p-5 rounded-xl border border-indigo-500/20 shadow-md flex items-start gap-4">
+                        <div class="text-3xl">📄</div>
+                        <div>
+                            <p class="font-bold text-indigo-200 mb-1">Entrega en formato físico</p>
+                            <p class="text-indigo-100 text-sm">Una vez que hayas finalizado y entregado la Parte 1 (código en computadora), el docente te entregará una hoja impresa con el pseudocódigo correspondiente a la Parte 2 para que realices la prueba de escritorio en papel y lápiz.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+        </div>
+    </div>
+
+    <script>
+        function switchCode(lang) {
+            const pseintBtn = document.getElementById('btn-pseint');
+            const cppBtn = document.getElementById('btn-cpp');
+            const pseintCode = document.getElementById('code-pseint');
+            const cppCode = document.getElementById('code-cpp');
+
+            if (lang === 'pseint') {
+                pseintBtn.className = "px-3 py-1 rounded-md text-sm font-semibold bg-indigo-500 text-white transition-colors";
+                cppBtn.className = "px-3 py-1 rounded-md text-sm font-semibold text-white/60 hover:text-white transition-colors";
+                pseintCode.classList.remove('hidden');
+                pseintCode.classList.add('block');
+                cppCode.classList.remove('block');
+                cppCode.classList.add('hidden');
+            } else {
+                cppBtn.className = "px-3 py-1 rounded-md text-sm font-semibold bg-indigo-500 text-white transition-colors";
+                pseintBtn.className = "px-3 py-1 rounded-md text-sm font-semibold text-white/60 hover:text-white transition-colors";
+                cppCode.classList.remove('hidden');
+                cppCode.classList.add('block');
+                pseintCode.classList.remove('block');
+                pseintCode.classList.add('hidden');
+            }
+        }
+
+        function switchTab(tabIndex) {
+            document.querySelectorAll('.tab-btn').forEach((btn, idx) => {
+                if (idx === tabIndex) {
+                    btn.classList.add('bg-indigo-300', 'text-black', 'border-indigo-300');
+                    btn.classList.remove('bg-white/5', 'text-white/70', 'border-white/10', 'hover:bg-white/10');
+                } else {
+                    btn.classList.remove('bg-indigo-300', 'text-black', 'border-indigo-300');
+                    btn.classList.add('bg-white/5', 'text-white/70', 'border-white/10', 'hover:bg-white/10');
+                }
+            });
+            document.querySelectorAll('.tab-content').forEach((content, idx) => {
+                if (idx === tabIndex) {
+                    content.classList.add('active');
+                } else {
+                    content.classList.remove('active');
+                }
+            });
+        }
+
+        // Fetch badge from TheSportsDB
+        fetch('https://www.thesportsdb.com/api/v1/json/3/searchteams.php?t=Argentina')
+            .then(response => response.json())
+            .then(data => {
+                if (data.teams && data.teams.length > 0) {
+                    const badgeUrl = data.teams[0].strBadge;
+                    document.getElementById('api-image-container').innerHTML = `<img src="${badgeUrl}" alt="AFA Badge" class="h-16 w-16 object-contain drop-shadow-2xl">`;
+                }
+            })
+            .catch(err => console.error("Error", err));
+    </script>
+</body>
+</html>

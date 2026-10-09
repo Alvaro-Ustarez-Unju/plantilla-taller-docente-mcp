@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Módulos de Proceso: Funciones en PseInt</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      background-color: #f4f6f9;
+      color: #333;
+      margin: 0;
+      padding: 15px;
+    }
+    .widget-container {
+      background: #ffffff;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+      max-width: 100%;
+    }
+    .widget-header {
+      text-align: center;
+      margin-bottom: 25px;
+    }
+    .widget-header h2 {
+      margin: 0 0 5px 0;
+      color: #2c3e50;
+    }
+    .widget-header p {
+      margin: 0;
+      color: #7f8c8d;
+      font-size: 0.95rem;
+    }
+
+    .grid-panel {
+      display: grid;
+      grid-template-columns: 1fr 1.2fr;
+      gap: 20px;
+    }
+    @media (max-width: 768px) {
+      .grid-panel { grid-template-columns: 1fr; }
+    }
+
+    /* Entorno de Ejecución Visual */
+    .entorno-visual {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      position: relative;
+    }
+    
+    .modulo {
+      border-radius: 8px;
+      padding: 15px;
+      border: 2px solid transparent;
+      transition: all 0.3s ease;
+    }
+    
+    /* Proceso Principal */
+    .modulo-ppal {
+      background-color: #ebf5fb;
+      border-color: #3498db;
+    }
+    .titulo-ppal { color: #2980b9; font-weight: bold; margin-bottom: 10px; font-size: 0.9rem; text-transform: uppercase; }
+    
+    .input-group {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+    .input-box {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      font-size: 0.85rem;
+      color: #555;
+    }
+    .input-box input {
+      padding: 8px;
+      border: 1px solid #bdc3c7;
+      border-radius: 4px;
+      margin-top: 4px;
+      font-family: monospace;
+    }
+    
+    .variable-asignacion {
+      background: #fff;
+      padding: 10px;
+      border-radius: 4px;
+      border: 1px dashed #3498db;
+      font-family: 'Courier New', Courier, monospace;
+      font-weight: bold;
+      color: #34495e;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .valor-espera { color: #95a5a6; font-style: italic; }
+    .valor-recibido { color: #27ae60; font-size: 1.2rem; }
+
+    /* Área de Tránsito (Flechas) */
+    .zona-transito {
+      display: flex;
+      justify-content: space-between;
+      padding: 0 20px;
+      height: 40px;
+      align-items: center;
+      font-size: 0.85rem;
+      font-weight: bold;
+    }
+    .flecha-envio { color: #e67e22; opacity: 0; transform: translateY(-10px); transition: all 0.5s; }
+    .flecha-retorno { color: #27ae60; opacity: 0; transform: translateY(10px); transition: all 0.5s; }
+
+    /* Función Módulo */
+    .modulo-funcion {
+      background-color: #f4ecf7;
+      border-color: #9b59b6;
+      opacity: 0.6;
+    }
+    .titulo-funcion { color: #8e44ad; font-weight: bold; margin-bottom: 10px; font-size: 0.9rem; text-transform: uppercase; }
+    
+    .caja-calculo {
+      background: #fff;
+      padding: 10px;
+      border-radius: 4px;
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 0.9rem;
+      color: #555;
+      text-align: center;
+      min-height: 40px;
+    }
+    .resultado-retorno {
+      margin-top: 10px;
+      text-align: center;
+      font-weight: bold;
+      color: #8e44ad;
+      font-family: monospace;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    /* Código PseInt y Controles */
+    .pseint-code {
+      background-color: #1e1e1e;
+      color: #d4d4d4;
+      border-radius: 8px;
+      padding: 15px;
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 0.85rem;
+      line-height: 1.5;
+    }
+    .kw { color: #569cd6; font-weight: bold; } /* Keywords */
+    .var { color: #9cdcfe; } /* Variables */
+    .func { color: #dcdcaa; } /* Functions */
+    .num { color: #b5cea8; } /* Numbers */
+    
+    .panel-explicacion {
+      background: #e8f8f5;
+      border-left: 4px solid #1abc9c;
+      padding: 12px;
+      margin-top: 15px;
+      font-size: 0.9rem;
+      border-radius: 0 4px 4px 0;
+      min-height: 60px;
+      display: flex;
+      align-items: center;
+      color: #2c3e50;
+    }
+
+    .btn {
+      width: 100%;
+      padding: 12px;
+      border: none;
+      border-radius: 6px;
+      font-weight: bold;
+      cursor: pointer;
+      color: white;
+      transition: transform 0.1s, background-color 0.2s;
+      margin-top: 15px;
+      font-size: 1rem;
+    }
+    .btn:active { transform: scale(0.98); }
+    .btn-ejecutar { background-color: #8e44ad; }
+    .btn-ejecutar:hover { background-color: #732d91; }
+    .btn-ejecutar:disabled { background-color: #bdc3c7; cursor: not-allowed; }
+    .btn-reset { background-color: #95a5a6; display: none; }
+    .btn-reset:hover { background-color: #7f8c8d; }
+
+    /* Animaciones */
+    @keyframes pulso {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.02); box-shadow: 0 4px 10px rgba(155, 89, 182, 0.3); }
+      100% { transform: scale(1); }
+    }
+    .animar-calculo { animation: pulso 1.5s ease-in-out; opacity: 1 !important; }
+    .animar-recibir { color: #27ae60; transform: scale(1.1); font-weight: bold; }
+    
+  </style>
+</head>
+<body>
+
+  <div class="widget-container">
+    <div class="widget-header">
+      <h2>Funciones: Módulos de Cálculo</h2>
+      <p>Observa cómo la Función procesa los datos y <b>retorna</b> el resultado al Proceso Principal.</p>
+    </div>
+
+    <div class="grid-panel">
+      <div class="entorno-visual">
+        
+        <div class="modulo modulo-ppal" id="mod-ppal">
+          <div class="titulo-ppal">Proceso Principal</div>
+          
+          <div class="input-group">
+            <div class="input-box">
+              <label>precio_base</label>
+              <input type="number" id="in-precio" value="1000" step="100">
+            </div>
+            <div class="input-box">
+              <label>porcentaje (%)</label>
+              <input type="number" id="in-desc" value="20" step="5">
+            </div>
+          </div>
+
+          <div class="variable-asignacion" id="var-asignacion">
+            <span>a_pagar =</span>
+            <span id="valor-final" class="valor-espera">Esperando retorno...</span>
+          </div>
+        </div>
+
+        <div class="zona-transito">
+          <div class="flecha-envio" id="f-envio">⬇ Envía: (<span id="arg-p"></span>, <span id="arg-d"></span>)</div>
+          <div class="flecha-retorno" id="f-retorno">⬆ Retorna: <span id="val-ret"></span></div>
+        </div>
+
+        <div class="modulo modulo-funcion" id="mod-func">
+          <div class="titulo-funcion">Función CalcularDescuento()</div>
+          <div style="font-size: 0.8rem; color: #7f8c8d; margin-bottom: 5px;">Recibe: (precio, descuento)</div>
+          
+          <div class="caja-calculo" id="caja-calc">
+            <span style="color: #bbb; font-style: italic;">Esperando llamada...</span>
+          </div>
+
+          <div class="resultado-retorno" id="res-retorno">
+            resultado = <span id="calc-final">?</span>
+          </div>
+        </div>
+
+      </div>
+
+      <div>
+        <div class="pseint-code">
+          <span class="kw">Proceso</span> Tienda<br>
+          &nbsp;&nbsp;<span class="kw">Definir</span> <span class="var">a_pagar</span> <span class="kw">Como Real</span>;<br>
+          &nbsp;&nbsp;<span style="color:#888">// La función devuelve un valor que se asigna a_pagar</span><br>
+          &nbsp;&nbsp;<span class="var" style="font-weight:bold;">a_pagar</span> = <span class="func">CalcularDescuento</span>(<span class="var" id="cd-p">precio</span>, <span class="var" id="cd-d">desc</span>);<br>
+          <span class="kw">FinProceso</span><br>
+          <br>
+          <span class="kw">Funcion</span> <span class="var">resultado</span> = <span class="func">CalcularDescuento</span>(<span class="var">p</span>, <span class="var">d</span>)<br>
+          &nbsp;&nbsp;<span class="var">resultado</span> = <span class="var">p</span> - (<span class="var">p</span> * <span class="var">d</span> / <span class="num">100</span>);<br>
+          <span class="kw">FinFuncion</span>
+        </div>
+
+        <div class="panel-explicacion" id="texto-explicacion">
+          Ingresa los valores y haz clic en Ejecutar para ver el ciclo de vida de la Función.
+        </div>
+
+        <button class="btn btn-ejecutar" id="btn-run" onclick="iniciarCalculo()">▶ Ejecutar Función</button>
+        <button class="btn btn-reset" id="btn-reset" onclick="resetear()">↻ Hacer otro cálculo</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const inPrecio = document.getElementById('in-precio');
+    const inDesc = document.getElementById('in-desc');
+    const btnRun = document.getElementById('btn-run');
+    const btnReset = document.getElementById('btn-reset');
+    const txtExplicacion = document.getElementById('texto-explicacion');
+    
+    // Elementos de la animación
+    const fEnvio = document.getElementById('f-envio');
+    const fRetorno = document.getElementById('f-retorno');
+    const modFunc = document.getElementById('mod-func');
+    const cajaCalc = document.getElementById('caja-calc');
+    const resRetorno = document.getElementById('res-retorno');
+    const valorFinal = document.getElementById('valor-final');
+    
+    const esperar = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+
+    async function iniciarCalculo() {
+      const precio = parseFloat(inPrecio.value);
+      const desc = parseFloat(inDesc.value);
+
+      if (isNaN(precio) || isNaN(desc)) {
+        alert("Por favor, ingresa números válidos.");
+        return;
+      }
+
+      // 1. Setup inicial
+      inPrecio.disabled = true;
+      inDesc.disabled = true;
+      btnRun.disabled = true;
+      btnRun.innerText = "Calculando...";
+      
+      document.getElementById('cd-p').innerText = precio;
+      document.getElementById('cd-p').className = "num";
+      document.getElementById('cd-d').innerText = desc;
+      document.getElementById('cd-d').className = "num";
+
+      // 2. Enviar parámetros (Paso por Valor implícito)
+      txtExplicacion.innerHTML = "<b>1. Invocación:</b> El Proceso Principal llama a la Función y le envía los datos (argumentos).";
+      document.getElementById('arg-p').innerText = precio;
+      document.getElementById('arg-d').innerText = desc;
+      fEnvio.style.opacity = "1";
+      fEnvio.style.transform = "translateY(0)";
+      await esperar(1500);
+
+      // 3. Ejecución de la Función
+      txtExplicacion.innerHTML = "<b>2. Proceso Interno:</b> La Función recibe los datos y ejecuta su matemática de forma aislada.";
+      modFunc.classList.add('animar-calculo');
+      fEnvio.style.opacity = "0";
+      
+      const descuentoAplicado = (precio * desc) / 100;
+      const resultado = precio - descuentoAplicado;
+      
+      cajaCalc.innerHTML = `
+        <span style="color:#d35400">${precio}</span> - 
+        (<span style="color:#d35400">${precio}</span> * <span style="color:#d35400">${desc}</span> / 100)<br>
+        = <span style="font-weight:bold;">${resultado}</span>
+      `;
+      await esperar(2000);
+
+      // 4. Preparar Retorno
+      txtExplicacion.innerHTML = "<b>3. Retorno:</b> La Función guarda el resultado en su variable de retorno predefinida y la envía de vuelta.";
+      document.getElementById('calc-final').innerText = resultado;
+      resRetorno.style.opacity = "1";
+      await esperar(1500);
+
+      // 5. Devolver Valor
+      txtExplicacion.innerHTML = "<b>4. Asignación:</b> El Proceso Principal recibe el valor y lo guarda en la variable <code>a_pagar</code>.";
+      document.getElementById('val-ret').innerText = resultado;
+      fRetorno.style.opacity = "1";
+      fRetorno.style.transform = "translateY(0)";
+      await esperar(1000);
+
+      // 6. Asignar en Proceso Principal
+      fRetorno.style.opacity = "0";
+      modFunc.classList.remove('animar-calculo');
+      valorFinal.innerText = "$" + resultado;
+      valorFinal.className = "valor-recibido animar-recibir";
+      
+      // Finalizar
+      btnRun.style.display = 'none';
+      btnReset.style.display = 'block';
+    }
+
+    function resetear() {
+      inPrecio.disabled = false;
+      inDesc.disabled = false;
+      
+      // Reset variables PseInt code
+      document.getElementById('cd-p').innerText = "precio";
+      document.getElementById('cd-p').className = "var";
+      document.getElementById('cd-d').innerText = "desc";
+      document.getElementById('cd-d').className = "var";
+
+      // Reset UI
+      txtExplicacion.innerHTML = "Ingresa los valores y haz clic en Ejecutar para ver el ciclo de vida de la Función.";
+      fEnvio.style.opacity = "0";
+      fEnvio.style.transform = "translateY(-10px)";
+      fRetorno.style.opacity = "0";
+      fRetorno.style.transform = "translateY(10px)";
+      modFunc.style.opacity = "0.6";
+      resRetorno.style.opacity = "0";
+      cajaCalc.innerHTML = '<span style="color: #bbb; font-style: italic;">Esperando llamada...</span>';
+      
+      valorFinal.innerText = "Esperando retorno...";
+      valorFinal.className = "valor-espera";
+
+      btnRun.disabled = false;
+      btnRun.innerText = "▶ Ejecutar Función";
+      btnRun.style.display = 'block';
+      btnReset.style.display = 'none';
+    }
+  </script>
+</body>
+</html>

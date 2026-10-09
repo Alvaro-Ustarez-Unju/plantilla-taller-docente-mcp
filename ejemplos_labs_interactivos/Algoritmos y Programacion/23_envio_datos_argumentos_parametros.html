@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --jefe-bg: #ebf5fb;
+            --jefe-border: #3498db;
+            --obrero-bg: #fdf2e9;
+            --obrero-border: #e67e22;
+            --argumento: #2980b9;
+            --parametro: #d35400;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, Arial, sans-serif;
+            margin: 0;
+            padding: 15px;
+            box-sizing: border-box;
+            background: #ffffff;
+            color: var(--primary);
+        }
+
+        .widget-container {
+            max-width: 600px;
+            margin: 0 auto;
+            border: 2px solid #ecf0f1;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+
+        h3, h4 { margin-top: 0; }
+        
+        .panel {
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 5px solid;
+            margin-bottom: 15px;
+            position: relative;
+        }
+
+        .panel-jefe { background: var(--jefe-bg); border-color: var(--jefe-border); }
+        .panel-obrero { background: var(--obrero-bg); border-color: var(--obrero-border); }
+
+        .codigo {
+            font-family: 'Courier New', monospace;
+            background: rgba(255,255,255,0.7);
+            padding: 10px;
+            border-radius: 6px;
+            font-size: 0.9em;
+            margin-bottom: 10px;
+        }
+
+        .input-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        input {
+            flex: 1;
+            padding: 8px 12px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-family: inherit;
+        }
+
+        button {
+            background: var(--jefe-border);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background 0.3s;
+        }
+
+        button:hover { background: #2980b9; }
+        button:disabled { background: #95a5a6; cursor: not-allowed; }
+
+        .etiqueta {
+            display: inline-block;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        .eti-arg { background: var(--argumento); color: white; }
+        .eti-param { background: var(--parametro); color: white; }
+
+        .camino {
+            text-align: center;
+            height: 40px;
+            position: relative;
+        }
+
+        .carta {
+            display: inline-block;
+            background: #fff;
+            border: 2px solid #ccc;
+            padding: 5px 15px;
+            border-radius: 4px;
+            font-weight: bold;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            opacity: 0;
+            transform: translateY(-20px);
+            transition: all 0.8s ease;
+            position: absolute;
+            left: 50%;
+            margin-left: -60px; /* Centrado aproximado */
+            width: 120px;
+            box-sizing: border-box;
+        }
+
+        .consola {
+            background: #1e1e1e;
+            color: #4af626;
+            padding: 10px;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            min-height: 60px;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+
+<div class="widget-container">
+    <h3>Envío de Datos: Argumentos vs Parámetros</h3>
+    
+    <div class="panel panel-jefe">
+        <h4>🏢 Jefe: Algoritmo Principal</h4>
+        <div class="input-group">
+            <input type="text" id="inputNombre" placeholder="Escribe un nombre (Ej. María)" autocomplete="off">
+            <button id="btnEjecutar" onclick="iniciarTransferencia()">Llamar Módulo</button>
+        </div>
+        <div class="codigo">
+            Leer nombre; <br>
+            MostrarBienvenida( <span id="txtArgumento" class="etiqueta">nombre</span> ); <span style="color:#7f8c8d; font-size: 0.8em;">// Argumento</span>
+        </div>
+    </div>
+
+    <div class="camino">
+        <div id="cartaAnimada" class="carta">✉️ <span id="contenidoCarta">...</span></div>
+    </div>
+
+    <div class="panel panel-obrero">
+        <h4>👷 Obrero: SubProceso</h4>
+        <div class="codigo">
+            SubProceso MostrarBienvenida( <span id="txtParametro" class="etiqueta">persona</span> ) <span style="color:#7f8c8d; font-size: 0.8em;">// Parámetro</span>
+        </div>
+        <div class="consola" id="consolaSalida">Esperando datos...</div>
+    </div>
+</div>
+
+<script>
+    async function iniciarTransferencia() {
+        const input = document.getElementById('inputNombre').value.trim();
+        const nombre = input === "" ? "Invitado" : input;
+        
+        const btn = document.getElementById('btnEjecutar');
+        const txtArg = document.getElementById('txtArgumento');
+        const txtParam = document.getElementById('txtParametro');
+        const carta = document.getElementById('cartaAnimada');
+        const contCarta = document.getElementById('contenidoCarta');
+        const consola = document.getElementById('consolaSalida');
+
+        // Reiniciar estado
+        btn.disabled = true;
+        consola.innerHTML = "Procesando...";
+        txtParam.textContent = "persona";
+        txtParam.className = "etiqueta";
+
+        // PASO 1: El Jefe prepara el Argumento
+        txtArg.textContent = `"${nombre}"`;
+        txtArg.classList.add('eti-arg');
+        
+        await delay(600);
+
+        // PASO 2: La Carta viaja
+        contCarta.textContent = `"${nombre}"`;
+        carta.style.opacity = "1";
+        carta.style.transform = "translateY(15px)"; // Baja hacia el obrero
+        
+        await delay(1000);
+
+        // PASO 3: El Obrero recibe en el Parámetro
+        carta.style.opacity = "0";
+        carta.style.transform = "translateY(-20px)"; // Resetea posición
+        
+        txtParam.textContent = `"${nombre}"`;
+        txtParam.classList.add('eti-param');
+        
+        // Efecto de latido al recibir
+        txtParam.style.transform = "scale(1.1)";
+        setTimeout(() => txtParam.style.transform = "scale(1)", 200);
+
+        await delay(800);
+
+        // PASO 4: Ejecución del código del obrero
+        consola.innerHTML = `***************************************<br>* Bienvenido ${nombre} al Sistema *<br>***************************************`;
+
+        // Limpieza después de unos segundos
+        setTimeout(() => {
+            btn.disabled = false;
+            txtArg.textContent = "nombre";
+            txtArg.classList.remove('eti-arg');
+        }, 2000);
+    }
+
+    // Función auxiliar para pausas (promesas)
+    function delay(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    }
+</script>
+
+</body>
+</html>

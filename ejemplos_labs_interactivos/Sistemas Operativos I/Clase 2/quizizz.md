@@ -1,206 +1,130 @@
-# 🎮 Cuestionario Quizizz / Wayground — Unidad 2: Administración de Memoria en Linux
-
-> **Universidad Nacional de Jujuy (UNJu) — Facultad de Ingeniería**  
-> **Cátedra:** Sistemas Operativos II — Ciclo Lectivo 2026  
-> **Equipo Docente:** Ing. María Fernanda Vázquez (Titular) | Ing. Fabio Damián Argañaraz Azua (JTP)  
-> **Uso:** Actividad interactiva en vivo (10-15 min) para la apertura de la **Clase 2 / TP 02**.
-
----
-
-## 📋 Banco de Preguntas (Con distractores deliberadamente largos para neutralizar el sesgo de longitud)
+# 🧠 Cuestionario Interactivo de Orientación Formativa (Quizizz / Wayground)
+### Cátedra: Teoría de Sistemas Operativos — Ciclo Lectivo 2026
+**Universidad Nacional de Jujuy (UNJu) — Facultad de Ingeniería**  
+**Docente Responsable:** Ing. María Fernanda Vázquez  
+**Jefe de Trabajos Prácticos:** Ing. Fabio D. Argañaraz  
 
 ---
 
-### Pregunta 1 (30 segundos)
-**En el espacio de direcciones virtuales de un proceso en Linux, ¿qué caracteriza al segmento BSS (*Block Started by Symbol*)?**
-
-- [ ] A) Contiene el código fuente en lenguaje C compilado con opciones de optimización máxima `-O3` y se almacena en memoria Flash permanente.
-- [x] **B) Almacena variables globales y estáticas no inicializadas, sin ocupar espacio físico en el ejecutable en disco.** ✅
-- [ ] C) Es una partición oculta en el disco de intercambio que solo se activa durante el arranque del núcleo del sistema operativo para inicializar el demonio systemd.
-- [ ] D) Es el segmento donde residen exclusivamente los punteros a funciones creados mediante la llamada al sistema `mmap()`.
-
-> **💡 Explicación:** El segmento BSS reserva espacio para variables globales/estáticas que no tienen valor inicial. Linux no almacena ceros en el archivo binario ejecutable en disco para ahorrar espacio; el kernel simplemente asigna las páginas y las llena de ceros al momento de cargar el proceso en memoria (usando la *Zero Page*).
+## 🎯 Propósito del Cuestionario
+Este cuestionario contiene **10 preguntas conceptuales formativas** diseñadas para dinamizar la clase y orientar a los estudiantes en los conceptos teóricos clave antes o durante la resolución de cada uno de los 10 ejercicios del [**Trabajo Práctico N° 2**](https://github.com/UNJU-Teoria-de-Sistemas-Operativos/TP2).
 
 ---
 
-### Pregunta 2 (30 segundos)
-**¿En qué se diferencian principalmente el *Heap* (Montículo) y el *Stack* (Pila) dentro del espacio de memoria de un proceso?**
+### 📌 Pregunta 1 (Guía para Ejercicio 01: Segmentos de Memoria de un Proceso)
+**¿En qué segmento del espacio de memoria de un proceso se alojan las variables locales de una función y las direcciones de retorno de las llamadas a subrutinas?**
+- A) En la sección de Texto (*Text*), que almacena las instrucciones binarias y datos estáticos de solo lectura protegidos contra escritura por el hardware de la MMU.
+- B) En el segmento de Datos (*Data*), reservado formalmente por el compilador para variables globales y estáticas con ciclo de vida permanente en el programa.
+- C) En la Pila de ejecución (*Stack*), cuya estructura LIFO gestiona marcos de activación con variables locales y direcciones de retorno.
+- D) En el *Heap* dinámico, administrado mediante llamadas del sistema a `malloc()` o `new` para estructuras complejas de tamaño variable en ejecución.
 
-- [ ] A) El Heap solo almacena variables booleanas de un solo byte gestionadas por el compilador, mientras que el Stack se utiliza para transferencias directas de red mediante sockets TCP.
-- [x] **B) El Heap crece hacia direcciones superiores mediante asignación dinámica (`malloc`/`brk`); el Stack crece hacia abajo con variables locales y marcos de llamada.** ✅
-- [ ] C) El Heap se almacena en la memoria caché L1 del procesador y el Stack se guarda en el archivo de intercambio swap en el disco SSD.
-- [ ] D) Ambos segmentos tienen un tamaño fijo inmutable de 4 KB definido rígidamente por la arquitectura del procesador durante el inicio del BIOS.
-
-> **💡 Explicación:** En la arquitectura estándar de memoria virtual de Linux, el Heap crece hacia arriba (hacia direcciones de memoria más altas) a medida que el proceso solicita memoria dinámica, mientras que el Stack crece hacia abajo (hacia direcciones más bajas) de forma automática con cada llamada a función y creación de variables locales.
-
----
-
-### Pregunta 3 (30 segundos)
-**¿Cuál es la función y ventaja de la técnica *Copy-On-Write* (COW) combinada con la *Zero Page* al crear un proceso con `fork()`?**
-
-- [ ] A) Recompilar automáticamente los módulos binarios del kernel en un archivo temporal de solo lectura para evitar desbordamientos de búfer en memoria física.
-- [x] **B) Compartir páginas en modo solo lectura hasta que uno de los procesos intenta escribir, duplicando la página solo en ese instante.** ✅
-- [ ] C) Forzar la sincronización continua de todos los bloques de memoria RAM directamente al disco duro para evitar pérdidas ante un corte de energía.
-- [ ] D) Prohibir el acceso al procesador a cualquier proceso hijo hasta que el proceso padre termine completamente su ciclo de ejecución.
-
-> **💡 Explicación:** Con Copy-On-Write (COW), el kernel no duplica inmediatamente la memoria física del proceso padre al hacer `fork()`. Ambos procesos comparten los mismos marcos de página marcados como solo lectura. Únicamente cuando uno de ellos intenta modificar un dato, la CPU genera una trampa y el kernel duplica ese marco específico de 4 KB.
+> **Respuesta correcta:** **C**  
+> **💡 Justificación pedagógica:** El *Stack* (pila de ejecución) almacena los registros de activación de funciones (parámetros, variables locales y dirección de retorno). El *Heap* es para memoria dinámica, *Data* para globales y *Text* para el código compilado (Silberschatz Cap. 3.1, Carretero Cap. 3.1).
 
 ---
 
-### Pregunta 4 (30 segundos)
-**En la gestión de memoria del Kernel de Linux, ¿cuál es el propósito fundamental del asignador *Buddy System* (Buddy Allocator)?**
+### 📌 Pregunta 2 (Guía para Ejercicio 02: Programa vs. Proceso)
+**¿Por qué se afirma formalmente que "un programa es una entidad pasiva mientras que un proceso es una entidad activa"?**
+- A) El programa es un archivo binario inerte en almacenamiento secundario, mientras que el proceso es una entidad en ejecución con memoria RAM, Program Counter y registros.
+- B) El programa gestiona directamente las interrupciones del procesador en modo usuario, mientras que el proceso es una biblioteca dinámica enlazada en tiempo de ejecución por el kernel.
+- C) El programa es una instancia activa planificada por el despachador de la CPU, mientras que el proceso es el código fuente sin compilar almacenado en el disco rígido de forma persistente.
+- D) El programa posee un identificador PID único asignado por las llamadas del sistema, mientras que el proceso representa la ruta estática dentro del árbol jerárquico del sistema de archivos.
 
-- [ ] A) Conectar múltiples servidores a través de una red de alta velocidad InfiniBand para sincronizar las bases de datos distribuidas en tiempo real.
-- [x] **B) Asignar bloques contiguos de páginas en potencias de 2 ($2^k$) y fusionar bloques hermanos libres de forma rápida.** ✅
-- [ ] C) Administrar la cola de impresión del sistema operativo organizando los documentos según el número de páginas enviadas por el usuario.
-- [ ] D) Traducir dinámicamente direcciones IPv4 a direcciones IPv6 dentro de la pila de protocolos del núcleo.
-
-> **💡 Explicación:** El Buddy System divide la memoria física en bloques contiguos de tamaño potencia de 2 (ej: 4KB, 8KB, 16KB, 32KB...). Cuando dos bloques adyacentes del mismo tamaño (bloques "hermanos" o buddies) quedan libres, se fusionan automáticamente en un bloque mayor, minimizando la fragmentación externa con una sobrecarga computacional mínima.
-
----
-
-### Pregunta 5 (30 segundos)
-**¿Por qué Linux incorpora el *Slab Allocator* por encima del *Buddy System* para estructuras internas como `task_struct` o descriptores de archivos?**
-
-- [ ] A) Para permitir que los procesos de usuario estándar puedan escribir directamente en el bus PCI sin requerir el cambio a Modo Kernel ni privilegios de administrador.
-- [x] **B) Para reutilizar cachés de objetos frecuentes de tamaño fijo y evitar la severa fragmentación interna del Buddy System.** ✅
-- [ ] C) Para duplicar la capacidad de memoria RAM física del equipo comprimiendo el código del sistema operativo en tiempo de ejecución.
-- [ ] D) Para cifrar los paquetes de red salientes mediante claves criptográficas asimétricas de 4096 bits.
-
-> **💡 Explicación:** Si el kernel pidiera memoria al Buddy System para una estructura pequeña (ej: un `task_struct` de pocos cientos de bytes), el Buddy le otorgaría una página entera de 4 KB, desperdiciando el resto (fragmentación interna). El Slab Allocator divide páginas en "slabs" de objetos del mismo tipo pre-inicializados, reutilizándolos instantáneamente.
+> **Respuesta correcta:** **A**  
+> **💡 Justificación pedagógica:** Un programa no consume tiempo de CPU ni memoria hasta que el sistema operativo lo carga en memoria principal creando un contexto de ejecución, instante en el que nace como proceso (Silberschatz Cap. 3.1, Stallings Cap. 3.1).
 
 ---
 
-### Pregunta 6 (30 segundos)
-**¿Cuál es la diferencia técnica entre la asignación de memoria con `kmalloc()` y con `vmalloc()` en el espacio del Kernel?**
+### 📌 Pregunta 3 (Guía para Ejercicio 03: Evolución de los Modelos de Estados)
+**¿Cuál fue la limitación crítica del modelo de dos estados (Ejecutando / No Ejecutando) que motivó la creación del modelo de tres estados con el estado Bloqueado?**
+- A) Provocaba inanición en los procesos de tiempo real al carecer de un temporizador de hardware que interrumpiera periódicamente a la CPU y regulara el quantum.
+- B) Impedía que el sistema operativo admitiera más de dos programas simultáneamente en la cola de planificación a largo plazo debido a restricciones del cargador.
+- C) Requería reiniciar el microprocesador cada vez que un proceso intentaba acceder a un archivo almacenado en almacenamiento secundario o en dispositivos lentos.
+- D) Agrupaba en una única cola tanto a procesos listos como a procesos detenidos por operaciones lentas de E/S, malgastando ciclos de CPU.
 
-- [ ] A) `kmalloc()` solo funciona en sistemas operativos de 16 bits antiguos, mientras que `vmalloc()` es un comando de usuario exclusivo de la shell ZSH para emular memoria virtual en disco.
-- [x] **B) `kmalloc()` garantiza memoria contigua física y virtualmente; `vmalloc()` garantiza memoria contigua solo virtualmente.** ✅
-- [ ] C) `kmalloc()` almacena datos en la memoria de la tarjeta de video (VRAM) y `vmalloc()` en la memoria principal del microprocesador.
-- [ ] D) No existe ninguna diferencia; `vmalloc()` es simplemente un alias obsoleto que apunta a la misma función del planificador de tareas.
-
-> **💡 Explicación:** `kmalloc()` solicita páginas al Buddy System obteniendo memoria físicamente contigua (esencial para dispositivos con acceso DMA). Por el contrario, `vmalloc()` asigna páginas que pueden estar dispersas en la RAM física pero mapeadas de forma consecutiva en el espacio virtual del kernel, ideal para buffers grandes o carga de módulos `.ko`.
-
----
-
-### Pregunta 7 (30 segundos)
-**¿Qué sucede a nivel de hardware y sistema operativo cuando un proceso intenta acceder a una página con su *bit de presencia* en 0 (*Page Fault*)?**
-
-- [ ] A) El microprocesador emite un pitido de advertencia en el altavoz de la placa madre y formatea automáticamente la partición de swap para liberar espacio.
-- [x] **B) La MMU genera una excepción (TRAP) que invoca al manejador del kernel para cargar la página desde el disco o swap a la RAM.** ✅
-- [ ] C) El proceso se aborta de forma definitiva con el error irrecuperable Kernel Panic y se reinicia la máquina inmediatamente.
-- [ ] D) El compilador GCC vuelve a compilar el programa en segundo plano asignándole registros de CPU adicionales.
-
-> **💡 Explicación:** En la Paginación por Demanda (*Demand Paging*), las páginas no se cargan en RAM hasta que son necesarias. Cuando el proceso intenta acceder a una página ausente, la MMU detecta el bit de presencia en 0 y dispara un fallo de página (*Page Fault*). El kernel suspende el proceso, trae la página desde el ejecutable o swap, actualiza la tabla de páginas y reanuda la instrucción.
+> **Respuesta correcta:** **D**  
+> **💡 Justificación pedagógica:** En el modelo de 2 estados, la cola "No Ejecutando" mezclaba procesos listos con procesos detenidos esperando datos de disco o red. Al separarlos con el estado *Bloqueado*, el despachador solo selecciona procesos que realmente pueden avanzar (Stallings Cap. 3.2, U4 Slide 8).
 
 ---
 
-### Pregunta 8 (30 segundos)
-**¿Cuál es el rol del demonio del kernel `kswapd` en GNU/Linux?**
+### 📌 Pregunta 4 (Guía para Ejercicio 04: Modelo de 7 Estados & Swapping)
+**En el modelo de 7 estados con memoria secundaria, ¿a qué estado pasa un proceso que se encuentra en "Bloqueado Suspendido" cuando finalmente concluye la operación de Entrada/Salida que estaba esperando?**
+- A) Pasa de forma inmediata al estado En Ejecución, interrumpiendo al proceso actual mediante un cambio de contexto forzado por la controladora de hardware.
+- B) Transita al estado Listo Suspendido en disco, quedando preparado para ser reincorporado a la memoria RAM cuando haya espacio libre.
+- C) Pasa al estado Listo en memoria principal, siendo cargado automáticamente por la controladora DMA del bus sin requerir la intervención del planificador.
+- D) Retorna al estado Nuevo para que el cargador del sistema operativo verifique nuevamente sus permisos de acceso y tabla de páginas en memoria secundaria.
 
-- [ ] A) Monitorear las conexiones SSH entrantes y bloquear las direcciones IP que superen los tres intentos fallidos de autenticación de usuario.
-- [x] **B) Vigilar el nivel de memoria libre y liberar páginas de forma asíncrona hacia el swap cuando se alcanza el umbral mínimo (*watermark*).** ✅
-- [ ] C) Comprimir los archivos del directorio `/var/log/` para que no ocupen espacio en el sistema de archivos raíz.
-- [ ] D) Medir la temperatura de los núcleos del procesador para regular la velocidad de los ventiladores del chasis.
-
-> **💡 Explicación:** `kswapd` es el demonio de intercambio de páginas del kernel en segundo plano. Cuando la memoria RAM libre cae por debajo de un umbral (*low watermark*), `kswapd` se despierta y desaloja páginas inactivas o modificadas al swap para mantener una reserva de marcos libres antes de que el sistema entre en falta crítica de memoria (OOM).
-
----
-
-### Pregunta 9 (30 segundos)
-**En el comando `free -m`, ¿cuál es la diferencia crucial entre la columna `free` (libre) y la columna `available` (disponible)?**
-
-- [ ] A) `free` indica la memoria swap configurada en el disco rígido y `available` indica la cantidad de memoria instalada en los slots de la placa madre.
-- [x] **B) `free` es RAM totalmente sin uso; `available` incluye además la memoria en buffers/caché que puede liberarse de inmediato si una aplicación la solicita.** ✅
-- [ ] C) `free` solo mide la memoria utilizada por el entorno gráfico de escritorio y `available` mide los procesos de la consola tty.
-- [ ] D) Son valores idénticos calculados por dos algoritmos distintos para verificar la consistencia del reloj del sistema.
-
-> **💡 Explicación:** En Linux, la memoria libre no utilizada es memoria desperdiciada, por lo que el kernel usa casi toda la RAM libre como caché de disco y buffers. Por ello, `free` suele ser bajo, pero `available` es la métrica real que indica cuánta memoria puede entregarse a nuevas aplicaciones sin necesidad de acudir al swap (RAM libre + caches reciclables).
+> **Respuesta correcta:** **B**  
+> **💡 Justificación pedagógica:** Al completarse el evento o E/S, el proceso deja de estar bloqueado, pero como sigue residiendo en disco (*Swap*), su estado pasa a ser *Listo Suspendido* (Inactivo). Luego, el planificador a medio plazo decidirá cuándo traerlo a *Listo* (Activo en RAM) (Stallings Cap. 3.2, U4 Slide 11).
 
 ---
 
-### Pregunta 10 (30 segundos)
-**En la configuración de múltiples áreas de intercambio swap en Linux, ¿qué significado tiene el valor de *Prioridad* (`Priority`) asignado con `swapon -p <prioridad>`?**
+### 📌 Pregunta 5 (Guía para Ejercicio 05: PCB y Cambio de Contexto)
+**¿Qué ocurre con la CPU durante un Cambio de Contexto (*Context Switch*) entre dos procesos?**
+- A) Continúa ejecutando código de la aplicación saliente a menor frecuencia de reloj mientras el kernel inicializa los controladores de interrupción correspondientes.
+- B) Formatea la región de memoria de intercambio (*swap*) para prevenir fugas de información confidencial entre usuarios concurrentes en sistemas multiusuario.
+- C) Ejecuta una instrucción privilegiada de apagado temporal que reduce el consumo eléctrico del microprocesador durante la conmutación entre los espacios de memoria.
+- D) Incurre en una sobrecarga ociosa (*overhead*), dedicando ciclos de reloj a salvar y restaurar registros de CPU y punteros de control sin avanzar trabajo útil.
 
-- [ ] A) Define el tamaño máximo en gigabytes que el archivo swap puede expandirse antes de emitir un error de cuota de disco.
-- [x] **B) Las áreas de mayor prioridad numérica se utilizan primero; a igual prioridad, el kernel distribuye las páginas en modo entrelazado (*round-robin*).** ✅
-- [ ] C) Indica la cantidad de segundos que un proceso puede permanecer bloqueado en disco antes de ser eliminado con señal SIGKILL.
-- [ ] D) Es un identificador único de seguridad que impide que usuarios sin privilegios lean el contenido del archivo de paginación.
-
-> **💡 Explicación:** En `/proc/swaps`, la columna de prioridad determina el orden de uso del swap (las prioridades van de -1 a 32767). Si se configuran dos particiones swap rápidas (ej: en discos SSD distintos) con la misma prioridad alta, Linux escribe en ambas de forma alternada (striping), mejorando el rendimiento de E/S.
+> **Respuesta correcta:** **D**  
+> **💡 Justificación pedagógica:** El cambio de contexto es una sobrecarga computacional indispensable: la CPU debe guardar registros, PC y punteros de pila en el PCB del proceso actual y cargar los del nuevo. Es tiempo estrictamente invertido en administración por el SO (Silberschatz Cap. 3.1, Carretero Cap. 3.2).
 
 ---
 
-## 📦 Bloque de Importación para Moodle / Quizizz (Formato Aiken)
+### 📌 Pregunta 6 (Guía para Ejercicio 06: Operaciones POSIX: fork, exec, Zombies y Huérfanos)
+**¿Qué define a un proceso en estado "Zombie" en un sistema operativo tipo UNIX/Linux?**
+- A) Ha finalizado su ejecución pero permanece en la tabla de procesos porque su padre aún no consultó su código de terminación mediante `wait()`.
+- B) Ha quedado en un bucle infinito consumiendo el 100% de la CPU debido a una condición de carrera no resuelta en su sección crítica de memoria compartida.
+- C) Ha sido desalojado de la memoria RAM hacia la partición de swap tras haber agotado sucesivamente múltiples quantums de ejecución asignados por el kernel.
+- D) Ha perdido la comunicación con el servidor gráfico pero mantiene abiertas sus conexiones de red y descriptores de tuberías anónimas con otros demonios.
 
-```text
-En el espacio de direcciones de un proceso en Linux, que caracteriza al segmento BSS?
-A. Contiene el codigo fuente compilado con optimizacion y se almacena en memoria Flash.
-B. Almacena variables globales y estaticas no inicializadas, sin ocupar espacio fisico en disco.
-C. Es una particion oculta de swap que se activa en el arranque para inicializar systemd.
-D. Es el segmento donde residen exclusivamente los punteros a funciones creados con mmap.
-ANSWER: B
+> **Respuesta correcta:** **A**  
+> **💡 Justificación pedagógica:** Un proceso zombie no consume memoria RAM ni CPU, pero retiene una entrada en la tabla de procesos y su PCB con el código de salida. Una vez que el padre invoca `wait()`, el zombie desaparece completamente (Silberschatz Cap. 3.3, U4 Slide 15).
 
-En que se diferencian principalmente el Heap y el Stack en el espacio de memoria de un proceso?
-A. El Heap almacena variables booleanas y el Stack se utiliza para sockets de red TCP.
-B. El Heap crece hacia direcciones superiores (malloc); el Stack crece hacia abajo con variables locales.
-C. El Heap se almacena en la cache L1 de la CPU y el Stack se guarda en el archivo de intercambio swap.
-D. Ambos segmentos tienen un tamano fijo inmutable de 4 KB definido por el BIOS.
-ANSWER: B
+---
 
-Cual es la ventaja de la tecnica Copy-On-Write (COW) al crear un proceso con fork()?
-A. Recompilar los modulos del kernel en un archivo temporal para evitar desbordamientos de buffer.
-B. Compartir paginas en solo lectura hasta que un proceso intenta escribir, duplicando solo en ese instante.
-C. Forzar la sincronizacion continua de la RAM a disco para evitar perdidas ante cortes de energia.
-D. Prohibir el acceso al procesador al proceso hijo hasta que el padre finalice.
-ANSWER: B
+### 📌 Pregunta 7 (Guía para Ejercicio 07: Hilos vs. Procesos)
+**Al crear múltiples hilos (*threads*) dentro de un mismo proceso, ¿cuál de los siguientes recursos NO se comparte entre ellos y es estrictamente privado para cada hilo?**
+- A) El espacio de memoria virtual completo, incluyendo las secciones de código compilado (*Text*) y la zona de asignación dinámica (*Heap*).
+- B) La tabla de descriptores de archivos abiertos, conexiones de sockets de red y credenciales de seguridad del usuario propietario del proceso.
+- C) La Pila de ejecución (*Stack*) con sus marcos de activación locales, el Program Counter y los registros de la CPU.
+- D) Las variables globales del programa, las variables estáticas y las estructuras sincronizadas de comunicación interproceso.
 
-Cual es el proposito fundamental del asignador Buddy System en Linux?
-A. Conectar multiples servidores a traves de una red InfiniBand para sincronizar bases de datos.
-B. Asignar bloques contiguos de paginas en potencias de 2 y fusionar bloques hermanos libres.
-C. Administrar la cola de impresion del sistema operativo segun el numero de paginas enviadas.
-D. Traducir dinamicamente direcciones IPv4 a IPv6 dentro de la pila de red del kernel.
-ANSWER: B
+> **Respuesta correcta:** **C**  
+> **💡 Justificación pedagógica:** Cada hilo representa un flujo de control independiente, por lo que necesita su propia secuencia de instrucciones (PC), estado de ejecución (registros de CPU) y pila propia para sus llamadas a funciones locales. El resto del espacio de memoria es compartido (Silberschatz Cap. 4.1, Stallings Cap. 4.1).
 
-Por que Linux incorpora el Slab Allocator por encima del Buddy System?
-A. Para permitir que los procesos de usuario escriban directamente en el bus PCI sin modo kernel.
-B. Para reutilizar caches de objetos frecuentes de tamano fijo y evitar fragmentacion interna del Buddy.
-C. Para duplicar la memoria RAM fisica comprimiendo el codigo del sistema operativo.
-D. Para cifrar los paquetes de red salientes mediante claves asimetricas de 4096 bits.
-ANSWER: B
+---
 
-Cual es la diferencia tecnica entre kmalloc() y vmalloc() en el Kernel?
-A. kmalloc() funciona en 16 bits y vmalloc() es un comando de usuario de ZSH para emular memoria.
-B. kmalloc() garantiza memoria contigua fisica y virtualmente; vmalloc() garantiza memoria contigua solo virtualmente.
-C. kmalloc() almacena datos en la memoria de la placa de video y vmalloc() en la memoria RAM principal.
-D. No existe ninguna diferencia; vmalloc() es un alias obsoleto hacia la misma funcion del scheduler.
-ANSWER: B
+### 📌 Pregunta 8 (Guía para Ejercicio 08: Mecanismos de IPC)
+**¿Cuál es la principal ventaja de la Memoria Compartida (*Shared Memory*) frente al Paso de Mensajes (*Message Passing*) como mecanismo de IPC?**
+- A) No requiere ningún tipo de primitiva de exclusión mutua ya que el hardware sincroniza automáticamente los accesos a los buses de control del sistema.
+- B) Permite comunicar procesos ubicados en diferentes hosts a través de Internet sin necesidad de configurar sockets de red TCP/IP ni puertos de escucha.
+- C) Garantiza la persistencia de la información en el sistema de archivos aún después de reiniciar o apagar el equipo físico mediante copias automáticas en disco.
+- D) Proporciona la máxima velocidad al evitar llamadas al sistema y copias intermedias de buffers en el kernel tras ser mapeada.
 
-Que sucede a nivel de hardware cuando un proceso accede a una pagina con bit de presencia en 0 (Page Fault)?
-A. El microprocesador formatea automaticamente la particion de swap para liberar espacio.
-B. La MMU genera una excepcion que invoca al kernel para cargar la pagina desde el disco a la RAM.
-C. El proceso se aborta inmediatamente con Kernel Panic y reinicia la computadora.
-D. El compilador GCC vuelve a compilar el programa en segundo plano con registros adicionales.
-ANSWER: B
+> **Respuesta correcta:** **D**  
+> **💡 Justificación pedagógica:** La memoria compartida evita llamadas al sistema (*syscalls*) y copias de buffers entre espacio de usuario y kernel en cada mensaje. Su desventaja es que la sincronización debe ser gestionada explícitamente por los programadores (Silberschatz Cap. 3.4, Carretero Cap. 3.4).
 
-Cual es el rol del demonio del kernel kswapd en GNU/Linux?
-A. Monitorear conexiones SSH entrantes y bloquear IPs que superen intentos fallidos.
-B. Vigilar el nivel de memoria libre y liberar paginas hacia el swap cuando se alcanza el umbral minimo.
-C. Comprimir los archivos de /var/log/ para que no ocupen espacio en la particion raiz.
-D. Medir la temperatura de la CPU para regular los ventiladores del gabinete.
-ANSWER: B
+---
 
-En el comando free -m, cual es la diferencia crucial entre free y available?
-A. free indica el espacio swap en disco y available la memoria fisica instalada en la placa madre.
-B. free es RAM totalmente sin uso; available incluye memoria en buffers/cache que puede liberarse de inmediato.
-C. free mide la memoria del entorno grafico y available la de los procesos de consola tty.
-D. Son valores identicos calculados por dos algoritmos para verificar la hora del sistema.
-ANSWER: B
+### 📌 Pregunta 9 (Guía para Ejercicio 09: Niveles y Criterios de Planificación)
+**¿Qué componente del sistema operativo es el responsable directo de seleccionar qué proceso de la cola de listos se ejecutará en la CPU y realizar el cambio de contexto?**
+- A) El Planificador a Largo Plazo (*Job Scheduler*), que regula la cantidad de procesos admitidos en memoria principal desde el disco secundario de almacenamiento.
+- B) El Planificador a Corto Plazo (*CPU Scheduler / Dispatcher*), que selecciona el proceso listo a ejecutar y efectúa el cambio de contexto.
+- C) El Planificador a Medio Plazo (*Swapper*), encargado de extraer procesos hacia memoria secundaria para reducir el grado global de multiprogramación.
+- D) El Administrador de Memoria Virtual (*Paging Daemon*), responsable de intercambiar marcos de página ante fallos de página sucesivos durante la ejecución.
 
-En la configuracion de areas swap en Linux, que significa el valor de Prioridad (swapon -p)?
-A. Define el tamano maximo en gigabytes que el archivo swap puede expandirse en el disco.
-B. Las areas de mayor prioridad numerica se usan primero; a igual prioridad se distribuyen en round-robin.
-C. Indica los segundos que un proceso puede permanecer en disco antes de recibir senal SIGKILL.
-D. Es un identificador unico que impide a usuarios sin privilegios leer el archivo swap.
-ANSWER: B
-```
+> **Respuesta correcta:** **B**  
+> **💡 Justificación pedagógica:** El planificador a corto plazo (dispatcher) se ejecuta frecuentemente (cada pocos milisegundos) para asignar la CPU a un proceso listo. El largo plazo regula el grado de multiprogramación y el medio plazo maneja la expulsión a swap (Silberschatz Cap. 5.1, U5 Slide 12).
+
+---
+
+### 📌 Pregunta 10 (Guía para Ejercicio 10: Algoritmos de Planificación de CPU)
+**¿Qué ocurre en el algoritmo de planificación Round Robin si se selecciona un Quantum de tiempo excesivamente pequeño (por ejemplo, cercano a 1 microsegundo)?**
+- A) El rendimiento del sistema cae drásticamente debido a que la CPU invierte casi todo su tiempo en el *overhead* de cambios de contexto sucesivos.
+- B) El algoritmo muta su comportamiento y se transforma en un First-Come, First-Served (FCFS) puro con tiempo de retorno óptimo garantizado matemáticamente.
+- C) Se elimina completamente el tiempo de espera de los procesos en cola, finalizando todas las tareas en un único ciclo de reloj del procesador.
+- D) Se genera inanición (*starvation*) prolongada en todos los procesos de corta duración frente a procesos con ráfagas extensas de uso computacional.
+
+> **Respuesta correcta:** **A**  
+> **💡 Justificación pedagógica:** Si el quantum es comparable al tiempo que demora un context switch, la CPU pasará la mayor parte de su tiempo guardando y restaurando PCBs en lugar de ejecutar código útil de los procesos. Por regla general, el quantum debe ser sustancialmente mayor que el tiempo de cambio de contexto (Silberschatz Cap. 5.3, Stallings Cap. 9.2).

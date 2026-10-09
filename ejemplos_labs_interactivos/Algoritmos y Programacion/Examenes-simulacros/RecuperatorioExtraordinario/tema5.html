@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🥛 Recuperatorio M2 - Tema 5 (La Serenísima - Usina Láctea)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Fira+Code&display=swap"
+        rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        .console {
+            font-family: 'Fira Code', monospace;
+        }
+
+        .theme-font {
+            font-family: 'Inter', sans-serif;
+        }
+
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        .tab-content {
+            transition: all 0.3s ease-in-out;
+            opacity: 0;
+            display: none;
+        }
+
+        .tab-content.active {
+            opacity: 1;
+            display: block;
+            animation: fadeIn 0.4s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(5px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+
+<body class="min-h-screen p-4 md:p-8 flex items-center justify-center bg-emerald-950">
+
+    <div
+        class="max-w-4xl w-full bg-emerald-900/90 backdrop-blur-md text-emerald-50 rounded-2xl shadow-2xl overflow-hidden border border-emerald-400/20">
+
+        <div class="p-6 md:p-8 border-b border-white/10 flex justify-between items-center flex-wrap gap-4">
+            <div>
+                <h1
+                    class="text-3xl md:text-4xl font-extrabold tracking-tight mb-2 text-emerald-300 drop-shadow-md theme-font flex items-center gap-3">
+                    <img src="../../assets/serenisima_milk.jpg" alt="La Serenísima Milk"
+                        class="w-10 h-10 md:w-12 md:h-12 object-contain drop-shadow-lg rounded-lg"> Tema 5: Usina
+                    Láctea
+                </h1>
+                <div
+                    class="inline-block px-3 py-1 bg-white/10 rounded-full text-sm font-semibold tracking-wide text-white">
+                    La Serenísima - Acopio y Pasteurización
+                </div>
+            </div>
+            <div class="h-16 flex items-center justify-center">
+                <div
+                    class="bg-white/10 rounded-xl px-4 py-2 text-xl font-extrabold text-emerald-300 tracking-widest border border-emerald-400/30">
+                    SERENÍSIMA</div>
+            </div>
+        </div>
+
+        <div class="p-6 md:p-8 space-y-8">
+
+            <section>
+                <h2
+                    class="text-2xl font-bold mb-3 border-b-2 border-white/20 inline-block text-emerald-300 theme-font tracking-wide">
+                    Contexto</h2>
+                <div class="leading-relaxed opacity-90 text-lg">
+                    <p class='mb-2'>La Serenísima, la marca láctea más reconocida de Argentina, necesita gestionar el
+                        control de calidad en su planta de pasteurización. El sistema debe registrar los silos de acopio,
+                        detectar litros descartados por acidez o contaminación en el proceso de pasteurización, y
+                        determinar en qué silo se obtuvo el <strong>mayor tenor graso</strong> para otorgar un premio
+                        al tambo proveedor correspondiente.</p>
+                </div>
+            </section>
+
+            <section class="bg-black/10 p-5 rounded-xl border border-white/5 shadow-inner">
+                <h2 class="text-2xl font-bold mb-3 text-emerald-300 flex items-center gap-2 theme-font tracking-wide">
+                    Tu Misión
+                </h2>
+                <div class="leading-relaxed opacity-95 text-md space-y-2">
+                    <p>Completar el programa en <strong>PSeInt</strong> o en <strong>C++</strong> (quienes lo deseen
+                        pueden resolverlo en este último lenguaje). Se te entrega un código base con el menú resuelto.
+                        Debes desarrollar:</p>
+                    <ul class="list-disc pl-5 space-y-1">
+                        <li>El bloque <strong>Segun</strong> en el algoritmo principal para invocar módulos. <span
+                                class="relative group inline-block ml-2 align-middle"><span
+                                    class="cursor-pointer bg-emerald-500/20 text-emerald-300 text-xs font-bold px-2 py-1 rounded border border-emerald-500/30">5%</span>
+                                <div
+                                    class="absolute opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-10 bottom-full left-1/2 -translate-x-1/2 mb-2 w-64 bg-gray-900 text-white text-sm rounded-lg shadow-xl border border-gray-700 p-3 pointer-events-none">
+                                    <div class="font-bold text-emerald-400 mb-1">Estructura Principal y Menú</div>
+                                    <p class="text-xs text-gray-300">Implementa correctamente la estructura condicional
+                                        múltiple, invocando los subprocesos correspondientes a cada opción.</p>
+                                    <div
+                                        class="absolute -bottom-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-gray-900 border-b border-r border-gray-700 transform rotate-45">
+                                    </div>
+                                </div>
+                            </span></li>
+                        <li><strong>Módulo de Entrada:</strong> Solicitar la cantidad de <em>silos de acopio</em> y
+                            validar que esté en el rango de 1 a 10. Además, solicitar la <em>capacidad por silo</em>
+                            en litros y validar que esté entre 1000 y 30000. <span
+                                class="relative group inline-block ml-2 align-middle"><span
+                                    class="cursor-pointer bg-emerald-500/20 text-emerald-300 text-xs font-bold px-2 py-1 rounded border border-emerald-500/30">15%</span>
+                                <div
+                                    class="absolute opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-10 bottom-full left-1/2 -translate-x-1/2 mb-2 w-64 bg-gray-900 text-white text-sm rounded-lg shadow-xl border border-gray-700 p-3 pointer-events-none">
+                                    <div class="font-bold text-emerald-400 mb-1">Módulo de Entrada y Doble Validación</div>
+                                    <p class="text-xs text-gray-300">Utiliza estructuras repetitivas adecuadas para
+                                        validar que ambos datos estén estrictamente dentro de sus rangos solicitados.
+                                    </p>
+                                    <div
+                                        class="absolute -bottom-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-gray-900 border-b border-r border-gray-700 transform rotate-45">
+                                    </div>
+                                </div>
+                            </span></li>
+                        <li><strong>Módulo de Proceso 1:</strong> Recibir los silos y la capacidad. Pedir el ingreso de
+                            <em>litros descartados por acidez</em> en cada control (el ingreso corta al ingresar un
+                            <strong>-1</strong>). Acumular el descarte, calcular el <strong>porcentaje de
+                                descarte</strong> sobre el total esperado (donde total esperado = silos × capacidad por
+                            silo), y <strong>clasificar la calidad láctea</strong>: si el porcentaje es menor a 1%
+                            mostrar "CALIDAD PREMIUM - APTO EXPORTACION", si es menor a 3% mostrar "CALIDAD ESTANDAR",
+                            de lo contrario mostrar "FUERA DE NORMA - AUDITORIA URGENTE". <span
+                                class="relative group inline-block ml-2 align-middle"><span
+                                    class="cursor-pointer bg-emerald-500/20 text-emerald-300 text-xs font-bold px-2 py-1 rounded border border-emerald-500/30">25%</span>
+                                <div
+                                    class="absolute opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-10 bottom-full left-1/2 -translate-x-1/2 mb-2 w-64 bg-gray-900 text-white text-sm rounded-lg shadow-xl border border-gray-700 p-3 pointer-events-none">
+                                    <div class="font-bold text-emerald-400 mb-1">Módulo de Proceso 1</div>
+                                    <p class="text-xs text-gray-300">Corta correctamente, acumula, calcula porcentaje y
+                                        clasifica usando condicionales anidados (3 niveles).</p>
+                                    <div
+                                        class="absolute -bottom-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-gray-900 border-b border-r border-gray-700 transform rotate-45">
+                                    </div>
+                                </div>
+                            </span></li>
+                        <li><strong>Módulo de Proceso 2:</strong> Recibir la cantidad de silos. Para cada silo ingresar
+                            los <em>litros procesados</em> y el <em>tenor graso</em> (en g/L). Determinar el
+                            <strong>MÁXIMO tenor graso</strong> y en qué <strong>número de silo</strong> se registró.
+                            Mostrar el silo ganador y anunciar que el tambo proveedor recibe un premio equivalente al
+                            <strong>8% del valor de los litros procesados del mejor silo</strong> (donde cada litro
+                            vale $720). <span
+                                class="relative group inline-block ml-2 align-middle"><span
+                                    class="cursor-pointer bg-emerald-500/20 text-emerald-300 text-xs font-bold px-2 py-1 rounded border border-emerald-500/30">30%</span>
+                                <div
+                                    class="absolute opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-10 bottom-full left-1/2 -translate-x-1/2 mb-2 w-64 bg-gray-900 text-white text-sm rounded-lg shadow-xl border border-gray-700 p-3 pointer-events-none">
+                                    <div class="font-bold text-emerald-400 mb-1">Módulo de Proceso 2</div>
+                                    <p class="text-xs text-gray-300">Calcula un tenor derivado de dos datos de entrada
+                                        por iteración y encuentra el máximo junto a su posición y litros del silo.</p>
+                                    <div
+                                        class="absolute -bottom-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-gray-900 border-b border-r border-gray-700 transform rotate-45">
+                                    </div>
+                                </div>
+                            </span></li>
+                    </ul>
+                </div>
+            </section>
+
+            <section class="bg-black/20 p-5 md:p-6 rounded-xl border border-white/5 shadow-inner">
+                <h2 class="text-xl font-bold mb-4 text-emerald-300 theme-font tracking-wide flex items-center gap-2">
+                    Casos de Prueba (Ejecuciones Esperadas)
+                </h2>
+
+                <div class="flex overflow-x-auto no-scrollbar gap-2 mb-6 pb-2 border-b border-white/10"
+                    id="tabs-container">
+                    <button onclick="switchTab(0)"
+                        class="tab-btn px-4 py-2 rounded-lg font-semibold text-sm transition-all border whitespace-nowrap bg-emerald-300 text-black border-emerald-300">
+                        Caso 1: Validación de Entrada
+                    </button>
+                    <button onclick="switchTab(1)"
+                        class="tab-btn px-4 py-2 rounded-lg font-semibold text-sm transition-all border whitespace-nowrap bg-white/5 text-white/70 border-white/10 hover:bg-white/10">
+                        Caso 2: Descarte y Mejor Silo (Normal)
+                    </button>
+                    <button onclick="switchTab(2)"
+                        class="tab-btn px-4 py-2 rounded-lg font-semibold text-sm transition-all border whitespace-nowrap bg-white/5 text-white/70 border-white/10 hover:bg-white/10">
+                        Caso 3: Valores Límite
+                    </button>
+                </div>
+
+                <div id="tab-contents">
+                    <!-- Caso 1 -->
+                    <div class="tab-content active">
+                        <div class="grid grid-cols-1 md:grid-cols-12 gap-6">
+                            <div class="md:col-span-3 bg-black/30 p-5 rounded-xl border border-white/10 flex flex-col">
+                                <h3 class="text-sm font-bold mb-3 text-emerald-300 uppercase tracking-wider">Entrada
+                                    (Simulada)</h3>
+                                <div class="flex-grow bg-black/50 p-4 rounded-lg border border-white/5">
+                                    <pre class="console text-sm text-gray-300 whitespace-pre-wrap leading-relaxed">1
+0
+11
+2
+2
+500
+35000
+5000
+4
+0</pre>
+                                </div>
+                            </div>
+                            <div
+                                class="md:col-span-9 bg-[#0a0a0a] p-5 rounded-xl border border-gray-800 shadow-inner flex flex-col relative overflow-hidden">
+                                <h3 class="text-sm font-bold mb-3 text-green-400 uppercase tracking-wider">Salida
+                                    Esperada por Pantalla</h3>
+                                <div class="flex-grow bg-black/40 p-4 rounded-lg border border-white/5 overflow-x-auto">
+                                    <pre class="console text-green-400 text-sm whitespace-pre-wrap leading-relaxed">=== USINA LACTEA LA SERENISIMA ===
+1. Ingresar Datos de Acopio
+...
+Ingrese una opción: <span class="text-purple-400">&gt; </span><span class="text-yellow-400">1</span>
+Ingrese cantidad de silos de acopio (1-10): <span class="text-purple-400">&gt; </span><span class="text-yellow-400">0</span>
+[Error] El valor debe estar entre 1 y 10.
+Ingrese cantidad de silos de acopio (1-10): <span class="text-purple-400">&gt; </span><span class="text-yellow-400">11</span>
+[Error] El valor debe estar entre 1 y 10.
+Ingrese cantidad de silos de acopio (1-10): <span class="text-purple-400">&gt; </span><span class="text-yellow-400">2</span>
+Ingrese capacidad por silo en litros (1000-30000): <span class="text-purple-400">&gt; </span><span class="text-yellow-400">500</span>
+[Error] El valor debe estar entre 1000 y 30000.
+Ingrese capacidad por silo en litros (1000-30000): <span class="text-purple-400">&gt; </span><span class="text-yellow-400">35000</span>
+[Error] El valor debe estar entre 1000 y 30000.
+Ingrese capacidad por silo en litros (1000-30000): <span class="text-purple-400">&gt; </span><span class="text-yellow-400">5000</span>
+(Regresa al menú)
+
+Ingrese una opción: <span class="text-purple-400">&gt; </span><span class="text-yellow-400">4</span>
+Silos registrados: 2 | Capacidad por silo: 5000 litros
+
+Ingrese una opción: <span class="text-purple-400">&gt; </span><span class="text-yellow-400">0</span>
+(Fin del programa)</pre>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Caso 2 -->
+                    <div class="tab-content ">
+                        <div class="grid grid-cols-1 md:grid-cols-12 gap-6">
+                            <div class="md:col-span-3 bg-black/30 p-5 rounded-xl border border-white/10 flex flex-col">
+                                <h3 class="text-sm font-bold mb-3 text-emerald-300 uppercase tracking-wider">Entrada
+                                    (Simulada)</h3>
+                                <div class="flex-grow bg-black/50 p-4 rounded-lg border border-white/5">
+                                    <pre class="console text-sm text-gray-300 whitespace-pre-wrap leading-relaxed">1
+3
+2000
+2
+30
+20
+10
+-1
+3
+1950
+38
+2000
+42
+1980
+36
+0</pre>
+                                </div>
+                            </div>
+                            <div
+                                class="md:col-span-9 bg-[#0a0a0a] p-5 rounded-xl border border-gray-800 shadow-inner flex flex-col relative overflow-hidden">
+                                <h3 class="text-sm font-bold mb-3 text-green-400 uppercase tracking-wider">Salida
+                                    Esperada por Pantalla</h3>
+                                <div class="flex-grow bg-black/40 p-4 rounded-lg border border-white/5 overflow-x-auto">
+                                    <pre class="console text-green-400 text-sm whitespace-pre-wrap leading-relaxed">Ingrese una opción: <span class="text-purple-400">&gt; </span><span class="text-yellow-400">1</span>
+Ingrese cantidad de silos de acopio (1-10): <span class="text-purple-400">&gt; </span><span class="text-yellow-400">3</span>
+Ingrese capacidad por silo en litros (1000-30000): <span class="text-purple-400">&gt; </span><span class="text-yellow-400">2000</span>
+(Regresa al menú)
+
+Ingrese una opción: <span class="text-purple-400">&gt; </span><span class="text-yellow-400">2</span>
+Ingrese litros descartados por control de acidez (-1 para finalizar): <span class="text-purple-400">&gt; </span><span class="text-yellow-400">30</span>
+Ingrese litros descartados por control de acidez (-1 para finalizar): <span class="text-purple-400">&gt; </span><span class="text-yellow-400">20</span>
+Ingrese litros descartados por control de acidez (-1 para finalizar): <span class="text-purple-400">&gt; </span><span class="text-yellow-400">10</span>
+Ingrese litros descartados por control de acidez (-1 para finalizar): <span class="text-purple-400">&gt; </span><span class="text-yellow-400">-1</span>
+Total descartado: 60 litros
+Porcentaje de descarte sobre produccion esperada (6000 litros): 1%
+Calidad: ESTANDAR
+(Regresa al menú)
+
+Ingrese una opción: <span class="text-purple-400">&gt; </span><span class="text-yellow-400">3</span>
+--- Silo 1 ---
+Litros procesados en silo 1: <span class="text-purple-400">&gt; </span><span class="text-yellow-400">1950</span>
+Tenor graso del silo 1 (g/L): <span class="text-purple-400">&gt; </span><span class="text-yellow-400">38</span>
+--- Silo 2 ---
+Litros procesados en silo 2: <span class="text-purple-400">&gt; </span><span class="text-yellow-400">2000</span>
+Tenor graso del silo 2 (g/L): <span class="text-purple-400">&gt; </span><span class="text-yellow-400">42</span>
+--- Silo 3 ---
+Litros procesados en silo 3: <span class="text-purple-400">&gt; </span><span class="text-yellow-400">1980</span>
+Tenor graso del silo 3 (g/L): <span class="text-purple-400">&gt; </span><span class="text-yellow-400">36</span>
+El mayor tenor graso fue 42 g/L en el silo 2.
+Premio al tambo del silo 2 (8% de 2000 litros x $720): $115200
+
+Ingrese una opción: <span class="text-purple-400">&gt; </span><span class="text-yellow-400">0</span>
+(Fin del programa)</pre>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Caso 3 -->
+                    <div class="tab-content ">
+                        <div class="grid grid-cols-1 md:grid-cols-12 gap-6">
+                            <div class="md:col-span-3 bg-black/30 p-5 rounded-xl border border-white/10 flex flex-col">
+                                <h3 class="text-sm font-bold mb-3 text-emerald-300 uppercase tracking-wider">Entrada
+                                    (Simulada)</h3>
+                                <div class="flex-grow bg-black/50 p-4 rounded-lg border border-white/5">
+                                    <pre class="console text-sm text-gray-300 whitespace-pre-wrap leading-relaxed">1
+1
+1000
+2
+5
+-1
+3
+990
+45
+0</pre>
+                                </div>
+                            </div>
+                            <div
+                                class="md:col-span-9 bg-[#0a0a0a] p-5 rounded-xl border border-gray-800 shadow-inner flex flex-col relative overflow-hidden">
+                                <h3 class="text-sm font-bold mb-3 text-green-400 uppercase tracking-wider">Salida
+                                    Esperada por Pantalla</h3>
+                                <div class="flex-grow bg-black/40 p-4 rounded-lg border border-white/5 overflow-x-auto">
+                                    <pre class="console text-green-400 text-sm whitespace-pre-wrap leading-relaxed">Ingrese una opción: <span class="text-purple-400">&gt; </span><span class="text-yellow-400">1</span>
+Ingrese cantidad de silos de acopio (1-10): <span class="text-purple-400">&gt; </span><span class="text-yellow-400">1</span>
+Ingrese capacidad por silo en litros (1000-30000): <span class="text-purple-400">&gt; </span><span class="text-yellow-400">1000</span>
+(Regresa al menú)
+
+Ingrese una opción: <span class="text-purple-400">&gt; </span><span class="text-yellow-400">2</span>
+Ingrese litros descartados por control de acidez (-1 para finalizar): <span class="text-purple-400">&gt; </span><span class="text-yellow-400">5</span>
+Ingrese litros descartados por control de acidez (-1 para finalizar): <span class="text-purple-400">&gt; </span><span class="text-yellow-400">-1</span>
+Total descartado: 5 litros
+Porcentaje de descarte sobre produccion esperada (1000 litros): 0.5%
+Calidad: PREMIUM - APTO EXPORTACION
+(Regresa al menú)
+
+Ingrese una opción: <span class="text-purple-400">&gt; </span><span class="text-yellow-400">3</span>
+--- Silo 1 ---
+Litros procesados en silo 1: <span class="text-purple-400">&gt; </span><span class="text-yellow-400">990</span>
+Tenor graso del silo 1 (g/L): <span class="text-purple-400">&gt; </span><span class="text-yellow-400">45</span>
+El mayor tenor graso fue 45 g/L en el silo 1.
+Premio al tambo del silo 1 (8% de 990 litros x $720): $56952
+
+Ingrese una opción: <span class="text-purple-400">&gt; </span><span class="text-yellow-400">0</span>
+(Fin del programa)</pre>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="bg-black/20 p-5 md:p-6 rounded-xl border border-white/5 shadow-inner">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-xl font-bold text-emerald-300 theme-font tracking-wide flex items-center gap-2">
+                        Código Base
+                    </h2>
+                    <div class="flex bg-black/40 rounded-lg p-1 border border-white/10">
+                        <button onclick="switchCode('pseint')" id="btn-pseint"
+                            class="px-3 py-1 rounded-md text-sm font-semibold bg-emerald-500 text-white transition-colors">PSeInt</button>
+                        <button onclick="switchCode('cpp')" id="btn-cpp"
+                            class="px-3 py-1 rounded-md text-sm font-semibold text-white/60 hover:text-white transition-colors">C++</button>
+                    </div>
+                </div>
+
+                <!-- PSeInt Code -->
+                <div id="code-pseint" class="bg-[#1e1e1e] p-4 rounded-lg border border-white/10 overflow-x-auto block">
+                    <pre class="console text-sm text-[#d4d4d4] whitespace-pre-wrap leading-relaxed">Algoritmo UsinaLactea_Tema5
+	Definir opc, silos, capacidadSilo Como Entero;
+	silos = 0;
+	capacidadSilo = 0;
+	opc = -1;
+	
+	Repetir
+		MostrarMenu(opc);
+		
+		// [TU CODIGO AQUI]
+
+		Esperar Tecla;
+	Mientras Que opc &lt;&gt; 0
+FinAlgoritmo
+
+SubProceso MostrarMenu(opc Por Referencia)
+	Borrar Pantalla;
+	Escribir "=== USINA LACTEA LA SERENISIMA ===";
+	Escribir "1. Ingresar Datos de Acopio";
+	Escribir "2. Controlar Perdidas en Pasteurizacion";
+	Escribir "3. Buscar Silo con Mejor Tenor Graso";
+	Escribir "4. Ver Estado Actual";
+	Escribir "0. Salir";
+	Escribir "Ingrese una opcion: ";
+	Leer opc;
+FinSubProceso
+
+// [TU CODIGO AQUI]
+// Desarrolla el Modulo de Entrada.
+SubProceso IngresarDatos()
+	
+FinSubProceso
+
+// [TU CODIGO AQUI]
+// Desarrolla el Modulo de Proceso 1.
+SubProceso ControlPasteurizacion()
+	
+FinSubProceso
+
+// [TU CODIGO AQUI]
+// Desarrolla el Modulo de Proceso 2.
+SubProceso BuscarMejorSilo()
+	
+FinSubProceso
+
+SubProceso MostrarEstado(silos, capacidadSilo)
+	Escribir "Silos registrados: ", silos, " | Capacidad por silo: ", capacidadSilo, " litros";
+FinSubProceso</pre>
+                </div>
+
+                <!-- C++ Code -->
+                <div id="code-cpp" class="bg-[#1e1e1e] p-4 rounded-lg border border-white/10 overflow-x-auto hidden">
+                    <pre class="console text-sm text-[#d4d4d4] whitespace-pre-wrap leading-relaxed">#include &lt;iostream&gt;
+using namespace std;
+
+int silos = 0;
+int capacidadSilo = 0;
+
+void MostrarMenu(int &amp;opc);
+void IngresarDatos();
+void ControlPasteurizacion();
+void BuscarMejorSilo();
+void MostrarEstado();
+
+int main() {
+    int opc = -1;
+    
+    do {
+        MostrarMenu(opc);
+        
+        // [TU CODIGO AQUI]
+        
+        system("pause");
+    } while (opc != 0);
+    
+    return 0;
+}
+
+void MostrarMenu(int &amp;opc) {
+    system("cls");
+    cout &lt;&lt; "=== USINA LACTEA LA SERENISIMA ===" &lt;&lt; endl;
+    cout &lt;&lt; "1. Ingresar Datos de Acopio" &lt;&lt; endl;
+    cout &lt;&lt; "2. Controlar Perdidas en Pasteurizacion" &lt;&lt; endl;
+    cout &lt;&lt; "3. Buscar Silo con Mejor Tenor Graso" &lt;&lt; endl;
+    cout &lt;&lt; "4. Ver Estado Actual" &lt;&lt; endl;
+    cout &lt;&lt; "0. Salir" &lt;&lt; endl;
+    cout &lt;&lt; "Ingrese una opcion: ";
+    cin &gt;&gt; opc;
+}
+
+// [TU CODIGO AQUI]
+// Desarrolla el Modulo de Entrada.
+void IngresarDatos() {
+
+}
+
+// [TU CODIGO AQUI]
+// Desarrolla el Modulo de Proceso 1.
+void ControlPasteurizacion() {
+
+}
+
+// [TU CODIGO AQUI]
+// Desarrolla el Modulo de Proceso 2.
+void BuscarMejorSilo() {
+
+}
+
+void MostrarEstado() {
+    cout &lt;&lt; "Silos registrados: " &lt;&lt; silos &lt;&lt; " | Capacidad por silo: " &lt;&lt; capacidadSilo &lt;&lt; " litros" &lt;&lt; endl;
+}
+</pre>
+                </div>
+            </section>
+
+            <section class="bg-black/20 p-5 md:p-6 rounded-xl border border-white/5 shadow-inner">
+                <h2 class="text-xl font-bold mb-4 text-emerald-300 theme-font tracking-wide flex items-center gap-2">
+                    📝 Parte 2: Prueba de Escritorio (Papel y Lápiz) <span
+                        class="relative group inline-block ml-3 align-middle"><span
+                            class="cursor-pointer bg-emerald-500/20 text-emerald-300 text-sm font-bold px-3 py-1 rounded border border-emerald-500/30">25%</span>
+                        <div
+                            class="absolute opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-10 bottom-full left-1/2 -translate-x-1/2 mb-2 w-64 bg-gray-900 text-white text-sm rounded-lg shadow-xl border border-gray-700 p-3 pointer-events-none font-normal">
+                            <div class="font-bold text-emerald-400 mb-1">Prueba de Escritorio</div>
+                            <p class="text-xs text-gray-300">Refleja paso a paso el cambio de valor de cada variable y
+                                anota la salida exacta por pantalla esperada.</p>
+                            <div
+                                class="absolute -bottom-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-gray-900 border-b border-r border-gray-700 transform rotate-45">
+                            </div>
+                        </div>
+                    </span>
+                </h2>
+                <div class="leading-relaxed opacity-95 text-md space-y-4">
+                    <div class="bg-emerald-950/80 p-5 rounded-xl border border-emerald-500/20 shadow-md flex items-start gap-4">
+                        <div class="text-3xl">📄</div>
+                        <div>
+                            <p class="font-bold text-emerald-200 mb-1">Entrega en formato físico</p>
+                            <p class="text-emerald-100 text-sm">Una vez que hayas finalizado y entregado la Parte 1 (código
+                                en computadora), el docente te entregará una hoja impresa con el pseudocódigo
+                                correspondiente a la Parte 2 para que realices la prueba de escritorio en papel y lápiz.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+    </div>
+
+    <script>
+        function switchCode(lang) {
+            const pseintBtn = document.getElementById('btn-pseint');
+            const cppBtn = document.getElementById('btn-cpp');
+            const pseintCode = document.getElementById('code-pseint');
+            const cppCode = document.getElementById('code-cpp');
+
+            if (lang === 'pseint') {
+                pseintBtn.className = "px-3 py-1 rounded-md text-sm font-semibold bg-emerald-500 text-white transition-colors";
+                cppBtn.className = "px-3 py-1 rounded-md text-sm font-semibold text-white/60 hover:text-white transition-colors";
+                pseintCode.classList.remove('hidden');
+                pseintCode.classList.add('block');
+                cppCode.classList.remove('block');
+                cppCode.classList.add('hidden');
+            } else {
+                cppBtn.className = "px-3 py-1 rounded-md text-sm font-semibold bg-emerald-500 text-white transition-colors";
+                pseintBtn.className = "px-3 py-1 rounded-md text-sm font-semibold text-white/60 hover:text-white transition-colors";
+                cppCode.classList.remove('hidden');
+                cppCode.classList.add('block');
+                pseintCode.classList.remove('block');
+                pseintCode.classList.add('hidden');
+            }
+        }
+
+        function switchTab(tabIndex) {
+            document.querySelectorAll('.tab-btn').forEach((btn, idx) => {
+                if (idx === tabIndex) {
+                    btn.classList.add('bg-emerald-300', 'text-black', 'border-emerald-300');
+                    btn.classList.remove('bg-white/5', 'text-white/70', 'border-white/10', 'hover:bg-white/10');
+                } else {
+                    btn.classList.remove('bg-emerald-300', 'text-black', 'border-emerald-300');
+                    btn.classList.add('bg-white/5', 'text-white/70', 'border-white/10', 'hover:bg-white/10');
+                }
+            });
+            document.querySelectorAll('.tab-content').forEach((content, idx) => {
+                if (idx === tabIndex) {
+                    content.classList.add('active');
+                } else {
+                    content.classList.remove('active');
+                }
+            });
+        }
+    </script>
+</body>
+
+</html>

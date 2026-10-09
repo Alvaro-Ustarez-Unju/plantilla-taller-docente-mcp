@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --jefe-bg: #ebf5fb;
+            --jefe-border: #3498db;
+            --funcion-bg: #f5eef8;
+            --funcion-border: #9b59b6;
+            --paquete-ida: #3498db;
+            --paquete-vuelta: #9b59b6;
+            --text-dark: #333;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, Arial, sans-serif;
+            margin: 0;
+            padding: 15px;
+            box-sizing: border-box;
+            background: #ffffff;
+            color: var(--primary);
+        }
+
+        .widget-container {
+            max-width: 650px;
+            margin: 0 auto;
+            border: 2px solid #ecf0f1;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            position: relative;
+        }
+
+        h3 { margin-top: 0; text-align: center; color: var(--primary); }
+
+        .panel {
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 5px solid;
+            margin-bottom: 20px;
+            position: relative;
+            background: white;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .panel-jefe { border-color: var(--jefe-border); background: var(--jefe-bg); }
+        .panel-funcion { border-color: var(--funcion-border); background: var(--funcion-bg); margin-bottom: 0; }
+
+        .panel-titulo {
+            font-weight: bold;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .controles {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            margin-bottom: 15px;
+            background: rgba(255,255,255,0.7);
+            padding: 10px;
+            border-radius: 6px;
+        }
+
+        input {
+            width: 70px;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            text-align: center;
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+        }
+
+        button {
+            background: var(--jefe-border);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+            flex-grow: 1;
+        }
+
+        button:hover { background: #2980b9; }
+        button:disabled { background: #95a5a6; cursor: not-allowed; }
+
+        .codigo {
+            font-family: 'Courier New', monospace;
+            font-size: 0.85em;
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 15px;
+            border-radius: 6px;
+            white-space: pre-wrap;
+            line-height: 1.5;
+        }
+
+        .hl-var { color: #9cdcfe; }
+        .hl-kw { color: #569cd6; font-weight: bold; }
+        .hl-str { color: #ce9178; }
+        .hl-num { color: #b5cea8; }
+        
+        .box-variable {
+            display: inline-block;
+            background: #2c3e50;
+            color: #f1c40f;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: bold;
+            border: 1px dashed #f1c40f;
+            min-width: 20px;
+            text-align: center;
+        }
+
+        /* Área de animación central */
+        .camino-datos {
+            height: 60px;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .paquete {
+            position: absolute;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            color: white;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+            opacity: 0;
+            transition: all 1s ease-in-out;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            z-index: 10;
+        }
+
+        .estado-texto {
+            text-align: center;
+            font-size: 0.85em;
+            color: #7f8c8d;
+            font-weight: bold;
+            min-height: 20px;
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="widget-container">
+    <h3>El Viaje del Retorno (Funciones)</h3>
+    
+    <div class="panel panel-jefe">
+        <div class="panel-titulo" style="color: var(--jefe-border);">🏢 Algoritmo Principal (El Jefe)</div>
+        
+        <div class="controles">
+            <label>Valor A:</label>
+            <input type="number" id="inA" value="5">
+            <label>Valor B:</label>
+            <input type="number" id="inB" value="7">
+            <button id="btnEjecutar" onclick="ejecutarFuncion()">Delegar Cálculo</button>
+        </div>
+
+        <div class="codigo">
+<span class="hl-kw">Algoritmo</span> SistemaPrincipal
+    <span class="hl-kw">Definir</span> <span class="hl-var">resultado</span> <span class="hl-kw">Como Entero</span>
+    
+    <span style="color:#6a9955;">// Llamamos a la función y GUARDAMOS lo que nos devuelve</span>
+    <span class="hl-var">resultado</span> <- CalcularSuma(<span class="hl-num" id="argA">5</span>, <span class="hl-num" id="argB">7</span>)
+    
+    <span class="hl-kw">Escribir</span> <span class="hl-str">"El especialista devolvió: "</span>, <span class="box-variable" id="varResultado">?</span>
+<span class="hl-kw">FinAlgoritmo</span></div>
+    </div>
+
+    <div class="camino-datos">
+        <div class="estado-texto" id="txtEstado">Esperando instrucciones...</div>
+        <div class="paquete" id="paqueteDatos">📦 Datos</div>
+    </div>
+
+    <div class="panel panel-funcion">
+        <div class="panel-titulo" style="color: var(--funcion-border);">🧠 Función (El Especialista)</div>
+        <div class="codigo">
+<span class="hl-kw">Funcion</span> <span class="hl-var">retorno</span> <- CalcularSuma(<span class="hl-var">a</span>, <span class="hl-var">b</span>)
+    <span class="hl-kw">Definir</span> <span class="hl-var">retorno</span> <span class="hl-kw">Como Entero</span>
+    
+    <span style="color:#6a9955;">// El cerebro hace el trabajo matemático</span>
+    <span class="hl-var">retorno</span> <- <span class="box-variable" id="paramA">a</span> + <span class="box-variable" id="paramB">b</span> <span id="calcInterno" style="color:#f1c40f; display:none;"> // = <span id="resSuma"></span></span>
+    
+<span class="hl-kw">FinFuncion</span> <span style="color:#6a9955;">// Al finalizar, la variable 'retorno' viaja de vuelta al Jefe</span></div>
+    </div>
+</div>
+
+<script>
+    async function ejecutarFuncion() {
+        const valA = parseInt(document.getElementById('inA').value) || 0;
+        const valB = parseInt(document.getElementById('inB').value) || 0;
+        const suma = valA + valB;
+
+        const btn = document.getElementById('btnEjecutar');
+        const estado = document.getElementById('txtEstado');
+        const paquete = document.getElementById('paqueteDatos');
+        
+        // UI Elements
+        const argA = document.getElementById('argA');
+        const argB = document.getElementById('argB');
+        const varRes = document.getElementById('varResultado');
+        const paramA = document.getElementById('paramA');
+        const paramB = document.getElementById('paramB');
+        const calcInterno = document.getElementById('calcInterno');
+        const resSuma = document.getElementById('resSuma');
+
+        // Reset
+        btn.disabled = true;
+        varRes.textContent = "?";
+        varRes.style.borderColor = "#f1c40f";
+        calcInterno.style.display = "none";
+        
+        argA.textContent = valA;
+        argB.textContent = valB;
+        paramA.textContent = "a";
+        paramB.textContent = "b";
+
+        // PASO 1: Envío de Argumentos (Ida)
+        estado.textContent = "⬇️ Enviando argumentos a la Función...";
+        paquete.style.background = "var(--paquete-ida)";
+        paquete.innerHTML = `⬇️ Argumentos: (${valA}, ${valB})`;
+        
+        paquete.style.top = "-40px";
+        paquete.style.opacity = "1";
+        
+        await delay(100);
+        paquete.style.transform = "translateY(90px)"; // Viaja hacia abajo
+        
+        await delay(1200);
+        
+        // PASO 2: Proceso Interno
+        paquete.style.opacity = "0";
+        estado.textContent = "⚙️ El Especialista está procesando...";
+        paramA.textContent = valA;
+        paramB.textContent = valB;
+        
+        await delay(800);
+        resSuma.textContent = suma;
+        calcInterno.style.display = "inline";
+        
+        await delay(1500);
+
+        // PASO 3: Retorno del Valor (Vuelta)
+        estado.textContent = "⬆️ Devolviendo el 'Valor de Retorno' al Jefe...";
+        paquete.style.background = "var(--paquete-vuelta)";
+        paquete.innerHTML = `⬆️ Retorno: ${suma}`;
+        
+        // Resetea posición del paquete abajo
+        paquete.style.transition = "none";
+        paquete.style.transform = "translateY(90px)";
+        
+        // Reflow
+        paquete.offsetHeight;
+        
+        // Anima hacia arriba
+        paquete.style.transition = "all 1s ease-in-out";
+        paquete.style.opacity = "1";
+        paquete.style.transform = "translateY(-50px)";
+        
+        await delay(1200);
+        
+        // PASO 4: Asignación en el Principal
+        paquete.style.opacity = "0";
+        estado.textContent = "✅ El Jefe recibe y guarda el resultado.";
+        
+        varRes.textContent = suma;
+        varRes.style.borderColor = "#2ecc71";
+        varRes.style.transform = "scale(1.2)";
+        await delay(300);
+        varRes.style.transform = "scale(1)";
+
+        setTimeout(() => {
+            btn.disabled = false;
+            estado.textContent = "Esperando nueva operación...";
+        }, 2000);
+    }
+
+    function delay(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    }
+</script>
+
+</body>
+</html>
